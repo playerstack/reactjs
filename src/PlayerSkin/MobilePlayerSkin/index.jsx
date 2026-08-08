@@ -120,7 +120,8 @@ const MobilePlayerSkin = React.forwardRef(
           changePlaybackRate(Number(speed.value ?? 1));
         }
         if (quality) {
-          changePlayBackQuality(Number(quality.value) ?? 0);
+          const parsed = Number(quality.value);
+          changePlayBackQuality(Number.isNaN(parsed) ? 0 : parsed);
         }
       },
       [changePlaybackRate, changePlayBackQuality],

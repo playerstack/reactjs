@@ -6,11 +6,7 @@ import SpinnerLoading from '../Icons/SpinnerLoading';
 
 /**
  * TopState renders top-level player state: kernel/error messages and,
- * optionally, a loading spinner.
- *
- * @param {boolean} showLoadingSpinner - When false, the built-in loading
- *   spinner is not rendered. Useful for skins (e.g. mobile) that display
- *   their own loading indicator elsewhere.
+ * optionally, a loading spinner when `loading` is true.
  */
 const TopState = ({ hasResource, loading = false, kernelMsg = null }) => {
   if (hasResource === false) {
@@ -33,16 +29,11 @@ const TopState = ({ hasResource, loading = false, kernelMsg = null }) => {
 
 TopState.propTypes = {
   hasResource: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   kernelMsg: PropTypes.object,
-  showLoadingSpinner: PropTypes.bool,
 };
 
 export default React.memo(
   TopState,
-  (p, n) =>
-    p.hasResource === n.hasResource &&
-    p.loading === n.loading &&
-    p.kernelMsg === n.kernelMsg &&
-    p.showLoadingSpinner === n.showLoadingSpinner,
+  (p, n) => p.hasResource === n.hasResource && p.loading === n.loading && p.kernelMsg === n.kernelMsg,
 );

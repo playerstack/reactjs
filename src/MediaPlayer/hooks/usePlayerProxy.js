@@ -96,6 +96,15 @@ const usePlayerProxy = ({
     }
   }
 
+  // Reset auto-selected URL when sources change so re-measurement occurs
+  const prevSourcesRef = React.useRef(sources);
+  React.useEffect(() => {
+    if (prevSourcesRef.current !== sources) {
+      prevSourcesRef.current = sources;
+      setAutoVideoUrl(null);
+    }
+  }, [sources]);
+
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -112,16 +121,14 @@ const usePlayerProxy = ({
               setAutoVideoUrl(sourcesIndexByResolution[recommendedQuality?.toString()]?.src ?? sources[0].src);
               updateStateRef.current((prev) => ({ ...prev, playbackQuality: recommendedQuality }));
             } else {
-              const sourceQuality = sources[0].src;
-              setAutoVideoUrl(sourceQuality);
-              updateStateRef.current((prev) => ({ ...prev, playbackQuality: Number(sourceQuality) }));
+              setAutoVideoUrl(sources[0].src);
+              updateStateRef.current((prev) => ({ ...prev, playbackQuality: sources[0].resolution }));
             }
           } catch (error) {
             if (cancelled) return;
             // Fallback to first source on error
-            const sourceQuality = sources[0].src;
-            setAutoVideoUrl(sourceQuality);
-            updateStateRef.current((prev) => ({ ...prev, playbackQuality: Number(sourceQuality) }));
+            setAutoVideoUrl(sources[0].src);
+            updateStateRef.current((prev) => ({ ...prev, playbackQuality: sources[0].resolution }));
           }
         }
       }

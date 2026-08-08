@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const DOUBLE_TAP_DELAY = 300;
 const SKIP_SECONDS = 10;
@@ -70,6 +70,15 @@ export default function useDoubleTapSkip({ currentTime, duration, changeCurrentT
       doSkip('forward');
     }
   }, [doSkip, showControls]);
+
+  // Cleanup all pending timers on unmount to prevent setState on unmounted component
+  useEffect(() => {
+    return () => {
+      clearTimeout(tapTimerLeft.current);
+      clearTimeout(tapTimerRight.current);
+      clearTimeout(hideTimer.current);
+    };
+  }, []);
 
   return { skipState, handleTapLeft, handleTapRight };
 }
