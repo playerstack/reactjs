@@ -69,7 +69,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
         document.removeEventListener('touchmove', handleTouchMove);
         document.removeEventListener('touchend', handleTouchEnd);
       };
-      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchmove', handleTouchMove, { passive: true });
       document.addEventListener('touchend', handleTouchEnd);
     },
     [handleInteraction, onSeeking],

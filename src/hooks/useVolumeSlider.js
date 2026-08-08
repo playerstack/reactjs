@@ -11,7 +11,6 @@ const useVolumeSlider = ({ fullscreen, value, onChange }) => {
 
   const sliderRef = React.useRef(null);
   const thumbRef = React.useRef(null);
-  const [isDragging, setIsDragging] = React.useState(false);
   const [thumbLeft, setThumbLeft] = React.useState(0);
 
   React.useEffect(() => {
@@ -49,7 +48,6 @@ const useVolumeSlider = ({ fullscreen, value, onChange }) => {
     (e) => {
       e.preventDefault();
       if (sliderRef?.current) {
-        setIsDragging(true);
         dispatch({ type: 'volumeSliding', payload: true });
       }
     },
@@ -70,7 +68,6 @@ const useVolumeSlider = ({ fullscreen, value, onChange }) => {
       });
 
       onChange(percentage);
-      setIsDragging(false);
     },
     [onChange, fullscreen, dispatch],
   );
@@ -80,7 +77,7 @@ const useVolumeSlider = ({ fullscreen, value, onChange }) => {
   const onMouseMove = React.useCallback(
     (e) => {
       e.preventDefault();
-      if (!isDragging) {
+      if (!state.volumeSliding) {
         return;
       }
 
@@ -99,7 +96,7 @@ const useVolumeSlider = ({ fullscreen, value, onChange }) => {
         rafRef.current = null;
       });
     },
-    [isDragging, fullscreen, onChange],
+    [state.volumeSliding, fullscreen, onChange],
   );
 
   React.useEffect(() => {

@@ -6,6 +6,15 @@ function reducer(state, action) {
       throw new Error('Reducer params has not been provided!');
     }
 
+    // Support function actions (like useState updater pattern)
+    if (typeof action === 'function') {
+      const resolvedAction = action(state);
+      if (!resolvedAction || typeof resolvedAction !== 'object') {
+        return state;
+      }
+      return reducer(state, resolvedAction);
+    }
+
     if ('type' in action) {
       const { type, payload } = action;
 

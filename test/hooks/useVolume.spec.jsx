@@ -68,12 +68,13 @@ describe('useVolume', () => {
       expect(updateState).toHaveBeenCalled();
     });
 
-    test('sets volume to 1 when currently muted and muted=true', () => {
+    test('restores previous volume when unmuting from muted state', () => {
       videoRef.current.muted = true;
       videoRef.current.volume = 0;
       const { result } = getHook({ muted: true });
       act(() => result.current.onMutedClick());
-      expect(updateState).toHaveBeenCalledWith(expect.objectContaining({ volume: 1 }));
+      // Restores to volumeBeforeMuteRef default (0.8) since no prior volume was set
+      expect(updateState).toHaveBeenCalledWith(expect.objectContaining({ volume: 0.8, muted: false }));
     });
 
     test('does nothing when videoRef.current is null', () => {

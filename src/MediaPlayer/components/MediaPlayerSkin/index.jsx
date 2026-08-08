@@ -29,6 +29,9 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
   });
 
   // Sync external props to internal state synchronously (during render, not in useEffect)
+  // Only overwrite internal state for properties whose external prop ACTUALLY changed,
+  // so that internal user actions (like muting via the skin) aren't overwritten
+  // when an unrelated prop (like playing) changes.
   if (
     props.pip !== prevProps.pip ||
     props.playbackRate !== prevProps.playbackRate ||
@@ -45,15 +48,29 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       muted: props.muted,
       volume: props.volume,
     });
-    setPlayerState((prevState) => ({
-      ...prevState,
-      isPIP: props.pip,
-      isMuted: props.muted,
-      playbackRate: props.playbackRate,
-      loop: props.loop,
-      playing: props.playing,
-      volume: props.muted ? 0 : (props.volume ?? playerStateInitial.volume),
-    }));
+    setPlayerState((prevState) => {
+      const next = { ...prevState };
+      if (props.pip !== prevProps.pip) {
+        next.isPIP = props.pip;
+      }
+      if (props.playbackRate !== prevProps.playbackRate) {
+        next.playbackRate = props.playbackRate;
+      }
+      if (props.loop !== prevProps.loop) {
+        next.loop = props.loop;
+      }
+      if (props.playing !== prevProps.playing) {
+        next.playing = props.playing;
+      }
+      if (props.muted !== prevProps.muted) {
+        next.isMuted = props.muted;
+        next.volume = props.muted ? 0 : (props.volume ?? playerStateInitial.volume);
+      }
+      if (props.volume !== prevProps.volume && !props.muted) {
+        next.volume = props.volume ?? playerStateInitial.volume;
+      }
+      return next;
+    });
   }
 
   const playerSkinRef = React.useRef(null);

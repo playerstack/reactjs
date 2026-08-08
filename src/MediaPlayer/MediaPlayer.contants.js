@@ -8,7 +8,10 @@ export const measureNetworkSpeedGeneratedFile = async () => {
   try {
     const speedInMbpsInCookie = getCookie('internet_speed');
     if (speedInMbpsInCookie) {
-      return parseFloat(speedInMbpsInCookie);
+      const parsed = parseFloat(speedInMbpsInCookie);
+      if (!isNaN(parsed) && parsed > 0) {
+        return parsed;
+      }
     }
 
     const controller = new AbortController();

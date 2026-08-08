@@ -22,11 +22,19 @@ export default function useDoubleTapSkip({ currentTime, duration, changeCurrentT
   const tapCountRight = useRef(0);
   const hideTimer = useRef(null);
 
+  // Use refs to always read fresh values inside callbacks without re-creating them
+  const currentTimeRef = useRef(currentTime);
+  currentTimeRef.current = currentTime;
+  const durationRef = useRef(duration);
+  durationRef.current = duration;
+
   const doSkip = useCallback(
     (direction) => {
-      if (isNaN(duration) || duration <= 0) return;
+      const dur = durationRef.current;
+      const time = currentTimeRef.current;
+      if (isNaN(dur) || dur <= 0) return;
       const delta = direction === 'forward' ? SKIP_SECONDS : -SKIP_SECONDS;
-      const newTime = Math.max(0, Math.min(duration, currentTime + delta));
+      const newTime = Math.max(0, Math.min(dur, time + delta));
       changeCurrentTime(newTime);
 
       setSkipState((prev) => ({
@@ -40,7 +48,7 @@ export default function useDoubleTapSkip({ currentTime, duration, changeCurrentT
         setSkipState({ direction: null, visible: false, seconds: 0 });
       }, SKIP_DISPLAY_DURATION);
     },
-    [currentTime, duration, changeCurrentTime],
+    [changeCurrentTime],
   );
 
   const handleTapLeft = useCallback(() => {

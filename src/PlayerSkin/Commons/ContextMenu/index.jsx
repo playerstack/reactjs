@@ -9,8 +9,15 @@ import {
 } from './ContextMenu.styled';
 import { mergeRefs } from '../../../utils';
 import CheckedIcon from '../Icons/CheckedIcon';
+import InLoopIcon from '../Icons/InLoopIcon';
+import PipIcon from '../Icons/PipIcon';
 import useAppDispatch from '../../../hooks/context/useAppDispatch';
 import useAppSelector from '../../../hooks/context/useAppSelector';
+
+const ICON_MAP = {
+  loop: InLoopIcon,
+  pip: PipIcon,
+};
 
 const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) => {
   const state = useAppSelector();
@@ -27,13 +34,7 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        (!menuRef.current.contains(event.target) ||
-          !Array.from(menuRef.current?.querySelectorAll('*'))
-            .map((el) => el.contains(event.target))
-            .includes(true))
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         dispatch({
           type: 'contextMenuVisible',
           payload: false,
@@ -56,27 +57,30 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
       data-itemindex="0"
       aria-checked={state.contextMenuVisible}
     >
-      {menuItems.map((item, i) => (
-        <StyledContextMenuItem
-          key={i}
-          onClick={() => {
-            item.action();
-            dispatch({
-              type: 'contextMenuVisible',
-              payload: false,
-            });
-          }}
-          isFullscreen={fullscreen}
-        >
-          {item.icon}
-          <StyledContextMenuLabel>{item.label}</StyledContextMenuLabel>
-          {item.isCheckable && item.defaultChecked && (
-            <StyledContextMenuChecked>
-              <CheckedIcon width={24} height={24} />
-            </StyledContextMenuChecked>
-          )}
-        </StyledContextMenuItem>
-      ))}
+      {menuItems.map((item, i) => {
+        const IconComponent = ICON_MAP[item.iconType];
+        return (
+          <StyledContextMenuItem
+            key={i}
+            onClick={() => {
+              item.action();
+              dispatch({
+                type: 'contextMenuVisible',
+                payload: false,
+              });
+            }}
+            isFullscreen={fullscreen}
+          >
+            {IconComponent && <IconComponent {...item.iconProps} />}
+            <StyledContextMenuLabel>{item.label}</StyledContextMenuLabel>
+            {item.isCheckable && item.defaultChecked && (
+              <StyledContextMenuChecked>
+                <CheckedIcon width={24} height={24} />
+              </StyledContextMenuChecked>
+            )}
+          </StyledContextMenuItem>
+        );
+      })}
     </StyledContextMenuContainer>
   );
 
