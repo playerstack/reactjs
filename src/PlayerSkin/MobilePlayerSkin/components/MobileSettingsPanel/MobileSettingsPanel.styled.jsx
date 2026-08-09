@@ -121,7 +121,9 @@ export const StyledSubPage = styled.div`
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
   transform: ${({ $visible }) => ($visible ? 'translateX(0)' : 'translateX(100%)')};
-  transition: opacity 0.15s linear, transform 0.15s ease-out;
+  transition:
+    opacity 0.15s linear,
+    transform 0.15s ease-out;
 `;
 
 export const StyledSubContent = styled.div`
@@ -161,7 +163,9 @@ export const StyledOptionList = styled.ul`
 `;
 
 export const StyledMainPage = styled.div`
-  transition: opacity 0.15s linear, transform 0.15s ease-out;
+  transition:
+    opacity 0.15s linear,
+    transform 0.15s ease-out;
   ${({ hidden }) =>
     hidden
       ? css`

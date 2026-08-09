@@ -194,6 +194,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         sources={props.sources}
         hasAudio={playerState.hasAudio}
         spriteVTTFile={props.spriteVTTFile}
+        chapters={props.chapters}
         hasResource={typeof videoUrl === 'string' || props.sources.length > 0}
         kernelMsg={playerState.kernelError}
         loading={playerState.isLoading}
@@ -236,6 +237,7 @@ export default React.memo(
     p.sources === n.sources &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&
     p.spriteVTTFile === n.spriteVTTFile &&
+    p.chapters === n.chapters &&
     p.prevented === n.prevented &&
     p.waiting === n.waiting &&
     p.playing === n.playing &&

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const Tooltip = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
+export const Tooltip = React.forwardRef(({ isFullscreen, hasChapters, ...rest }, ref) => <div ref={ref} {...rest} />);
 
 Tooltip.displayName = 'Tooltip';
 
@@ -26,7 +26,9 @@ export const Tip = React.forwardRef(({ isFullscreen, showTooltipOnly, ...rest },
 Tip.displayName = 'Tip';
 
 export const StyledTip = styled(Tip)`
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0.4em 0.8em;
   transform: translateX(-50%);
   font-weight: 500;
@@ -55,5 +57,29 @@ export const StyledTip = styled(Tip)`
   `
       : `
     font-size: 12px;
+  `}
+`;
+
+export const ChapterLabel = React.forwardRef(({ isFullscreen, ...rest }, ref) => <span ref={ref} {...rest} />);
+
+ChapterLabel.displayName = 'ChapterLabel';
+
+export const StyledChapterLabel = styled(ChapterLabel)`
+  display: block;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  margin-top: 4px;
+  ${({ isFullscreen }) =>
+    isFullscreen
+      ? `
+    font-size: 14px;
+  `
+      : `
+    font-size: 11px;
   `}
 `;

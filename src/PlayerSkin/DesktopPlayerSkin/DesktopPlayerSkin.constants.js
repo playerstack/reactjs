@@ -37,5 +37,3 @@ export const sliderWith = (isFullscreen) => {
 
   return 55;
 };
-
-

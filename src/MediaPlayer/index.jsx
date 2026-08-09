@@ -209,6 +209,7 @@ export const createMediaPlayer = (player) => {
           disableDeferredLoading={this.props.disableDeferredLoading}
           progressFrequency={this.props.progressFrequency}
           spriteVTTFile={this.props.spriteVTTFile}
+          chapters={this.props.chapters}
           poster={this.props.poster}
           forceMobile={this.props.forceMobile}
         />

@@ -27,6 +27,7 @@ import SettingsButton from './components/Controls/components/SettingsButton';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import ContextMenu from './components/ContextMenu';
+import useChapters from '../../hooks/useChapters';
 
 const DesktopPlayerSkin = React.forwardRef(
   (
@@ -52,6 +53,7 @@ const DesktopPlayerSkin = React.forwardRef(
       fullscreen,
       qualities,
       spriteVTTFile,
+      chapters,
       fullHDQualityBreak,
       playbackRate,
       loop,
@@ -105,6 +107,9 @@ const DesktopPlayerSkin = React.forwardRef(
       exitPictureInPicture,
       onLoopClick,
     });
+
+    const { getChapterAtTime } = useChapters({ chapters, duration });
+    const activeChapter = React.useMemo(() => getChapterAtTime(currentTime), [getChapterAtTime, currentTime]);
 
     React.useEffect(() => {
       dispatch({
@@ -217,6 +222,7 @@ const DesktopPlayerSkin = React.forwardRef(
           {false === live && (
             <TimeSlider
               spriteVTTFile={spriteVTTFile}
+              chapters={chapters}
               currentTime={currentTime}
               duration={duration}
               buffered={buffered}
@@ -245,11 +251,7 @@ const DesktopPlayerSkin = React.forwardRef(
             }
             fullscreen={fullscreen}
           >
-            <PreviousButton
-              fullscreen={fullscreen}
-              onPrevious={onPrevious}
-              showNavButtons={showNavButtons}
-            />
+            <PreviousButton fullscreen={fullscreen} onPrevious={onPrevious} showNavButtons={showNavButtons} />
             <PlayButton
               fullscreen={fullscreen}
               paused={paused}
@@ -257,11 +259,7 @@ const DesktopPlayerSkin = React.forwardRef(
               onPauseClick={onPauseClick}
               onPlayClick={onPlayClick}
             />
-            <NextButton
-              fullscreen={fullscreen}
-              onNext={onNext}
-              showNavButtons={showNavButtons}
-            />
+            <NextButton fullscreen={fullscreen} onNext={onNext} showNavButtons={showNavButtons} />
             <Volume
               fullscreen={fullscreen}
               isMuted={muted}
@@ -270,7 +268,7 @@ const DesktopPlayerSkin = React.forwardRef(
               onMutedClick={onMutedClick}
               changeVolume={changeVolume}
             />
-            <PlayTime live={live} currentTime={currentTime} duration={duration} />
+            <PlayTime live={live} currentTime={currentTime} duration={duration} chapterTitle={activeChapter?.title} />
           </ControlBar>
         </Controls>
         <TopState hasResource={hasResource} loading={loading} kernelMsg={kernelMsg} />

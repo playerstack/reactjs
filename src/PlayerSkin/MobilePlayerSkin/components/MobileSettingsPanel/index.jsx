@@ -141,7 +141,11 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
           {subMenu === 'quality' && (
             <StyledOptionList>
               {qualities.map((q) => (
-                <StyledOptionItem key={q.value} active={q.value === selectedQuality} onClick={handleQualityClick(q.value)}>
+                <StyledOptionItem
+                  key={q.value}
+                  active={q.value === selectedQuality}
+                  onClick={handleQualityClick(q.value)}
+                >
                   {q.label}
                 </StyledOptionItem>
               ))}

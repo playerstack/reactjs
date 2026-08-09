@@ -7,15 +7,25 @@ import {
   StyledMobileProgressBuffered,
   StyledMobileProgressFilled,
   StyledMobileProgressHandle,
+  StyledMobileSeekTooltip,
 } from './MobileProgressBar.styled';
+import MobileChapterSegments from './MobileChapterSegments';
 import { formatTime } from '../../../../utils';
 
-const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeeking }) => {
+const MobileProgressBar = ({ currentTime, duration, buffered, chapters, getChapterAtTime, onChange, onSeeking }) => {
   const containerRef = React.useRef(null);
   const isDragging = React.useRef(false);
+  const [seeking, setSeeking] = React.useState(false);
 
   const progress = duration > 0 ? currentTime / duration : 0;
   const bufferedProgress = buffered || 0;
+  const hasChapters = chapters && chapters.length > 0;
+
+  // Chapter title at current time position (shown during seek)
+  const chapterAtCurrentTime = React.useMemo(() => {
+    if (!hasChapters || !getChapterAtTime) return null;
+    return getChapterAtTime(currentTime);
+  }, [hasChapters, getChapterAtTime, currentTime]);
 
   const handleInteraction = React.useCallback(
     (clientX) => {
@@ -31,6 +41,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
   const handleMouseDown = React.useCallback(
     (e) => {
       isDragging.current = true;
+      setSeeking(true);
       if (onSeeking) onSeeking(true);
       handleInteraction(e.clientX);
 
@@ -41,6 +52,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
       };
       const handleMouseUp = () => {
         isDragging.current = false;
+        setSeeking(false);
         if (onSeeking) onSeeking(false);
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -55,6 +67,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
     (e) => {
       e.preventDefault();
       isDragging.current = true;
+      setSeeking(true);
       if (onSeeking) onSeeking(true);
       const touch = e.touches[0];
       handleInteraction(touch.clientX);
@@ -67,6 +80,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
       };
       const handleTouchEnd = () => {
         isDragging.current = false;
+        setSeeking(false);
         if (onSeeking) onSeeking(false);
         document.removeEventListener('touchmove', handleTouchMove);
         document.removeEventListener('touchend', handleTouchEnd);
@@ -76,6 +90,16 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
     },
     [handleInteraction, onSeeking],
   );
+
+  // Register touchstart as non-passive to allow preventDefault (avoid scroll during drag)
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener('touchstart', handleTouchStart, { passive: false });
+    return () => {
+      el.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, [handleTouchStart]);
 
   return (
     <StyledMobileProgressContainer
@@ -88,12 +112,34 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
       aria-valuetext={formatTime(Math.round(currentTime))}
       tabIndex={0}
       onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
     >
-      <StyledMobileProgressTrack />
-      <StyledMobileProgressBuffered style={{ width: `${bufferedProgress * 100}%` }} />
-      <StyledMobileProgressFilled style={{ width: `${progress * 100}%` }} />
+      {hasChapters ? (
+        <MobileChapterSegments
+          segments={chapters}
+          currentTime={currentTime}
+          duration={duration}
+          buffered={buffered}
+          hoveredIndex={
+            seeking && chapterAtCurrentTime
+              ? chapters.findIndex((s) => s.startTime === chapterAtCurrentTime.startTime)
+              : -1
+          }
+        />
+      ) : (
+        <>
+          <StyledMobileProgressTrack />
+          <StyledMobileProgressBuffered style={{ width: `${bufferedProgress * 100}%` }} />
+          <StyledMobileProgressFilled style={{ width: `${progress * 100}%` }} />
+        </>
+      )}
       <StyledMobileProgressHandle style={{ left: `${progress * 100}%` }} />
+      {hasChapters && seeking && chapterAtCurrentTime && (
+        <StyledMobileSeekTooltip style={{ left: `${progress * 100}%` }}>
+          {chapterAtCurrentTime.title}
+          {'\n'}
+          {formatTime(Math.round(currentTime))}
+        </StyledMobileSeekTooltip>
+      )}
     </StyledMobileProgressContainer>
   );
 };
@@ -102,6 +148,14 @@ MobileProgressBar.propTypes = {
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
   buffered: PropTypes.number,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+    }),
+  ),
+  getChapterAtTime: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onSeeking: PropTypes.func,
 };

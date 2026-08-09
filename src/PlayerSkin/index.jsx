@@ -147,6 +147,7 @@ export default React.memo(
     p.kernelMsg === n.kernelMsg &&
     p.url === n.url &&
     p.sources === n.sources &&
+    p.chapters === n.chapters &&
     p.poster === n.poster &&
     p.forceMobile === n.forceMobile,
 );

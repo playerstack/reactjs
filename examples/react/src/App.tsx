@@ -212,6 +212,15 @@ const App = () => {
               },
             ]}
             language="es"
+            chapters={[
+              { title: 'Intro', startTime: 0 },
+              { title: 'The Forest', startTime: 60 },
+              { title: 'Camp Site', startTime: 120 },
+              { title: 'The Sprites', startTime: 180 },
+              { title: 'River Crossing', startTime: 300 },
+              { title: 'The Cave', startTime: 420 },
+              { title: 'Credits', startTime: 540 },
+            ]}
             poster={state.poster}
             prevented={false}
             waiting={false}

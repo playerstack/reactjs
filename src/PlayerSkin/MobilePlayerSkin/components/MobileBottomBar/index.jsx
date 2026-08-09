@@ -18,6 +18,8 @@ const MobileBottomBar = ({
   duration,
   buffered,
   fullscreen,
+  chapters,
+  getChapterAtTime,
   i18n,
   onChangeCurrentTime,
   onSeeking,
@@ -35,6 +37,8 @@ const MobileBottomBar = ({
             currentTime={currentTime}
             duration={duration}
             buffered={buffered}
+            chapters={chapters}
+            getChapterAtTime={getChapterAtTime}
             onChange={onChangeCurrentTime}
             onSeeking={onSeeking}
           />
@@ -57,6 +61,14 @@ MobileBottomBar.propTypes = {
   duration: PropTypes.number.isRequired,
   buffered: PropTypes.number,
   fullscreen: PropTypes.bool.isRequired,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+    }),
+  ),
+  getChapterAtTime: PropTypes.func,
   i18n: PropTypes.shape({
     exitFullscreen: PropTypes.string,
     fullscreen: PropTypes.string,

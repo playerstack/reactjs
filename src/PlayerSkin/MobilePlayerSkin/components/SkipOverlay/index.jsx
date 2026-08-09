@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  StyledSkipOverlay,
-  StyledSkipIconContainer,
-  StyledSkipText,
-  StyledSkipTapArea,
-} from './SkipOverlay.styled';
+import { StyledSkipOverlay, StyledSkipIconContainer, StyledSkipText, StyledSkipTapArea } from './SkipOverlay.styled';
 import { SkipChevronIcon } from '../../icons';
 
 const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {

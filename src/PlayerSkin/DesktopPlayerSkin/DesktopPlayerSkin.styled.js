@@ -33,5 +33,3 @@ export const StyledBezelTextVolume = styled.div`
   border-radius: 3px;
   color: #eee;
 `;
-
-

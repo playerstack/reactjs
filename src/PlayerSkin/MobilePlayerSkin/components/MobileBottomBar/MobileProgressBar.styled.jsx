@@ -47,3 +47,19 @@ export const StyledMobileProgressHandle = styled.div`
   transform: translate(-50%, -50%);
   pointer-events: none;
 `;
+
+export const StyledMobileSeekTooltip = styled.div`
+  position: absolute;
+  bottom: 20px;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 0;
+  white-space: pre-line;
+  text-align: center;
+  pointer-events: none;
+  line-height: 1.3;
+  z-index: 10;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+`;

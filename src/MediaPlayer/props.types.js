@@ -15,6 +15,12 @@ export const propTypes = {
   ),
   fullHDQualityBreak: PropTypes.number,
   spriteVTTFile: PropTypes.string,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+    }),
+  ),
   playing: bool,
   loop: bool,
   volume: number,
@@ -72,6 +78,7 @@ const noop = () => {};
 export const defaultProps = {
   url: '',
   sources: [],
+  chapters: [],
   playing: false,
   loop: false,
   volume: null,

@@ -12,12 +12,15 @@ import {
 } from './TimeSlider.styled';
 import Timelens from './components/Timelens';
 import TimeTooltip from './components/TimeTooltip';
+import ChapterSegments from './components/ChapterSegments';
 import useTimeSlider from '../../../../hooks/useTimeSlider';
+import useChapters from '../../../../hooks/useChapters';
 import { formatTime } from '../../../../utils';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
 const TimeSlider = ({
   spriteVTTFile,
+  chapters,
   currentTime,
   duration,
   buffered: bufferedScaleX,
@@ -49,6 +52,20 @@ const TimeSlider = ({
     onSeeking,
   });
 
+  const { segments, getChapterAtTime } = useChapters({ chapters, duration });
+  const hasChapters = segments.length > 0;
+
+  // Get the chapter title and index for the hovered time position
+  const hoveredChapter = React.useMemo(() => {
+    const tooltipTime = timeSliderSliding ? timeSliderState.value : timeSliderState.tooltip;
+    return getChapterAtTime(tooltipTime);
+  }, [timeSliderSliding, timeSliderState.value, timeSliderState.tooltip, getChapterAtTime]);
+
+  const hoveredSegmentIndex = React.useMemo(() => {
+    if (!hoveredChapter || !showTooltip) return -1;
+    return segments.findIndex((s) => s.startTime === hoveredChapter.startTime);
+  }, [hoveredChapter, showTooltip, segments]);
+
   return (
     <StyledSliderContainer
       ref={sliderRef}
@@ -60,6 +77,8 @@ const TimeSlider = ({
       aria-valuetext={formatTime(Math.round(currentTime))}
       tabIndex={0}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onTouchStart={onMouseDown}
       onKeyDown={() => {}}
       onMouseOver={onSliderMouseOver}
       onMouseMove={onSliderMouseMove}
@@ -69,27 +88,52 @@ const TimeSlider = ({
       isSliding={timeSliderSliding}
       isFullscreen={fullscreen}
     >
-      <StyledSliderContent>
-        <StyledSlideRail isFullscreen={fullscreen}>
-          <StyledSliderBuffered style={{ transform: `scaleX(${bufferedScaleX})` }} />
-          <StyledTrack style={{ transform: `translateX(${trackTranslateX.track}%)` }} />
-        </StyledSlideRail>
-        <StyledSliderHandleRail style={{ transform: `translateX(${trackTranslateX.handle}%)` }}>
-          <StyledSliderHandle
-            ref={handleRef}
-            type="button"
-            onMouseDown={onMouseDown}
-            onTouchStart={onMouseDown}
-            isFullscreen={fullscreen}
-          />
-        </StyledSliderHandleRail>
-      </StyledSliderContent>
+      {hasChapters ? (
+        <>
+          <StyledSliderContent>
+            <ChapterSegments
+              segments={segments}
+              currentTime={timeSliderSliding ? timeSliderState.value : currentTime}
+              duration={duration}
+              bufferedScaleX={bufferedScaleX}
+              hoveredIndex={hoveredSegmentIndex}
+              fullscreen={fullscreen}
+            />
+            <StyledSliderHandleRail style={{ transform: `translateX(${trackTranslateX.handle}%)` }}>
+              <StyledSliderHandle
+                ref={handleRef}
+                type="button"
+                onMouseDown={onMouseDown}
+                onTouchStart={onMouseDown}
+                isFullscreen={fullscreen}
+              />
+            </StyledSliderHandleRail>
+          </StyledSliderContent>
+        </>
+      ) : (
+        <StyledSliderContent>
+          <StyledSlideRail isFullscreen={fullscreen}>
+            <StyledSliderBuffered style={{ transform: `scaleX(${bufferedScaleX})` }} />
+            <StyledTrack style={{ transform: `translateX(${trackTranslateX.track}%)` }} />
+          </StyledSlideRail>
+          <StyledSliderHandleRail style={{ transform: `translateX(${trackTranslateX.handle}%)` }}>
+            <StyledSliderHandle
+              ref={handleRef}
+              type="button"
+              onMouseDown={onMouseDown}
+              onTouchStart={onMouseDown}
+              isFullscreen={fullscreen}
+            />
+          </StyledSliderHandleRail>
+        </StyledSliderContent>
+      )}
       <TimeTooltip
         sliderRef={sliderRef}
         showTooltip={showTooltip}
         duration={duration}
         tooltip={timeSliderSliding ? timeSliderState.value : timeSliderState.tooltip}
         showTooltipOnly={!spriteVTTFile}
+        chapterTitle={hoveredChapter?.title}
         fullscreen={fullscreen}
       />
       {spriteVTTFile && (
@@ -99,6 +143,7 @@ const TimeSlider = ({
           duration={duration}
           spriteVTTFile={spriteVTTFile}
           fullscreen={fullscreen}
+          hasChapters={hasChapters}
         />
       )}
     </StyledSliderContainer>
@@ -107,6 +152,12 @@ const TimeSlider = ({
 
 TimeSlider.propTypes = {
   spriteVTTFile: PropTypes.string,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+    }),
+  ),
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
   buffered: PropTypes.number.isRequired || null,
@@ -118,6 +169,7 @@ export default React.memo(
   TimeSlider,
   (p, n) =>
     p.spriteVTTFile === n.spriteVTTFile &&
+    p.chapters === n.chapters &&
     p.currentTime === n.currentTime &&
     p.duration === n.duration &&
     p.buffered === n.buffered &&

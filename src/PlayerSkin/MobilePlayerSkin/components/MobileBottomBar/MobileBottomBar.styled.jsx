@@ -34,7 +34,6 @@ export const StyledMobileTime = styled.span`
   color: #fff;
   white-space: nowrap;
   flex-shrink: 0;
-  margin-right: 6px;
 `;
 
 export const StyledMobileFullscreenButton = styled.button`

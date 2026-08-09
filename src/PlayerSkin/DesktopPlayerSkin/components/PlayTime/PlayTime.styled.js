@@ -20,3 +20,8 @@ export const StyledLiveDot = styled.span`
   border-radius: 50%;
   background: #ff0000;
 `;
+
+export const StyledChapterIndicator = styled.span`
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+`;

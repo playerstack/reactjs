@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const TimelensThumbnail = React.forwardRef(({ isFullscreen, showing, ...rest }, ref) => (
+export const TimelensThumbnail = React.forwardRef(({ isFullscreen, showing, hasChapters, ...rest }, ref) => (
   <div ref={ref} {...rest} />
 ));
 
@@ -20,7 +20,7 @@ export const StyledTimelensThumbnail = styled(TimelensThumbnail)`
   transition:
     opacity 0.2s,
     z-index 0.2s;
-  transform: translateY(-100%) translateY(-7px);
+  transform: translateY(-100%) translateY(${({ hasChapters }) => (hasChapters ? '-14px' : '-7px')});
   ${({ isFullscreen }) =>
     isFullscreen
       ? `

@@ -19,6 +19,7 @@ import useDoubleTapSkip from '../../hooks/useDoubleTapSkip';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import useAppSelector from '../../hooks/context/useAppSelector';
+import useChapters from '../../hooks/useChapters';
 
 const MobilePlayerSkin = React.forwardRef(
   (
@@ -44,6 +45,7 @@ const MobilePlayerSkin = React.forwardRef(
       fullscreen,
       qualities,
       spriteVTTFile,
+      chapters,
       fullHDQualityBreak,
       playbackRate,
       loop,
@@ -101,6 +103,8 @@ const MobilePlayerSkin = React.forwardRef(
       exitPictureInPicture,
       onLoopClick,
     });
+
+    const { segments, getChapterAtTime } = useChapters({ chapters, duration });
 
     React.useEffect(() => {
       dispatch({
@@ -239,6 +243,8 @@ const MobilePlayerSkin = React.forwardRef(
           duration={duration}
           buffered={buffered}
           fullscreen={fullscreen}
+          chapters={segments}
+          getChapterAtTime={getChapterAtTime}
           i18n={i18n}
           onChangeCurrentTime={changeCurrentTime}
           onSeeking={onSeeking}
@@ -320,6 +326,7 @@ export default React.memo(
   MobilePlayerSkin,
   (p, n) =>
     p.spriteVTTFile === n.spriteVTTFile &&
+    p.chapters === n.chapters &&
     p.videoRef === n.videoRef &&
     p.playerRef === n.playerRef &&
     p.live === n.live &&

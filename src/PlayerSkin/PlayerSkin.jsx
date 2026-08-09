@@ -20,6 +20,12 @@ PlayerSkin.displayName = 'PlayerSkin';
 
 PlayerSkin.propTypes = {
   spriteVTTFile: PropTypes.string,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+    }),
+  ),
   videoRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(HTMLVideoElement) })])
     .isRequired,
   playerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(HTMLDivElement) })])
@@ -77,6 +83,7 @@ export default React.memo(
   PlayerSkin,
   (p, n) =>
     p.spriteVTTFile === n.spriteVTTFile &&
+    p.chapters === n.chapters &&
     p.videoRef === n.videoRef &&
     p.playerRef === n.playerRef &&
     p.live === n.live &&
