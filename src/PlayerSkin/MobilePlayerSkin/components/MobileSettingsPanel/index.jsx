@@ -33,6 +33,7 @@ const SPEED_OPTIONS = [
 const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSettings, onClose }) => {
   const { i18n } = useAppSelector();
   const [subMenu, setSubMenu] = React.useState(null); // null | 'quality' | 'speed'
+  const [selectedQuality, setSelectedQuality] = React.useState(null); // null = auto
 
   const handleClose = React.useCallback(
     (e) => {
@@ -52,6 +53,7 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
     (value) => (e) => {
       e.stopPropagation();
       onChangeSettings({ quality: { value: String(value) } });
+      setSelectedQuality(value === 0 ? null : String(value));
       setSubMenu(null);
       onClose();
     },
@@ -116,7 +118,11 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
                 <SettingsGearIcon />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.quality || 'Calidad'}</StyledSwitchLabel>
-              <StyledSwitchValue>Auto</StyledSwitchValue>
+              <StyledSwitchValue>
+                {selectedQuality === null
+                  ? 'Auto'
+                  : qualities.find((q) => q.value === selectedQuality)?.label || selectedQuality}
+              </StyledSwitchValue>
             </StyledSwitchItem>
           )}
           <StyledSwitchItem onClick={() => setSubMenu('speed')}>
@@ -135,11 +141,11 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
           {subMenu === 'quality' && (
             <StyledOptionList>
               {qualities.map((q) => (
-                <StyledOptionItem key={q.value} active={false} onClick={handleQualityClick(q.value)}>
+                <StyledOptionItem key={q.value} active={q.value === selectedQuality} onClick={handleQualityClick(q.value)}>
                   {q.label}
                 </StyledOptionItem>
               ))}
-              <StyledOptionItem active onClick={handleQualityClick(0)}>
+              <StyledOptionItem active={selectedQuality === null} onClick={handleQualityClick(0)}>
                 auto
               </StyledOptionItem>
             </StyledOptionList>
