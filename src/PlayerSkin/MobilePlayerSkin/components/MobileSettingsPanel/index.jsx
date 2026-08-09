@@ -80,84 +80,81 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
     }
   }, [visible]);
 
+  const isSubMenuOpen = subMenu !== null;
+
   return (
     <StyledSettingsOverlay visible={visible} onClick={(e) => e.stopPropagation()}>
-      {/* Main page header */}
-      {!subMenu && (
-        <>
-          <StyledSettingsHeader>
-            <StyledIconButton position="left" aria-label="Settings">
-              <SettingsGearIcon />
-            </StyledIconButton>
-            <StyledHeaderTitle>{i18n.settings || 'Configuración'}</StyledHeaderTitle>
-            <StyledIconButton position="right" onClick={handleClose} aria-label="Close">
-              <CloseIcon />
-            </StyledIconButton>
-          </StyledSettingsHeader>
-          <StyledMainPage hidden={false}>
-            <StyledSwitchesGrid>
-              {qualities.length > 0 && (
-                <StyledSwitchItem onClick={() => setSubMenu('quality')}>
-                  <StyledSwitchIcon>
-                    <SettingsGearIcon />
-                  </StyledSwitchIcon>
-                  <StyledSwitchLabel>{i18n.quality || 'Calidad'}</StyledSwitchLabel>
-                  <StyledSwitchValue>Auto</StyledSwitchValue>
-                </StyledSwitchItem>
-              )}
-              <StyledSwitchItem onClick={() => setSubMenu('speed')}>
-                <StyledSwitchIcon>
-                  <SpeedIcon />
-                </StyledSwitchIcon>
-                <StyledSwitchLabel>{i18n.speed || 'Velocidad'}</StyledSwitchLabel>
-                <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
-              </StyledSwitchItem>
-            </StyledSwitchesGrid>
-          </StyledMainPage>
-        </>
-      )}
+      {/* Header — always rendered, content changes based on subMenu state */}
+      <StyledSettingsHeader>
+        {!isSubMenuOpen ? (
+          <StyledIconButton position="left" aria-label="Settings">
+            <SettingsGearIcon />
+          </StyledIconButton>
+        ) : (
+          <StyledIconButton position="left" onClick={handleBack} aria-label="Back">
+            <BackIcon />
+          </StyledIconButton>
+        )}
+        <StyledHeaderTitle>
+          {!isSubMenuOpen
+            ? i18n.settings || 'Configuración'
+            : subMenu === 'quality'
+              ? i18n.quality || 'Calidad'
+              : i18n.speed || 'Velocidad'}
+        </StyledHeaderTitle>
+        <StyledIconButton position="right" onClick={handleClose} aria-label="Close">
+          <CloseIcon />
+        </StyledIconButton>
+      </StyledSettingsHeader>
 
-      {/* Sub page: Quality or Speed */}
-      {subMenu && (
-        <>
-          <StyledSettingsHeader>
-            <StyledIconButton position="left" onClick={handleBack} aria-label="Back">
-              <BackIcon />
-            </StyledIconButton>
-            <StyledHeaderTitle>
-              {subMenu === 'quality' ? i18n.quality || 'Calidad' : i18n.speed || 'Velocidad'}
-            </StyledHeaderTitle>
-            <StyledIconButton position="right" onClick={handleClose} aria-label="Close">
-              <CloseIcon />
-            </StyledIconButton>
-          </StyledSettingsHeader>
-          <StyledSubPage visible>
-            <StyledSubContent>
-              {subMenu === 'quality' && (
-                <StyledOptionList>
-                  {qualities.map((q) => (
-                    <StyledOptionItem key={q.value} active={false} onClick={handleQualityClick(q.value)}>
-                      {q.label}
-                    </StyledOptionItem>
-                  ))}
-                  <StyledOptionItem active onClick={handleQualityClick(0)}>
-                    auto
-                  </StyledOptionItem>
-                </StyledOptionList>
-              )}
-              {subMenu === 'speed' && (
-                <StyledOptionList>
-                  {SPEED_OPTIONS.map((s) => (
-                    <StyledOptionItem key={s.value} active={s.value === playbackRate} onClick={handleSpeedClick(s.value)}>
-                      {s.label}
-                    </StyledOptionItem>
-                  ))}
-                </StyledOptionList>
-              )}
-            </StyledSubContent>
-          </StyledSubPage>
-        </>
-      )}
+      {/* Main page — slides left when submenu opens */}
+      <StyledMainPage hidden={isSubMenuOpen}>
+        <StyledSwitchesGrid>
+          {qualities.length > 0 && (
+            <StyledSwitchItem onClick={() => setSubMenu('quality')}>
+              <StyledSwitchIcon>
+                <SettingsGearIcon />
+              </StyledSwitchIcon>
+              <StyledSwitchLabel>{i18n.quality || 'Calidad'}</StyledSwitchLabel>
+              <StyledSwitchValue>Auto</StyledSwitchValue>
+            </StyledSwitchItem>
+          )}
+          <StyledSwitchItem onClick={() => setSubMenu('speed')}>
+            <StyledSwitchIcon>
+              <SpeedIcon />
+            </StyledSwitchIcon>
+            <StyledSwitchLabel>{i18n.speed || 'Velocidad'}</StyledSwitchLabel>
+            <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
+          </StyledSwitchItem>
+        </StyledSwitchesGrid>
+      </StyledMainPage>
+
+      {/* Sub page — slides in from right */}
+      <StyledSubPage visible={isSubMenuOpen}>
+        <StyledSubContent>
+          {subMenu === 'quality' && (
+            <StyledOptionList>
+              {qualities.map((q) => (
+                <StyledOptionItem key={q.value} active={false} onClick={handleQualityClick(q.value)}>
+                  {q.label}
+                </StyledOptionItem>
+              ))}
+              <StyledOptionItem active onClick={handleQualityClick(0)}>
+                auto
+              </StyledOptionItem>
+            </StyledOptionList>
+          )}
+          {subMenu === 'speed' && (
+            <StyledOptionList>
+              {SPEED_OPTIONS.map((s) => (
+                <StyledOptionItem key={s.value} active={s.value === playbackRate} onClick={handleSpeedClick(s.value)}>
+                  {s.label}
+                </StyledOptionItem>
+              ))}
+            </StyledOptionList>
+          )}
+        </StyledSubContent>
+      </StyledSubPage>
     </StyledSettingsOverlay>
   );
 };

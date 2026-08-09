@@ -23,9 +23,9 @@ export const StyledMobileSettingsButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px;
-  width: 48px;
-  height: 48px;
+  padding: 4px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;

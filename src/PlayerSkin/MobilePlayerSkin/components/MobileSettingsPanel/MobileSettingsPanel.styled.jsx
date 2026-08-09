@@ -5,14 +5,17 @@ export const StyledSettingsOverlay = styled.div`
   z-index: 10;
   height: 100%;
   width: 100%;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transform: ${({ visible }) => (visible ? 'translate(-50%, -50%)' : 'translate(-50%, -100%)')};
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-  transition: opacity 0.3s ease;
+  transition: all 0.4s ease;
+  will-change: transform;
   display: flex;
   flex-direction: column;
   font-family: Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
 `;
 
 export const StyledSettingsHeader = styled.div`
@@ -117,7 +120,8 @@ export const StyledSubPage = styled.div`
   overflow: hidden;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
   pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-  transition: opacity 0.15s linear;
+  transform: ${({ visible }) => (visible ? 'translateX(0)' : 'translateX(100%)')};
+  transition: opacity 0.15s linear, transform 0.15s ease-out;
 `;
 
 export const StyledSubContent = styled.div`
