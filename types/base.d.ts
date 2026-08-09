@@ -17,6 +17,11 @@ export interface ISourceProps {
   resolution: number;
 }
 
+export interface IChapterProps {
+  title: string;
+  startTime: number;
+}
+
 export interface IOnProgressProps {
   played: number;
   playedSeconds: number;
@@ -46,6 +51,7 @@ export interface IBaseReactJSMediaPlayerCommons {
   live?: boolean;
   poster?: string;
   spriteVTTFile?: string;
+  chapters?: IChapterProps[];
   onReady?: (player: ReactJSMediaPlayer) => void;
   onStart?: () => void;
   onPlay?: () => void;
@@ -61,6 +67,9 @@ export interface IBaseReactJSMediaPlayerCommons {
   onProgress?: (state: IOnProgressProps) => void;
   onPlayBackRateChange?: (rate: number) => void;
   onPlayBackQualityChange?: (quality: number | null) => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  showNavButtons?: boolean;
 }
 
 export interface IBaseReactJSMediaPlayerWithUrlNever {

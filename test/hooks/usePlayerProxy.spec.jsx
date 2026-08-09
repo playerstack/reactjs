@@ -326,4 +326,85 @@ describe('usePlayerProxy', () => {
     });
     expect(result.current.videoUrl).toBe('video_1080.m3u8');
   });
+
+  test('does not re-run auto-quality when sources array reference changes but content is equal', async () => {
+    const updateState = jest.fn();
+    const { rerender } = renderHook(
+      (props) => usePlayerProxy(props),
+      {
+        wrapper,
+        initialProps: {
+          ...baseProps,
+          updateState,
+          playerState: { seeking: false, playbackQuality: 720 },
+          extraProps: {
+            url: '',
+            sources: [
+              { src: 'video_1080.m3u8', resolution: 1080 },
+              { src: 'video_720.m3u8', resolution: 720 },
+            ],
+            fullHDQualityBreak: 1080,
+            prevented: false,
+          },
+        },
+      },
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    const callsAfterFirst = updateState.mock.calls.length;
+
+    // Re-render with a NEW array reference but identical content (simulates inline array prop)
+    rerender({
+      ...baseProps,
+      updateState,
+      playerState: { seeking: false, playbackQuality: 720 },
+      extraProps: {
+        url: '',
+        sources: [
+          { src: 'video_1080.m3u8', resolution: 1080 },
+          { src: 'video_720.m3u8', resolution: 720 },
+        ],
+        fullHDQualityBreak: 1080,
+        prevented: false,
+      },
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // The auto-quality measurement must NOT run again, so no extra updateState calls
+    expect(updateState.mock.calls.length).toBe(callsAfterFirst);
+  });
+
+  test('keeps manually selected videoUrl after unrelated re-render', async () => {
+    const inlineSources = () => [
+      { src: 'video_1080.m3u8', resolution: 1080 },
+      { src: 'video_720.m3u8', resolution: 720 },
+    ];
+    const { result, rerender } = renderHook((props) => usePlayerProxy(props), {
+      wrapper,
+      initialProps: {
+        ...baseProps,
+        playerState: { seeking: false, playbackQuality: 720 },
+        extraProps: { url: '', sources: inlineSources(), fullHDQualityBreak: 1080, prevented: false },
+      },
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(result.current.videoUrl).toBe('video_720.m3u8');
+
+    // Unrelated re-render with a fresh sources array reference (same content)
+    rerender({
+      ...baseProps,
+      playerState: { seeking: false, playbackQuality: 720 },
+      extraProps: { url: '', sources: inlineSources(), fullHDQualityBreak: 1080, prevented: false },
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    // Manual selection preserved
+    expect(result.current.videoUrl).toBe('video_720.m3u8');
+  });
 });

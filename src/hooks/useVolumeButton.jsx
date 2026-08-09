@@ -3,7 +3,7 @@ import React from 'react';
 import MutedIcon from '../PlayerSkin/Commons/Icons/MutedIcon';
 import UnmutedIcon from '../PlayerSkin/Commons/Icons/UnmutedIcon';
 import useAppSelector from './context/useAppSelector';
-import { buildIconProps } from '../PlayerSkin/PlayerSkin.constants';
+import { buildIconProps } from '../PlayerSkin/Commons/constants';
 
 const useVolumeButton = ({ fullscreen, isMuted, volume, forceMuted, changeVolume, onMutedClick }) => {
   const state = useAppSelector();

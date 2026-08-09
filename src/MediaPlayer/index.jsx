@@ -194,6 +194,9 @@ export const createMediaPlayer = (player) => {
           onPlay={this.props.onPlay}
           onPlayBackQualityChange={this.props.onPlayBackQualityChange}
           onPlayBackRateChange={this.props.onPlayBackRateChange}
+          onPrevious={this.props.onPrevious}
+          onNext={this.props.onNext}
+          showNavButtons={this.props.showNavButtons}
           fullHDQualityBreak={sourceProps.fullHDQualityBreak}
           language={this.props.language}
           live={this.props.live}
@@ -206,7 +209,9 @@ export const createMediaPlayer = (player) => {
           disableDeferredLoading={this.props.disableDeferredLoading}
           progressFrequency={this.props.progressFrequency}
           spriteVTTFile={this.props.spriteVTTFile}
+          chapters={this.props.chapters}
           poster={this.props.poster}
+          forceMobile={this.props.forceMobile}
         />
       );
     };

@@ -15,6 +15,12 @@ export const propTypes = {
   ),
   fullHDQualityBreak: PropTypes.number,
   spriteVTTFile: PropTypes.string,
+  chapters: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      startTime: PropTypes.number.isRequired,
+    }),
+  ),
   playing: bool,
   loop: bool,
   volume: number,
@@ -32,6 +38,7 @@ export const propTypes = {
   waiting: bool,
   prevented: bool,
   wrapper: oneOfType([string, func, shape({ render: func.isRequired })]),
+  forceMobile: bool,
   config: shape({
     attributes: object,
     tracks: array,
@@ -61,6 +68,9 @@ export const propTypes = {
   onProgress: func,
   onEnablePIP: func,
   onDisablePIP: func,
+  onPrevious: func,
+  onNext: func,
+  showNavButtons: bool,
 };
 
 const noop = () => {};
@@ -68,6 +78,7 @@ const noop = () => {};
 export const defaultProps = {
   url: '',
   sources: [],
+  chapters: [],
   playing: false,
   loop: false,
   volume: null,
@@ -83,6 +94,7 @@ export const defaultProps = {
   waiting: false,
   prevented: false,
   wrapper: 'div',
+  forceMobile: undefined,
   language: availableLanguages[0],
   poster: '',
   config: {

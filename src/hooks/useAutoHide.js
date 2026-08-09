@@ -11,92 +11,57 @@ const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, 
 
   const timerControls = React.useRef(undefined);
 
+  // Consolidate all "should stay visible" conditions into a single derived value
+  const shouldStayVisible =
+    hasResource === false ||
+    loading ||
+    prevented ||
+    paused ||
+    ended ||
+    waiting ||
+    seeking ||
+    timeSliding ||
+    menuVisible ||
+    subMenuVisible ||
+    controlsHovering ||
+    kernelMsg;
+
+  // Keep in ref so callbacks don't depend on the value identity
+  const shouldStayVisibleRef = React.useRef(shouldStayVisible);
+  shouldStayVisibleRef.current = shouldStayVisible;
+
   const showControls = React.useCallback(() => {
     if (typeof window !== 'undefined') {
       window.clearTimeout(timerControls.current);
     }
     dispatch({ type: 'hiding', payload: false });
 
-    if (
-      hasResource === false ||
-      loading ||
-      prevented ||
-      paused ||
-      ended ||
-      waiting ||
-      seeking ||
-      timeSliding ||
-      menuVisible ||
-      subMenuVisible ||
-      controlsHovering ||
-      kernelMsg
-    ) {
+    if (shouldStayVisibleRef.current) {
       return;
     }
 
     timerControls.current = window.setTimeout(() => {
       dispatch({ type: 'hiding', payload: true });
     }, timeToHide);
-  }, [
-    hasResource,
-    loading,
-    prevented,
-    paused,
-    ended,
-    waiting,
-    seeking,
-    timeSliding,
-    menuVisible,
-    subMenuVisible,
-    controlsHovering,
-    kernelMsg,
-    dispatch,
-  ]);
+  }, [dispatch]);
 
   const hideControls = React.useCallback(() => {
     if (typeof window !== 'undefined') {
       window.clearTimeout(timerControls.current);
     }
 
-    if (
-      hasResource === false ||
-      loading ||
-      prevented ||
-      paused ||
-      ended ||
-      waiting ||
-      seeking ||
-      timeSliding ||
-      menuVisible ||
-      subMenuVisible ||
-      controlsHovering ||
-      kernelMsg
-    ) {
+    if (shouldStayVisibleRef.current) {
       dispatch({ type: 'hiding', payload: false });
       return;
     }
     dispatch({ type: 'hiding', payload: true });
-  }, [
-    hasResource,
-    loading,
-    prevented,
-    paused,
-    ended,
-    waiting,
-    seeking,
-    timeSliding,
-    menuVisible,
-    subMenuVisible,
-    controlsHovering,
-    kernelMsg,
-    dispatch,
-  ]);
+  }, [dispatch]);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined' && (paused || ended)) {
       window.clearTimeout(timerControls.current);
       dispatch({ type: 'hiding', payload: false });
-    } else if (!paused) {
+    } else if (!paused && !ended) {
       showControls();
     }
   }, [paused, ended, showControls, dispatch]);

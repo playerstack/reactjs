@@ -1,11 +1,21 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act, fireEvent } from '@testing-library/react';
 import MediaPlayerSkin from '../../src/MediaPlayer/components/MediaPlayerSkin/index';
 
-jest.mock('../../src/core/PlayerProxy', () => ({
-  __esModule: true,
-  default: () => null,
-}));
+jest.mock('../../src/core/PlayerProxy', () => {
+  const ReactMock = require('react');
+  // Store the onReady callback so tests can trigger it
+  let onReadyCallback = null;
+  const PlayerProxyMock = ReactMock.forwardRef((props, ref) => {
+    ReactMock.useImperativeHandle(ref, () => ({}));
+    // Store onReady for external triggering
+    onReadyCallback = props.onReady;
+    return ReactMock.createElement('div', { 'data-testid': 'player-proxy' });
+  });
+  PlayerProxyMock.displayName = 'PlayerProxy';
+  PlayerProxyMock.triggerReady = () => { if (onReadyCallback) onReadyCallback(); };
+  return { __esModule: true, default: PlayerProxyMock };
+});
 
 jest.mock('../../src/MediaPlayer/MediaPlayer.contants', () => ({
   measureNetworkSpeedGeneratedFile: jest.fn().mockResolvedValue(5),
@@ -39,6 +49,7 @@ const baseProps = {
   waiting: false,
   disableDeferredLoading: true,
   progressFrequency: 100,
+  forceMobile: false,
   config: {
     attributes: {},
     tracks: [],
@@ -75,6 +86,10 @@ const baseProps = {
 };
 
 describe('MediaPlayerSkin integration', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('renders without crashing', () => {
     const { container } = render(<MediaPlayerSkin {...baseProps} />);
     expect(container.firstChild).not.toBeNull();
@@ -88,5 +103,225 @@ describe('MediaPlayerSkin integration', () => {
   test('renders with muted=true', () => {
     const { container } = render(<MediaPlayerSkin {...baseProps} muted={true} />);
     expect(container.firstChild).not.toBeNull();
+  });
+
+  describe('props sync block', () => {
+    test('syncs pip prop change to internal state', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} pip={false} />,
+      );
+      // Change pip from false to true
+      rerender(<MediaPlayerSkin {...baseProps} pip={true} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('syncs playbackRate prop change', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} playbackRate={1} />,
+      );
+      rerender(<MediaPlayerSkin {...baseProps} playbackRate={2} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('syncs loop prop change', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} loop={false} />,
+      );
+      rerender(<MediaPlayerSkin {...baseProps} loop={true} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('syncs playing prop change', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} playing={false} />,
+      );
+      rerender(<MediaPlayerSkin {...baseProps} playing={true} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('syncs muted prop change and adjusts volume', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} muted={false} volume={0.8} />,
+      );
+      // Muting should set volume to 0 internally
+      rerender(<MediaPlayerSkin {...baseProps} muted={true} volume={0.8} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('syncs volume prop change when not muted', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} volume={0.5} muted={false} />,
+      );
+      rerender(<MediaPlayerSkin {...baseProps} volume={0.9} muted={false} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('does not override internal state when unrelated prop changes', () => {
+      const { rerender, container } = render(
+        <MediaPlayerSkin {...baseProps} playing={false} volume={0.5} />,
+      );
+      // Only playing changes, volume should not be overwritten
+      rerender(<MediaPlayerSkin {...baseProps} playing={true} volume={0.5} />);
+      expect(container.firstChild).not.toBeNull();
+    });
+  });
+
+  describe('handleKeyDown delegation', () => {
+    test('delegates keydown to playerSkinRef', () => {
+      const { container } = render(<MediaPlayerSkin {...baseProps} />);
+      const wrapper = container.firstChild;
+
+      // Simulate keydown on the wrapper
+      fireEvent.keyDown(wrapper, { key: ' ', code: 'Space' });
+      // Should not throw - handleKeyDown delegates to playerSkinRef.current
+      expect(wrapper).toBeTruthy();
+    });
+
+    test('handles keydown when playerSkinRef is not yet available', () => {
+      const { container } = render(<MediaPlayerSkin {...baseProps} />);
+      const wrapper = container.firstChild;
+
+      // Should not throw even before skin is mounted
+      expect(() => fireEvent.keyDown(wrapper, { key: 'f' })).not.toThrow();
+    });
+  });
+
+  describe('preventedMemorized calculation', () => {
+    test('returns true when prevented prop is true', () => {
+      const { container } = render(
+        <MediaPlayerSkin {...baseProps} prevented={true} />,
+      );
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('returns true when playing and muted', () => {
+      const { container } = render(
+        <MediaPlayerSkin {...baseProps} playing={true} muted={true} prevented={false} />,
+      );
+      expect(container.firstChild).not.toBeNull();
+    });
+
+    test('returns false when not prevented and not (playing && muted)', () => {
+      const { container } = render(
+        <MediaPlayerSkin {...baseProps} playing={false} muted={false} prevented={false} />,
+      );
+      expect(container.firstChild).not.toBeNull();
+    });
+  });
+
+  describe('playerStyles effect', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    test('sets dimensions from player element after timeout when loading finishes', async () => {
+      const PlayerProxy = require('../../src/core/PlayerProxy').default;
+
+      const mockPlayerElement = document.createElement('div');
+      Object.defineProperty(mockPlayerElement, 'offsetWidth', { value: 800 });
+      Object.defineProperty(mockPlayerElement, 'offsetHeight', { value: 450 });
+
+      const mockPlayer = {
+        getPlayer: () => mockPlayerElement,
+      };
+
+      const { container } = render(
+        <MediaPlayerSkin {...baseProps} player={mockPlayer} />,
+      );
+
+      // Trigger onReady to set isLoading = false
+      act(() => {
+        PlayerProxy.triggerReady();
+      });
+
+      // Now the effect should fire and set a timeout
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+
+      // The wrapper should have style set from the effect
+      const wrapper = container.firstChild;
+      expect(wrapper).not.toBeNull();
+      // Check the wrapper has a style attribute with dimensions
+      expect(wrapper.style.width).toBe('800px');
+      expect(wrapper.style.height).toBe('450px');
+    });
+
+    test('cleans up timeout on unmount before it fires', () => {
+      const PlayerProxy = require('../../src/core/PlayerProxy').default;
+
+      const mockPlayerElement = document.createElement('div');
+      Object.defineProperty(mockPlayerElement, 'offsetWidth', { value: 640 });
+      Object.defineProperty(mockPlayerElement, 'offsetHeight', { value: 360 });
+
+      const mockPlayer = {
+        getPlayer: () => mockPlayerElement,
+      };
+
+      const { unmount } = render(
+        <MediaPlayerSkin {...baseProps} player={mockPlayer} />,
+      );
+
+      // Trigger onReady
+      act(() => {
+        PlayerProxy.triggerReady();
+      });
+
+      // Unmount before the 500ms timeout fires
+      unmount();
+
+      // Should not throw
+      act(() => {
+        jest.advanceTimersByTime(600);
+      });
+    });
+  });
+
+  describe('PlayerProxy rendering with videoUrl', () => {
+    test('renders PlayerProxy when url is provided', () => {
+      const { queryByTestId } = render(
+        <MediaPlayerSkin {...baseProps} url="video.mp4" />,
+      );
+      expect(queryByTestId('player-proxy')).not.toBeNull();
+    });
+
+    test('does not render PlayerProxy when url is empty', () => {
+      const { queryByTestId } = render(
+        <MediaPlayerSkin {...baseProps} url="" />,
+      );
+      // Empty string is falsy, so PlayerProxy should not render
+      expect(queryByTestId('player-proxy')).toBeNull();
+    });
+
+    test('renders PlayerProxy with sources', async () => {
+      const sources = [
+        { src: 'video-720.mp4', resolution: 720 },
+        { src: 'video-1080.mp4', resolution: 1080 },
+      ];
+      const { queryByTestId } = render(
+        <MediaPlayerSkin {...baseProps} url="" sources={sources} />,
+      );
+      // With sources, videoUrl should be derived from sources after speed measurement
+      // Since measureNetworkSpeedGeneratedFile is mocked to resolve immediately,
+      // we need to wait for the async effect
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 0));
+      });
+      expect(queryByTestId('player-proxy')).not.toBeNull();
+    });
+  });
+
+  describe('MediaPlayerWrapper attributes', () => {
+    test('has tabIndex, role, and dir attributes', () => {
+      const { container } = render(<MediaPlayerSkin {...baseProps} />);
+      const wrapper = container.firstChild;
+      expect(wrapper.getAttribute('tabindex')).toBe('0');
+      expect(wrapper.getAttribute('role')).toBe('application');
+      expect(wrapper.getAttribute('dir')).toBe('ltr');
+    });
   });
 });

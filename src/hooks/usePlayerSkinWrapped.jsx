@@ -2,9 +2,7 @@ import React from 'react';
 
 import useAppDispatch from './context/useAppDispatch';
 import useAppSelector from './context/useAppSelector';
-import InLoopIcon from '../PlayerSkin/Commons/Icons/InLoopIcon';
-import PipIcon from '../PlayerSkin/Commons/Icons/PipIcon';
-import { buildIconProps } from '../PlayerSkin/PlayerSkin.constants';
+import { buildIconProps } from '../PlayerSkin/Commons/constants';
 
 const usePlayerSkinWrapped = ({
   fullscreen,
@@ -60,18 +58,20 @@ const usePlayerSkinWrapped = ({
   const menuItemsMemorized = React.useMemo(() => {
     const menuItems = [
       {
-        action: () => onLoopClick(),
+        action: onLoopClick,
         label: i18n.loop,
-        icon: <InLoopIcon {...iconProps} />,
+        iconType: 'loop',
+        iconProps,
         isCheckable: true,
         defaultChecked: loop,
       },
     ];
     if (pictureInPictureEnabled) {
       menuItems.push({
-        action: () => (pip ? exitPictureInPicture() : requestPictureInPicture()),
+        action: pip ? exitPictureInPicture : requestPictureInPicture,
         label: i18n.pictureInPicture,
-        icon: <PipIcon {...iconProps} />,
+        iconType: 'pip',
+        iconProps,
         isCheckable: false,
         defaultChecked: false,
       });

@@ -168,12 +168,60 @@ const App = () => {
             className="reactjs-player"
             width="100%"
             height="100%"
-            url={state.urlFile}
-            language="es"
-            spriteVTTFile={state.spriteVTTFile}
-            poster={state.poster}
+            // url={state.urlFile}
+            config={{
+              file: {
+                forceVideo: true,
+                forceHLS: true,
+                hlsOptions: {
+                  xhrSetup: (xhr) => {
+                    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+                    xhr.setRequestHeader('Cache-Control', 'no-cache');
+                    xhr.withCredentials = false;
+                  },
+                },
+              },
+            }}
+            url="http://localhost:5173/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_1080_4800000_load.m3u8"
+            spriteVTTFile="http://127.0.0.1:8000/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_sprite.vtt"
             fullHDQualityBreak={720}
-            sources={[]}
+            sources={[
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_1080_4800000_load.m3u8',
+                resolution: 1080,
+              },
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_720_2400000_load.m3u8',
+                resolution: 720,
+              },
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_540_1200000_load.m3u8',
+                resolution: 540,
+              },
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_360_800000_load.m3u8',
+                resolution: 360,
+              },
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_270_400000_load.m3u8',
+                resolution: 270,
+              },
+              {
+                src: '/uploads/videos/f08e80da-bf1d-4e3d-8899-f0f6155f6efa_video_144p_load.m3u8',
+                resolution: 144,
+              },
+            ]}
+            language="es"
+            chapters={[
+              { title: 'Intro', startTime: 0 },
+              { title: 'The Forest', startTime: 60 },
+              { title: 'Camp Site', startTime: 120 },
+              { title: 'The Sprites', startTime: 180 },
+              { title: 'River Crossing', startTime: 300 },
+              { title: 'The Cave', startTime: 420 },
+              { title: 'Credits', startTime: 540 },
+            ]}
+            poster={state.poster}
             prevented={false}
             waiting={false}
             playing={state.playing}
@@ -196,6 +244,9 @@ const App = () => {
             onProgress={handleProgress}
             onDuration={handleDuration}
             onPlayBackQualityChange={(e) => console.log('onPlayBackQualityChange', e)}
+            onPrevious={() => console.log('onPrevious')}
+            onNext={() => console.log('onNext')}
+            showNavButtons
           />
         </div>
 

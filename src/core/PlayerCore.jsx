@@ -49,6 +49,20 @@ export default class PlayerCore extends React.Component {
 
   componentWillUnmount() {
     this.player.removeAttribute('src');
+    if (this.hls) {
+      this.hls.destroy();
+      this.hls = null;
+    }
+    if (this.dash) {
+      this.dash.reset();
+      this.dash = null;
+    }
+    if (this.flv) {
+      this.flv.unload();
+      this.flv.detachMediaElement();
+      this.flv.destroy();
+      this.flv = null;
+    }
     this.removeListeners(this.player);
     this.listenersAttached = false;
   }
@@ -276,8 +290,19 @@ export default class PlayerCore extends React.Component {
 
   stop() {
     this.player.removeAttribute('src');
+    if (this.hls) {
+      this.hls.destroy();
+      this.hls = null;
+    }
     if (this.dash) {
       this.dash.reset();
+      this.dash = null;
+    }
+    if (this.flv) {
+      this.flv.unload();
+      this.flv.detachMediaElement();
+      this.flv.destroy();
+      this.flv = null;
     }
   }
 
