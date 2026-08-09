@@ -61,6 +61,9 @@ export interface IBaseReactJSMediaPlayerCommons {
   onProgress?: (state: IOnProgressProps) => void;
   onPlayBackRateChange?: (rate: number) => void;
   onPlayBackQualityChange?: (quality: number | null) => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  showNavButtons?: boolean;
 }
 
 export interface IBaseReactJSMediaPlayerWithUrlNever {

@@ -19,6 +19,7 @@ import TimeSlider from './components/TimeSlider';
 import Volume from './components/Volume';
 import PlayTime from './components/PlayTime';
 import PlayButton from './components/Controls/components/PlayButton';
+import { PreviousButton, NextButton } from './components/Controls/components/NavButtons';
 import FullscreenButton from './components/Controls/components/FullscreenButton';
 
 import useAutoHide from '../../hooks/useAutoHide';
@@ -70,6 +71,9 @@ const DesktopPlayerSkin = React.forwardRef(
       onSeeking,
       onLoopClick,
       onPreventedClick,
+      onPrevious,
+      onNext,
+      showNavButtons,
       kernelMsg = null,
     },
     ref,
@@ -241,12 +245,22 @@ const DesktopPlayerSkin = React.forwardRef(
             }
             fullscreen={fullscreen}
           >
+            <PreviousButton
+              fullscreen={fullscreen}
+              onPrevious={onPrevious}
+              showNavButtons={showNavButtons}
+            />
             <PlayButton
               fullscreen={fullscreen}
               paused={paused}
               ended={ended}
               onPauseClick={onPauseClick}
               onPlayClick={onPlayClick}
+            />
+            <NextButton
+              fullscreen={fullscreen}
+              onNext={onNext}
+              showNavButtons={showNavButtons}
             />
             <Volume
               fullscreen={fullscreen}

@@ -56,8 +56,13 @@ export const StyledMobileNavButton = styled.button`
   justify-content: center;
   color: #fff;
   opacity: 0.85;
-  &:hover {
+  &:hover:not(:disabled) {
     opacity: 1;
+  }
+  &:disabled {
+    color: #757575 !important;
+    opacity: 1;
+    cursor: default;
   }
 `;
 

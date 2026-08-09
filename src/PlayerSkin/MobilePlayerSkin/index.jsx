@@ -62,6 +62,9 @@ const MobilePlayerSkin = React.forwardRef(
       onSeeking,
       onLoopClick,
       onPreventedClick,
+      onPrevious,
+      onNext,
+      showNavButtons,
       kernelMsg = null,
     },
     ref,
@@ -211,6 +214,9 @@ const MobilePlayerSkin = React.forwardRef(
           paused={paused}
           ended={ended}
           onPlayPause={handlePlayPauseClick}
+          onPrevious={onPrevious}
+          onNext={onNext}
+          showNavButtons={showNavButtons}
           i18n={i18n}
         />
 
@@ -284,6 +290,9 @@ MobilePlayerSkin.propTypes = {
   exitFullscreen: PropTypes.func.isRequired,
   onLoopClick: PropTypes.func.isRequired,
   onPreventedClick: PropTypes.func.isRequired,
+  onPrevious: PropTypes.func,
+  onNext: PropTypes.func,
+  showNavButtons: PropTypes.bool,
   kernelMsg: PropTypes.oneOfType([
     PropTypes.shape({
       type: PropTypes.string.isRequired,
@@ -339,5 +348,8 @@ export default React.memo(
     p.exitFullscreen === n.exitFullscreen &&
     p.onSeeking === n.onSeeking &&
     p.onLoopClick === n.onLoopClick &&
-    p.onPreventedClick === n.onPreventedClick,
+    p.onPreventedClick === n.onPreventedClick &&
+    p.onPrevious === n.onPrevious &&
+    p.onNext === n.onNext &&
+    p.showNavButtons === n.showNavButtons,
 );

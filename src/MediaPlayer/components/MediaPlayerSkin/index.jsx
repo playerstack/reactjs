@@ -219,6 +219,9 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         updateState={setPlayerState}
         player={props.player}
         forceMobile={props.forceMobile}
+        onPrevious={props.onPrevious}
+        onNext={props.onNext}
+        showNavButtons={props.showNavButtons}
       />
     </MediaPlayerWrapper>
   );
@@ -273,5 +276,8 @@ export default React.memo(
     p.onEnablePIP === n.onEnablePIP &&
     p.onDisablePIP === n.onDisablePIP &&
     p.onLoaded === n.onLoaded &&
-    p.onMount === n.onMount,
+    p.onMount === n.onMount &&
+    p.onPrevious === n.onPrevious &&
+    p.onNext === n.onNext &&
+    p.showNavButtons === n.showNavButtons,
 );

@@ -9,43 +9,80 @@ import {
 } from './MobileCenterControls.styled';
 import { PlayIcon, PauseIcon, PrevIcon, NextIcon } from '../../icons';
 
-const MobileCenterControls = ({ visible, isLoading, paused, ended, onPlayPause, i18n }) => (
-  <StyledMobileCenterControls visible={visible}>
-    <StyledMobileNavButton
-      aria-label={i18n.previous || 'Previous'}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      <PrevIcon />
-    </StyledMobileNavButton>
+const MobileCenterControls = ({
+  visible,
+  isLoading,
+  paused,
+  ended,
+  onPlayPause,
+  onPrevious,
+  onNext,
+  showNavButtons = false,
+  i18n,
+}) => {
+  const hasPrevious = typeof onPrevious === 'function';
+  const hasNext = typeof onNext === 'function';
+  const showPrevious = hasPrevious || showNavButtons;
+  const showNext = hasNext || showNavButtons;
 
-    {isLoading ? (
-      <StyledMobileSpinner onClick={(e) => e.stopPropagation()}>
-        <div />
-      </StyledMobileSpinner>
-    ) : (
-      <StyledMobilePlayButton
-        aria-label={paused ? i18n.play : i18n.pause}
-        onClick={(e) => {
-          e.stopPropagation();
-          onPlayPause();
-        }}
-      >
-        {paused || ended ? <PlayIcon /> : <PauseIcon />}
-      </StyledMobilePlayButton>
-    )}
+  const handlePrevious = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (hasPrevious) {
+        onPrevious();
+      }
+    },
+    [hasPrevious, onPrevious],
+  );
 
-    <StyledMobileNavButton
-      aria-label={i18n.next || 'Next'}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      <NextIcon />
-    </StyledMobileNavButton>
-  </StyledMobileCenterControls>
-);
+  const handleNext = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (hasNext) {
+        onNext();
+      }
+    },
+    [hasNext, onNext],
+  );
+
+  const handlePlayPause = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      onPlayPause();
+    },
+    [onPlayPause],
+  );
+
+  return (
+    <StyledMobileCenterControls visible={visible}>
+      {showPrevious && (
+        <StyledMobileNavButton
+          aria-label={i18n.previous || 'Previous'}
+          onClick={handlePrevious}
+          disabled={!hasPrevious}
+        >
+          <PrevIcon />
+        </StyledMobileNavButton>
+      )}
+
+      {isLoading ? (
+        <StyledMobileSpinner onClick={(e) => e.stopPropagation()}>
+          <div />
+        </StyledMobileSpinner>
+      ) : (
+        <StyledMobilePlayButton aria-label={paused ? i18n.play : i18n.pause} onClick={handlePlayPause}>
+          {paused || ended ? <PlayIcon /> : <PauseIcon />}
+        </StyledMobilePlayButton>
+      )}
+
+      {showNext && (
+        <StyledMobileNavButton aria-label={i18n.next || 'Next'} onClick={handleNext} disabled={!hasNext}>
+          <NextIcon />
+        </StyledMobileNavButton>
+      )}
+    </StyledMobileCenterControls>
+  );
+};
 
 MobileCenterControls.propTypes = {
   visible: PropTypes.bool.isRequired,
@@ -53,6 +90,9 @@ MobileCenterControls.propTypes = {
   paused: PropTypes.bool.isRequired,
   ended: PropTypes.bool.isRequired,
   onPlayPause: PropTypes.func.isRequired,
+  onPrevious: PropTypes.func,
+  onNext: PropTypes.func,
+  showNavButtons: PropTypes.bool,
   i18n: PropTypes.shape({
     previous: PropTypes.string,
     next: PropTypes.string,

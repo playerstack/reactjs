@@ -208,33 +208,55 @@ describe('MobileCenterControls – onClick handlers (stopPropagation)', () => {
     paused: true,
     ended: false,
     onPlayPause: jest.fn(),
+    onPrevious: jest.fn(),
+    onNext: jest.fn(),
     i18n: { previous: 'Previous', next: 'Next', play: 'Play', pause: 'Pause' },
   };
 
-  test('PrevButton click triggers onClick handler via fireEvent', () => {
+  test('PrevButton click calls onPrevious and stops propagation', () => {
+    const onPrevious = jest.fn();
     const parentClick = jest.fn();
-    const { container } = render(
+    render(
       <div onClick={parentClick}>
-        <MobileCenterControls {...defaultProps} />
+        <MobileCenterControls {...defaultProps} onPrevious={onPrevious} />
       </div>,
     );
     const prevBtn = screen.getByLabelText('Previous');
     fireEvent.click(prevBtn);
-    // stopPropagation prevents event from reaching parent
+    expect(onPrevious).toHaveBeenCalled();
     expect(parentClick).not.toHaveBeenCalled();
   });
 
-  test('NextButton click triggers onClick handler via fireEvent', () => {
+  test('NextButton click calls onNext and stops propagation', () => {
+    const onNext = jest.fn();
     const parentClick = jest.fn();
-    const { container } = render(
+    render(
       <div onClick={parentClick}>
-        <MobileCenterControls {...defaultProps} />
+        <MobileCenterControls {...defaultProps} onNext={onNext} />
       </div>,
     );
     const nextBtn = screen.getByLabelText('Next');
     fireEvent.click(nextBtn);
-    // stopPropagation prevents event from reaching parent
+    expect(onNext).toHaveBeenCalled();
     expect(parentClick).not.toHaveBeenCalled();
+  });
+
+  test('does not render Previous button when onPrevious is not provided', () => {
+    render(<MobileCenterControls {...defaultProps} onPrevious={undefined} />);
+    expect(screen.queryByLabelText('Previous')).toBeNull();
+  });
+
+  test('does not render Next button when onNext is not provided', () => {
+    render(<MobileCenterControls {...defaultProps} onNext={undefined} />);
+    expect(screen.queryByLabelText('Next')).toBeNull();
+  });
+
+  test('renders neither nav button when no callbacks provided (single video)', () => {
+    render(<MobileCenterControls {...defaultProps} onPrevious={undefined} onNext={undefined} />);
+    expect(screen.queryByLabelText('Previous')).toBeNull();
+    expect(screen.queryByLabelText('Next')).toBeNull();
+    // Play button still present
+    expect(screen.getByLabelText('Play')).toBeInTheDocument();
   });
 
   test('PlayButton click calls stopPropagation and onPlayPause', () => {
@@ -258,12 +280,9 @@ describe('MobileCenterControls – onClick handlers (stopPropagation)', () => {
         <MobileCenterControls {...defaultProps} isLoading={true} />
       </div>,
     );
-    // When loading, the spinner div is rendered with onClick
-    // Find the styled spinner div (it's the middle element between prev and next buttons)
+    // When loading, the spinner div replaces the play button; prev/next still render
     const buttons = container.querySelectorAll('button');
-    // Only prev and next buttons are rendered (no play button)
     expect(buttons).toHaveLength(2);
-    // The spinner is a div between the two buttons
     const centerControlsDiv = buttons[0].parentElement;
     const spinnerDiv = centerControlsDiv.children[1]; // middle child
     fireEvent.click(spinnerDiv);

@@ -235,6 +235,9 @@ const App = () => {
             onProgress={handleProgress}
             onDuration={handleDuration}
             onPlayBackQualityChange={(e) => console.log('onPlayBackQualityChange', e)}
+            onPrevious={() => console.log('onPrevious')}
+            onNext={() => console.log('onNext')}
+            showNavButtons
           />
         </div>
 

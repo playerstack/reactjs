@@ -116,5 +116,8 @@ export default React.memo(
     p.exitFullscreen === n.exitFullscreen &&
     p.onSeeking === n.onSeeking &&
     p.onLoopClick === n.onLoopClick &&
-    p.onPreventedClick === n.onPreventedClick,
+    p.onPreventedClick === n.onPreventedClick &&
+    p.onPrevious === n.onPrevious &&
+    p.onNext === n.onNext &&
+    p.showNavButtons === n.showNavButtons,
 );

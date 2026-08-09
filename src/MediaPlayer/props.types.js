@@ -62,6 +62,9 @@ export const propTypes = {
   onProgress: func,
   onEnablePIP: func,
   onDisablePIP: func,
+  onPrevious: func,
+  onNext: func,
+  showNavButtons: bool,
 };
 
 const noop = () => {};
