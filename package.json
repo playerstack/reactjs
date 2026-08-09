@@ -1,7 +1,7 @@
 {
-  "name": "reactjs-media-player",
+  "name": "player-stack",
   "version": "0.1.8-alpha.0",
-  "description": "A React component for playing a file paths",
+  "description": "A React component for playing video and audio with HLS, DASH, FLV and native formats",
   "main": "lib/index.js",
   "typings": "types/lib/index.d.ts",
   "scripts": {
@@ -19,9 +19,9 @@
     "build:demo": "cp -r examples/react/public demo && npm run build:lib && builder examples/react/src/index.tsx --format=iife --bundle --outdir=demo --minify --sourcemap",
     "build:lib": "builder \"./src/**/*.{js,jsx}\" --outdir=lib --format=cjs",
     "build:lazy": "builder \"./src/**/*.{js,jsx}\" --outdir=lazy --format=cjs",
-    "build:dist": "builder ./src/index.js --outfile=dist/ReactJSMediaPlayer.js --format=iife --bundle --minify --sourcemap --global-name=ReactJSMediaPlayer --external:react --external:react-dom --plugin:global-externals='{\"react\":\"globalThis.React\",\"react-dom\":\"globalThis.ReactDOM\"}' --footer:js='ReactJSMediaPlayer = ReactJSMediaPlayer.default;'",
-    "build:standalone": "builder ./src/standalone.jsx --outfile=dist/ReactJSMediaPlayer.standalone.js --format=iife --bundle --minify --sourcemap --global-name=renderReactJSMediaPlayer --footer:js='renderReactJSMediaPlayer = renderReactJSMediaPlayer.default;'",
-    "build:es6": "builder ./src/standalone.jsx --outfile=dist/ReactJSMediaPlayer.standalone.es6.js --format=esm --bundle --minify --external:react --external:react-dom",
+    "build:dist": "builder ./src/index.js --outfile=dist/PlayerStack.js --format=iife --bundle --minify --sourcemap --global-name=PlayerStack --external:react --external:react-dom --plugin:global-externals='{\"react\":\"globalThis.React\",\"react-dom\":\"globalThis.ReactDOM\"}' --footer:js='PlayerStack = PlayerStack.default;'",
+    "build:standalone": "builder ./src/standalone.jsx --outfile=dist/PlayerStack.standalone.js --format=iife --bundle --minify --sourcemap --global-name=renderPlayerStack --footer:js='renderPlayerStack = renderPlayerStack.default;'",
+    "build:es6": "builder ./src/standalone.jsx --outfile=dist/PlayerStack.standalone.es6.js --format=esm --bundle --minify --external:react --external:react-dom",
     "preversion": "npm run lint && npm run test",
     "version": "auto-changelog -p && npm run build:dist && npm run build:standalone && git add CHANGELOG.md dist",
     "prepublishOnly": "npm run build && node scripts/pre-publish.js && cp -r types/* .",
@@ -29,14 +29,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soyvillareal/reactjs-media-player.git"
+    "url": "git+https://github.com/soyvillareal/player-stack.git"
   },
   "author": "Oscar Garcés (https://github.com/soyvillareal)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soyvillareal/reactjs-media-player/issues"
+    "url": "https://github.com/soyvillareal/player-stack/issues"
   },
-  "homepage": "https://soyvillareal.github.io/reactjs-media-player",
+  "homepage": "https://soyvillareal.github.io/player-stack",
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

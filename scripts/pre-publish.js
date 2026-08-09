@@ -11,7 +11,7 @@ const generateSinglePlayer = async () => {
         lazyPlayer: Player
       }])
     `;
-  await writeFile(join('.', 'reactjs-media-player.js'), file);
+  await writeFile(join('.', 'player-stack.js'), file);
 };
 
 generateSinglePlayer();
