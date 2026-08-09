@@ -53,12 +53,14 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
 
   const handleTouchStart = React.useCallback(
     (e) => {
+      e.preventDefault();
       isDragging.current = true;
       if (onSeeking) onSeeking(true);
       const touch = e.touches[0];
       handleInteraction(touch.clientX);
 
       const handleTouchMove = (ev) => {
+        ev.preventDefault();
         if (isDragging.current && ev.touches[0]) {
           handleInteraction(ev.touches[0].clientX);
         }
@@ -69,7 +71,7 @@ const MobileProgressBar = ({ currentTime, duration, buffered, onChange, onSeekin
         document.removeEventListener('touchmove', handleTouchMove);
         document.removeEventListener('touchend', handleTouchEnd);
       };
-      document.addEventListener('touchmove', handleTouchMove, { passive: true });
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
       document.addEventListener('touchend', handleTouchEnd);
     },
     [handleInteraction, onSeeking],

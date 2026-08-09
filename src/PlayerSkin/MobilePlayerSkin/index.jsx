@@ -9,6 +9,7 @@ import MobileCenterControls from './components/MobileCenterControls';
 import MobileBottomBar from './components/MobileBottomBar';
 import SkipOverlay from './components/SkipOverlay';
 import MobileSettingsPanel from './components/MobileSettingsPanel';
+import MobileSpritePreview from './components/MobileSpritePreview';
 import ContextMenu from '../Commons/ContextMenu';
 import TopState from '../Commons/TopState';
 import PreventedTip from '../Commons/PreventedTip';
@@ -149,7 +150,7 @@ const MobilePlayerSkin = React.forwardRef(
       }
     }, [paused, ended, onPlayClick, onPauseClick]);
 
-    const isLoading = (waiting || seeking || loading) && !paused && !ended;
+    const isLoading = (waiting || (seeking && !spriteVTTFile) || loading) && !paused && !ended;
 
     return (
       <StyledMobilePlayerSkin onContextMenu={handleContextMenu} onClick={toggleControls}>
@@ -184,6 +185,16 @@ const MobilePlayerSkin = React.forwardRef(
           position={contextMenuPosition}
           menuItems={contextMenuItems}
         />
+
+        {/* Full-area sprite preview when seeking via progress bar (YouTube mobile style) */}
+        {spriteVTTFile && (
+          <MobileSpritePreview
+            spriteVTTFile={spriteVTTFile}
+            duration={duration}
+            seekTime={currentTime}
+            visible={seeking}
+          />
+        )}
 
         {/* Dark overlay when controls visible */}
         <StyledOverlay visible={controlsVisible && hasResource && !ended && !prevented} />

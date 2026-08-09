@@ -7,6 +7,7 @@ export const StyledMobileProgressContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+  touch-action: none;
 `;
 
 export const StyledMobileProgressTrack = styled.div`
