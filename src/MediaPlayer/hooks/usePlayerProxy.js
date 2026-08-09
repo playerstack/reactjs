@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { indexBy } from '../../utils';
+import useDeepCompareMemoize from '../../hooks/useDeepCompareMemoize';
 import { getRecommendedVideoQuality, measureNetworkSpeedGeneratedFile } from '../MediaPlayer.contants';
 
 const usePlayerProxy = ({
@@ -26,6 +27,18 @@ const usePlayerProxy = ({
   extraProps: { url, sources, fullHDQualityBreak, prevented },
 }) => {
   const [autoVideoUrl, setAutoVideoUrl] = React.useState(null);
+
+  // Consumers often pass `sources` as an inline array, producing a new reference
+  // on every render. Stabilize it with a single deep comparison so downstream
+  // memos/effects rely on cheap reference equality and don't re-run needlessly.
+  const stableSources = useDeepCompareMemoize(sources);
+
+  // Index sources by resolution once per real source change — reused by both the
+  // auto-quality effect and the videoUrl memo.
+  const sourcesByResolution = React.useMemo(
+    () => (stableSources.length > 0 ? indexBy(stableSources, 'resolution') : null),
+    [stableSources],
+  );
 
   // Stable ref for updateState to prevent infinite re-render loops.
   // updateState (React setState) is stable by React's contract, but its identity
@@ -80,77 +93,65 @@ const usePlayerProxy = ({
   const seekingRef = React.useRef(playerState.seeking);
   seekingRef.current = playerState.seeking;
 
-  // Only log the fullHDQualityBreak warning once per set of sources
-  const warnedRef = React.useRef(false);
+  // Warn once when fullHDQualityBreak doesn't match any available resolution.
   React.useEffect(() => {
-    warnedRef.current = false;
-  }, [sources, fullHDQualityBreak]);
-
-  if (sources.length > 0 && !warnedRef.current) {
-    const resolutions = sources.map((source) => source.resolution);
-    if (resolutions.includes(fullHDQualityBreak) === false) {
+    if (!sourcesByResolution) return;
+    if (fullHDQualityBreak !== undefined && !(fullHDQualityBreak in sourcesByResolution)) {
+      const resolutions = Object.keys(sourcesByResolution).join(', ');
       console.error(
-        `ReactJSMediaPlayer: Invalid fullHDQualityBreak value "${fullHDQualityBreak}". Accepted resolutions are: ${resolutions.join(', ')}. Falling back to highest available.`,
+        `ReactJSMediaPlayer: Invalid fullHDQualityBreak value "${fullHDQualityBreak}". Accepted resolutions are: ${resolutions}. Falling back to highest available.`,
       );
-      warnedRef.current = true;
     }
-  }
+  }, [sourcesByResolution, fullHDQualityBreak]);
 
-  // Reset auto-selected URL when sources change so re-measurement occurs
-  const prevSourcesRef = React.useRef(sources);
+  // Auto-select the best quality via a network speed measurement, once per source set.
+  // Runs only when sources change (stableSources), never on unrelated re-renders,
+  // so it can't override a quality the user picked manually.
   React.useEffect(() => {
-    if (prevSourcesRef.current !== sources) {
-      prevSourcesRef.current = sources;
+    if (!sourcesByResolution) {
       setAutoVideoUrl(null);
+      return;
     }
-  }, [sources]);
-
-  React.useEffect(() => {
     let cancelled = false;
     (async () => {
-      if (sources && sources.length > 0) {
-        const sourcesIndexByResolution = indexBy(sources, 'resolution');
-        if (autoVideoUrl === null && sourcesIndexByResolution) {
-          try {
-            const speed = await measureNetworkSpeedGeneratedFile();
-            if (cancelled) return;
-            const speeds = Object.keys(sourcesIndexByResolution).map(Number);
-            const recommendedQuality = getRecommendedVideoQuality(speed || 0, speeds);
+      try {
+        const speed = await measureNetworkSpeedGeneratedFile();
+        if (cancelled) return;
+        const availableResolutions = Object.keys(sourcesByResolution).map(Number);
+        const recommendedQuality = getRecommendedVideoQuality(speed || 0, availableResolutions);
+        const fallback = stableSources[0];
 
-            if (speed !== null && recommendedQuality) {
-              setAutoVideoUrl(sourcesIndexByResolution[recommendedQuality?.toString()]?.src ?? sources[0].src);
-              updateStateRef.current((prev) => ({ ...prev, playbackQuality: recommendedQuality }));
-            } else {
-              setAutoVideoUrl(sources[0].src);
-              updateStateRef.current((prev) => ({ ...prev, playbackQuality: sources[0].resolution }));
-            }
-          } catch (error) {
-            if (cancelled) return;
-            // Fallback to first source on error
-            setAutoVideoUrl(sources[0].src);
-            updateStateRef.current((prev) => ({ ...prev, playbackQuality: sources[0].resolution }));
-          }
+        if (speed !== null && recommendedQuality) {
+          setAutoVideoUrl(sourcesByResolution[recommendedQuality]?.src ?? fallback.src);
+          updateStateRef.current((prev) => ({ ...prev, playbackQuality: recommendedQuality }));
+        } else {
+          setAutoVideoUrl(fallback.src);
+          updateStateRef.current((prev) => ({ ...prev, playbackQuality: fallback.resolution }));
         }
+      } catch {
+        if (cancelled) return;
+        const fallback = stableSources[0];
+        setAutoVideoUrl(fallback.src);
+        updateStateRef.current((prev) => ({ ...prev, playbackQuality: fallback.resolution }));
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [sources, autoVideoUrl]);
+    // stableSources is the source of truth; sourcesByResolution derives from it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stableSources]);
 
+  const { playbackQuality } = playerState;
   const videoUrl = React.useMemo(() => {
-    if (sources && sources.length > 0) {
-      const sourcesIndexByResolution = indexBy(sources, 'resolution');
-      if (playerState.playbackQuality === null || playerState.playbackQuality === undefined) {
-        if (autoVideoUrl !== null) {
-          return autoVideoUrl;
-        }
-        return sources[0].src;
-      }
-      return sourcesIndexByResolution[playerState.playbackQuality]?.src ?? sources[0].src;
+    if (!sourcesByResolution) {
+      return url;
     }
-    return url;
-  }, [url, sources, playerState.playbackQuality, autoVideoUrl]);
+    if (playbackQuality === null || playbackQuality === undefined) {
+      return autoVideoUrl ?? stableSources[0].src;
+    }
+    return sourcesByResolution[playbackQuality]?.src ?? stableSources[0].src;
+  }, [url, stableSources, sourcesByResolution, playbackQuality, autoVideoUrl]);
 
   // Build proxy object once — uses refs to always read latest callback/state
   const proxyMemorized = React.useMemo(

@@ -234,11 +234,31 @@ describe('PlayerProxy – handleError', () => {
 
 // ─── handleLoaded ────────────────────────────────────────────────────────────
 describe('PlayerProxy – handleLoaded', () => {
-  test('sets isLoading to false', () => {
+  test('sets isLoading to false when isReady and not startOnPlay', () => {
     const instance = new PlayerProxy(baseProps);
     instance.isLoading = true;
+    instance.isReady = true;
+    instance.startOnPlay = false;
     act(() => instance.handleLoaded());
     expect(instance.isLoading).toBe(false);
+  });
+
+  test('does not set isLoading to false when startOnPlay is true (quality switch in progress)', () => {
+    const instance = new PlayerProxy(baseProps);
+    instance.isLoading = true;
+    instance.isReady = true;
+    instance.startOnPlay = true;
+    act(() => instance.handleLoaded());
+    expect(instance.isLoading).toBe(true);
+  });
+
+  test('does not set isLoading to false when isReady is false', () => {
+    const instance = new PlayerProxy(baseProps);
+    instance.isLoading = true;
+    instance.isReady = false;
+    instance.startOnPlay = false;
+    act(() => instance.handleLoaded());
+    expect(instance.isLoading).toBe(true);
   });
 });
 

@@ -26,6 +26,7 @@ export default class PlayerProxy extends React.Component {
   isReady = false;
   isPlaying = false; // Track playing state internally to prevent bugs
   isLoading = true; // Use isLoading to prevent onPause when switching URL
+  isSwitchingQuality = false; // Suppress onPause during quality switch until play resumes
   startOnPlay = true;
   onDurationCalled = false;
 
@@ -68,10 +69,15 @@ export default class PlayerProxy extends React.Component {
       this.isLoading = true;
       this.startOnPlay = true;
       this.onDurationCalled = false;
-      this.player.load(url, this.isReady);
+      // When switching quality, remember the current position to seek after the new source loads
       if (prevProps.playbackQuality !== playbackQuality) {
-        this.player.seekTo(this.prevPlayed);
+        this.seekOnPlay = this.prevPlayed;
+        this.isSwitchingQuality = true;
       }
+      this.player.load(url, this.isReady);
+      // Don't process play/pause/volume changes in the same cycle as a URL change.
+      // handleReady will resume playback once the new source is loaded.
+      return;
     }
     if (prevProps.playing === false && playing && this.isPlaying === false) {
       this.player.play();
@@ -231,7 +237,7 @@ export default class PlayerProxy extends React.Component {
     if (this.loadOnReady) {
       this.player.load(this.loadOnReady, true);
       this.loadOnReady = null;
-    } else if (playing) {
+    } else if (playing || this.isSwitchingQuality) {
       this.player.play();
     }
     this.handleDurationCheck();
@@ -240,6 +246,7 @@ export default class PlayerProxy extends React.Component {
   handlePlay = (e) => {
     this.isPlaying = true;
     this.isLoading = false;
+    this.isSwitchingQuality = false;
     const { onStart, onPlay, playbackRate } = this.props;
     if (this.startOnPlay) {
       if (this.player.setPlaybackRate && playbackRate !== 1) {
@@ -265,7 +272,7 @@ export default class PlayerProxy extends React.Component {
 
   handlePause = (e) => {
     this.isPlaying = false;
-    if (!this.isLoading && this.props.onPause) {
+    if (!this.isLoading && !this.isSwitchingQuality && this.props.onPause) {
       this.props.onPause(e);
     }
   };
@@ -314,9 +321,12 @@ export default class PlayerProxy extends React.Component {
   };
 
   handleLoaded = () => {
-    // Sometimes we know loading has stopped but onReady/onPlay are never called
-    // so this provides a way for players to avoid getting stuck
-    this.isLoading = false;
+    // Only clear isLoading if we're not waiting for onReady to fire.
+    // During URL/quality switches, handleReady will clear isLoading
+    // after the source is actually ready to play.
+    if (this.isReady && !this.startOnPlay) {
+      this.isLoading = false;
+    }
   };
 
   render() {
