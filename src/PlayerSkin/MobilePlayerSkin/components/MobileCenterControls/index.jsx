@@ -54,7 +54,7 @@ const MobileCenterControls = ({
   );
 
   return (
-    <StyledMobileCenterControls visible={visible}>
+    <StyledMobileCenterControls $visible={visible}>
       {showPrevious && (
         <StyledMobileNavButton
           aria-label={i18n.previous || 'Previous'}

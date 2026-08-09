@@ -5,7 +5,7 @@ import { StyledMobileTopBar, StyledMobileSettingsButton } from './MobileTopBar.s
 import { SettingsGearIcon } from '../../icons';
 
 const MobileTopBar = ({ visible, onOpenSettings, settingsLabel }) => (
-  <StyledMobileTopBar visible={visible}>
+  <StyledMobileTopBar $visible={visible}>
     <StyledMobileSettingsButton onClick={onOpenSettings} aria-label={settingsLabel}>
       <SettingsGearIcon />
     </StyledMobileSettingsButton>

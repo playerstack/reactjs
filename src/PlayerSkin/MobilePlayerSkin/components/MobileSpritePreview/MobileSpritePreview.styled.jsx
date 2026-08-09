@@ -13,8 +13,8 @@ export const StyledSpriteOverlay = styled.div`
   align-items: center;
   justify-content: center;
   transition: opacity 0.15s ease;
-  ${({ visible }) =>
-    visible
+  ${({ $visible }) =>
+    $visible
       ? css`
           opacity: 1;
           pointer-events: none;

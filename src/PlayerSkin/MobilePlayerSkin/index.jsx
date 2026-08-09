@@ -197,7 +197,7 @@ const MobilePlayerSkin = React.forwardRef(
         )}
 
         {/* Dark overlay when controls visible */}
-        <StyledOverlay visible={controlsVisible && hasResource && !ended && !prevented} />
+        <StyledOverlay $visible={controlsVisible && hasResource && !ended && !prevented} />
 
         {/* Double-tap skip areas */}
         <SkipOverlay skipState={skipState} onTapLeft={handleTapLeft} onTapRight={handleTapRight} i18n={i18n} />

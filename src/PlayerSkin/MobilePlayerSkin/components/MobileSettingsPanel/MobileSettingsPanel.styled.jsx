@@ -7,9 +7,9 @@ export const StyledSettingsOverlay = styled.div`
   width: 100%;
   left: 50%;
   top: 50%;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  transform: ${({ visible }) => (visible ? 'translate(-50%, -50%)' : 'translate(-50%, -100%)')};
-  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: ${({ $visible }) => ($visible ? 'translate(-50%, -50%)' : 'translate(-50%, -100%)')};
+  pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
   transition: all 0.4s ease;
   will-change: transform;
   display: flex;
@@ -53,8 +53,8 @@ export const StyledIconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  ${({ position }) =>
-    position === 'left'
+  ${({ $position }) =>
+    $position === 'left'
       ? css`
           left: 6px;
         `
@@ -118,9 +118,9 @@ export const StyledSubPage = styled.div`
   flex: 1;
   position: relative;
   overflow: hidden;
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
-  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
-  transform: ${({ visible }) => (visible ? 'translateX(0)' : 'translateX(100%)')};
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
+  transform: ${({ $visible }) => ($visible ? 'translateX(0)' : 'translateX(100%)')};
   transition: opacity 0.15s linear, transform 0.15s ease-out;
 `;
 

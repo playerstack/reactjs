@@ -7,8 +7,8 @@ export const StyledMobileTopBar = styled.div`
   z-index: 7;
   padding: 8px;
   transition: opacity 0.25s cubic-bezier(0, 0, 0.2, 1);
-  ${({ visible }) =>
-    visible
+  ${({ $visible }) =>
+    $visible
       ? css`
           opacity: 1;
           pointer-events: auto;

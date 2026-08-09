@@ -11,8 +11,8 @@ export const StyledMobileCenterControls = styled.div`
   gap: 60px;
   z-index: 7;
   transition: opacity 0.25s cubic-bezier(0, 0, 0.2, 1);
-  ${({ visible }) =>
-    visible
+  ${({ $visible }) =>
+    $visible
       ? css`
           opacity: 1;
           pointer-events: auto;

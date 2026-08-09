@@ -10,8 +10,8 @@ export const StyledMobileBottomBar = styled.div`
   align-items: center;
   padding: 0px 16px 8px 16px;
   transition: opacity 0.25s cubic-bezier(0, 0, 0.2, 1);
-  ${({ visible }) =>
-    visible
+  ${({ $visible }) =>
+    $visible
       ? css`
           opacity: 1;
           pointer-events: auto;

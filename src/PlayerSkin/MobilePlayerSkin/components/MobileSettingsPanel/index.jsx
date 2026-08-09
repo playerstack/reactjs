@@ -85,15 +85,15 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
   const isSubMenuOpen = subMenu !== null;
 
   return (
-    <StyledSettingsOverlay visible={visible} onClick={(e) => e.stopPropagation()}>
+    <StyledSettingsOverlay $visible={visible} onClick={(e) => e.stopPropagation()}>
       {/* Header — always rendered, content changes based on subMenu state */}
       <StyledSettingsHeader>
         {!isSubMenuOpen ? (
-          <StyledIconButton position="left" aria-label="Settings">
+          <StyledIconButton $position="left" aria-label="Settings">
             <SettingsGearIcon />
           </StyledIconButton>
         ) : (
-          <StyledIconButton position="left" onClick={handleBack} aria-label="Back">
+          <StyledIconButton $position="left" onClick={handleBack} aria-label="Back">
             <BackIcon />
           </StyledIconButton>
         )}
@@ -104,7 +104,7 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
               ? i18n.quality || 'Calidad'
               : i18n.speed || 'Velocidad'}
         </StyledHeaderTitle>
-        <StyledIconButton position="right" onClick={handleClose} aria-label="Close">
+        <StyledIconButton $position="right" onClick={handleClose} aria-label="Close">
           <CloseIcon />
         </StyledIconButton>
       </StyledSettingsHeader>
@@ -136,7 +136,7 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
       </StyledMainPage>
 
       {/* Sub page — slides in from right */}
-      <StyledSubPage visible={isSubMenuOpen}>
+      <StyledSubPage $visible={isSubMenuOpen}>
         <StyledSubContent>
           {subMenu === 'quality' && (
             <StyledOptionList>

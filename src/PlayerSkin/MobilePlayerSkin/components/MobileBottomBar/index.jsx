@@ -24,7 +24,7 @@ const MobileBottomBar = ({
   onRequestFullscreen,
   onExitFullscreen,
 }) => (
-  <StyledMobileBottomBar visible={visible} onClick={(e) => e.stopPropagation()}>
+  <StyledMobileBottomBar $visible={visible} onClick={(e) => e.stopPropagation()}>
     {false === live && (
       <>
         <StyledMobileTime>

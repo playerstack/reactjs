@@ -107,7 +107,7 @@ const MobileSpritePreview = ({ spriteVTTFile, duration, seekTime, visible }) => 
   if (!spriteVTTFile) return null;
 
   return (
-    <StyledSpriteOverlay ref={containerRef} visible={visible && spriteStyle !== null}>
+    <StyledSpriteOverlay ref={containerRef} $visible={visible && spriteStyle !== null}>
       {spriteStyle && <StyledSpriteFrame style={spriteStyle} />}
     </StyledSpriteOverlay>
   );
