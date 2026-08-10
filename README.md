@@ -13,7 +13,7 @@
   Not using React? <a href='#standalone-player'>No problem ;)</a>
 </p>
 
-> **Note:** This package was previously published as [`reactjs-media-player`](https://www.npmjs.com/package/@playerstack/reactjs). That package is now deprecated — please use `@playerstack/reactjs` instead.
+> **Note:** This package was previously published as [`reactjs-media-player`](https://www.npmjs.com/package/reactjs-media-player). That package is now deprecated — please use `@playerstack/reactjs` instead.
 
 ---
 
