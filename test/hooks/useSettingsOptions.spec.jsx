@@ -118,3 +118,111 @@ describe('useSettingsOptions', () => {
     expect(changeSettings).toHaveBeenCalled();
   });
 });
+
+describe('useSettingsOptions — auto quality', () => {
+  const defaults = {
+    live: false,
+    fullHDQualityBreak: 1080,
+    qualities: [
+      { label: '1080p', value: '1080', isFullHD: true },
+      { label: '720p', value: '720', isFullHD: false },
+    ],
+    playbackRate: 1,
+    playbackQuality: null,
+    changeSettings: jest.fn(),
+    fullscreen: false,
+  };
+
+  const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+
+  beforeEach(() => jest.clearAllMocks());
+
+  test('initial quality value is "0" (auto)', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    expect(result.current.values.quality.value).toBe('0');
+  });
+
+  test('syncs auto label when playbackQuality changes to non-zero', () => {
+    const { result, rerender } = renderHook((props) => useSettingsOptions(props), {
+      wrapper,
+      initialProps: defaults,
+    });
+
+    // Simulate auto-selection resolving to 720
+    rerender({ ...defaults, playbackQuality: 720 });
+
+    expect(result.current.values.quality.value).toBe('0');
+    expect(result.current.values.quality.label).toContain('720p');
+    expect(result.current.values.quality.label).toContain('Auto');
+  });
+
+  test('does not sync when playbackQuality is 0', () => {
+    const { result, rerender } = renderHook((props) => useSettingsOptions(props), {
+      wrapper,
+      initialProps: { ...defaults, playbackQuality: 720 },
+    });
+
+    const labelBefore = result.current.values.quality.label;
+    rerender({ ...defaults, playbackQuality: 0 });
+    // Should not change to "Auto (0p)"
+    expect(result.current.values.quality.label).toBe(labelBefore);
+  });
+
+  test('handleMenuClick with "0" sets auto label with current quality', () => {
+    const { result, rerender } = renderHook((props) => useSettingsOptions(props), {
+      wrapper,
+      initialProps: { ...defaults, playbackQuality: 720 },
+    });
+
+    // Select manual quality first
+    const handler = result.current.handleMenuClick('quality');
+    act(() => handler('1080'));
+    expect(result.current.values.quality.value).toBe('1080');
+
+    // Now re-render with playbackQuality still at 1080 (since we selected it)
+    rerender({ ...defaults, playbackQuality: 1080 });
+
+    // Switch back to auto
+    const handler2 = result.current.handleMenuClick('quality');
+    act(() => handler2('0'));
+
+    expect(result.current.values.quality.value).toBe('0');
+    expect(result.current.values.quality.label).toContain('1080p');
+  });
+
+  test('handleMenuClick with "0" and no current quality shows plain Auto', () => {
+    const { result } = renderHook(() => useSettingsOptions({ ...defaults, playbackQuality: null }), { wrapper });
+
+    const handler = result.current.handleMenuClick('quality');
+    act(() => handler('0'));
+
+    expect(result.current.values.quality.value).toBe('0');
+    expect(result.current.values.quality.label).toBe('Auto');
+  });
+
+  test('handleMenuClick with manual quality sets isAutoQuality false', () => {
+    const { result, rerender } = renderHook((props) => useSettingsOptions(props), {
+      wrapper,
+      initialProps: { ...defaults, playbackQuality: 720 },
+    });
+
+    const handler = result.current.handleMenuClick('quality');
+    act(() => handler('1080'));
+
+    // Changing playbackQuality externally should NOT override manual selection
+    rerender({ ...defaults, playbackQuality: 720 });
+    expect(result.current.values.quality.value).toBe('1080');
+    expect(result.current.values.quality.label).toBe('1080p');
+  });
+
+  test('does not sync when qualities array is empty', () => {
+    const { result, rerender } = renderHook((props) => useSettingsOptions(props), {
+      wrapper,
+      initialProps: { ...defaults, qualities: [], playbackQuality: null },
+    });
+
+    rerender({ ...defaults, qualities: [], playbackQuality: 720 });
+    // Should not update label since no qualities available
+    expect(result.current.values.quality.value).toBe('0');
+  });
+});

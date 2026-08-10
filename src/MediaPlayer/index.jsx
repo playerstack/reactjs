@@ -210,6 +210,7 @@ export const createMediaPlayer = (player) => {
           progressFrequency={this.props.progressFrequency}
           spriteVTTFile={this.props.spriteVTTFile}
           chapters={this.props.chapters}
+          heatmapData={this.props.heatmapData}
           poster={this.props.poster}
           forceMobile={this.props.forceMobile}
         />

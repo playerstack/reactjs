@@ -10,9 +10,20 @@ import {
   StyledMobileSeekTooltip,
 } from './MobileProgressBar.styled';
 import MobileChapterSegments from './MobileChapterSegments';
+import HeatmapGraph from '../../../Commons/HeatmapGraph';
+import useHeatmap from '../../../../hooks/useHeatmap';
 import { formatTime } from '../../../../utils';
 
-const MobileProgressBar = ({ currentTime, duration, buffered, chapters, getChapterAtTime, onChange, onSeeking }) => {
+const MobileProgressBar = ({
+  currentTime,
+  duration,
+  buffered,
+  chapters,
+  heatmapData,
+  getChapterAtTime,
+  onChange,
+  onSeeking,
+}) => {
   const containerRef = React.useRef(null);
   const isDragging = React.useRef(false);
   const [seeking, setSeeking] = React.useState(false);
@@ -20,6 +31,8 @@ const MobileProgressBar = ({ currentTime, duration, buffered, chapters, getChapt
   const progress = duration > 0 ? currentTime / duration : 0;
   const bufferedProgress = buffered || 0;
   const hasChapters = chapters && chapters.length > 0;
+
+  const { strokePath, hasHeatmap } = useHeatmap({ heatmapData, duration });
 
   // Chapter title at current time position (shown during seek)
   const chapterAtCurrentTime = React.useMemo(() => {
@@ -133,6 +146,16 @@ const MobileProgressBar = ({ currentTime, duration, buffered, chapters, getChapt
         </>
       )}
       <StyledMobileProgressHandle style={{ left: `${progress * 100}%` }} />
+      {hasHeatmap && (
+        <HeatmapGraph
+          strokePath={strokePath}
+          currentTime={currentTime}
+          duration={duration}
+          isFullscreen={false}
+          bottomOffset={14}
+          visible={seeking}
+        />
+      )}
       {hasChapters && seeking && chapterAtCurrentTime && (
         <StyledMobileSeekTooltip style={{ left: `${progress * 100}%` }}>
           {chapterAtCurrentTime.title}
@@ -153,6 +176,13 @@ MobileProgressBar.propTypes = {
       title: PropTypes.string.isRequired,
       startTime: PropTypes.number.isRequired,
       endTime: PropTypes.number.isRequired,
+    }),
+  ),
+  heatmapData: PropTypes.arrayOf(
+    PropTypes.shape({
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
     }),
   ),
   getChapterAtTime: PropTypes.func,

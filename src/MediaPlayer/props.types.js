@@ -21,6 +21,13 @@ export const propTypes = {
       startTime: PropTypes.number.isRequired,
     }),
   ),
+  heatmapData: PropTypes.arrayOf(
+    PropTypes.shape({
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+  ),
   playing: bool,
   loop: bool,
   volume: number,
@@ -79,6 +86,7 @@ export const defaultProps = {
   url: '',
   sources: [],
   chapters: [],
+  heatmapData: [],
   playing: false,
   loop: false,
   volume: null,

@@ -123,15 +123,18 @@ const usePlayerProxy = ({
 
         if (speed !== null && recommendedQuality) {
           setAutoVideoUrl(sourcesByResolution[recommendedQuality]?.src ?? fallback.src);
+          autoResolutionRef.current = recommendedQuality;
           updateStateRef.current((prev) => ({ ...prev, playbackQuality: recommendedQuality }));
         } else {
           setAutoVideoUrl(fallback.src);
+          autoResolutionRef.current = fallback.resolution;
           updateStateRef.current((prev) => ({ ...prev, playbackQuality: fallback.resolution }));
         }
       } catch {
         if (cancelled) return;
         const fallback = stableSources[0];
         setAutoVideoUrl(fallback.src);
+        autoResolutionRef.current = fallback.resolution;
         updateStateRef.current((prev) => ({ ...prev, playbackQuality: fallback.resolution }));
       }
     })();
@@ -142,12 +145,24 @@ const usePlayerProxy = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stableSources]);
 
+  // Store the auto-determined resolution so we can restore it when user re-selects "Auto"
+  const autoResolutionRef = React.useRef(null);
+
   const { playbackQuality } = playerState;
+
+  // When user switches back to auto (playbackQuality === 0), restore the auto-determined resolution
+  React.useEffect(() => {
+    if (playbackQuality === 0 && autoResolutionRef.current !== null) {
+      updateStateRef.current((prev) => ({ ...prev, playbackQuality: autoResolutionRef.current }));
+    }
+  }, [playbackQuality]);
+
   const videoUrl = React.useMemo(() => {
     if (!sourcesByResolution) {
       return url;
     }
-    if (playbackQuality === null || playbackQuality === undefined) {
+    // playbackQuality === 0 means "auto" — use the auto-selected URL
+    if (playbackQuality === null || playbackQuality === undefined || playbackQuality === 0) {
       return autoVideoUrl ?? stableSources[0].src;
     }
     return sourcesByResolution[playbackQuality]?.src ?? stableSources[0].src;

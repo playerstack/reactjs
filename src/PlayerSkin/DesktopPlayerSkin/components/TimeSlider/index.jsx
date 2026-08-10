@@ -13,14 +13,17 @@ import {
 import Timelens from './components/Timelens';
 import TimeTooltip from './components/TimeTooltip';
 import ChapterSegments from './components/ChapterSegments';
+import HeatmapGraph from '../../../Commons/HeatmapGraph';
 import useTimeSlider from '../../../../hooks/useTimeSlider';
 import useChapters from '../../../../hooks/useChapters';
+import useHeatmap from '../../../../hooks/useHeatmap';
 import { formatTime } from '../../../../utils';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
 const TimeSlider = ({
   spriteVTTFile,
   chapters,
+  heatmapData,
   currentTime,
   duration,
   buffered: bufferedScaleX,
@@ -54,6 +57,8 @@ const TimeSlider = ({
 
   const { segments, getChapterAtTime } = useChapters({ chapters, duration });
   const hasChapters = segments.length > 0;
+
+  const { strokePath, hasHeatmap } = useHeatmap({ heatmapData, duration });
 
   // Get the chapter title and index for the hovered time position
   const hoveredChapter = React.useMemo(() => {
@@ -136,6 +141,15 @@ const TimeSlider = ({
         chapterTitle={hoveredChapter?.title}
         fullscreen={fullscreen}
       />
+      {hasHeatmap && (
+        <HeatmapGraph
+          strokePath={strokePath}
+          currentTime={timeSliderSliding ? timeSliderState.value : currentTime}
+          duration={duration}
+          isFullscreen={fullscreen}
+          visible={showTooltip || timeSliderSliding}
+        />
+      )}
       {spriteVTTFile && (
         <Timelens
           ref={timelensRef}
@@ -158,6 +172,13 @@ TimeSlider.propTypes = {
       startTime: PropTypes.number.isRequired,
     }),
   ),
+  heatmapData: PropTypes.arrayOf(
+    PropTypes.shape({
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+  ),
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
   buffered: PropTypes.number.isRequired || null,
@@ -170,6 +191,7 @@ export default React.memo(
   (p, n) =>
     p.spriteVTTFile === n.spriteVTTFile &&
     p.chapters === n.chapters &&
+    p.heatmapData === n.heatmapData &&
     p.currentTime === n.currentTime &&
     p.duration === n.duration &&
     p.buffered === n.buffered &&

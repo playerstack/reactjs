@@ -30,10 +30,21 @@ const SPEED_OPTIONS = [
   { label: '0.25', value: 0.25 },
 ];
 
-const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSettings, onClose }) => {
+const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality, onChangeSettings, onClose }) => {
   const { i18n } = useAppSelector();
   const [subMenu, setSubMenu] = React.useState(null); // null | 'quality' | 'speed'
+  const [isAutoQuality, setIsAutoQuality] = React.useState(true);
   const [selectedQuality, setSelectedQuality] = React.useState(null); // null = auto
+
+  // Sync selectedQuality when auto-selection updates playbackQuality
+  React.useEffect(() => {
+    if (playbackQuality == null || playbackQuality === 0 || qualities.length === 0) return;
+    const qualityStr = playbackQuality.toString();
+    const matchingQuality = qualities.find((q) => q.value === qualityStr);
+    if (matchingQuality && isAutoQuality) {
+      setSelectedQuality(qualityStr);
+    }
+  }, [playbackQuality, qualities]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = React.useCallback(
     (e) => {
@@ -53,7 +64,14 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
     (value) => (e) => {
       e.stopPropagation();
       onChangeSettings({ quality: { value: String(value) } });
-      setSelectedQuality(value === 0 ? null : String(value));
+      if (value === 0) {
+        setIsAutoQuality(true);
+        // Keep selectedQuality as the current auto-resolved resolution
+        // (don't set to null so the label shows the resolution)
+      } else {
+        setIsAutoQuality(false);
+        setSelectedQuality(String(value));
+      }
       setSubMenu(null);
       onClose();
     },
@@ -98,11 +116,7 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
           </StyledIconButton>
         )}
         <StyledHeaderTitle>
-          {!isSubMenuOpen
-            ? i18n.settings || 'Configuración'
-            : subMenu === 'quality'
-              ? i18n.quality || 'Calidad'
-              : i18n.speed || 'Velocidad'}
+          {!isSubMenuOpen ? i18n.settings : subMenu === 'quality' ? i18n.quality : i18n.speed}
         </StyledHeaderTitle>
         <StyledIconButton $position="right" onClick={handleClose} aria-label="Close">
           <CloseIcon />
@@ -117,10 +131,12 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
               <StyledSwitchIcon>
                 <SettingsGearIcon />
               </StyledSwitchIcon>
-              <StyledSwitchLabel>{i18n.quality || 'Calidad'}</StyledSwitchLabel>
+              <StyledSwitchLabel>{i18n.quality}</StyledSwitchLabel>
               <StyledSwitchValue>
-                {selectedQuality === null
-                  ? 'Auto'
+                {isAutoQuality
+                  ? selectedQuality
+                    ? `${i18n.auto} (${selectedQuality}p)`
+                    : i18n.auto
                   : qualities.find((q) => q.value === selectedQuality)?.label || selectedQuality}
               </StyledSwitchValue>
             </StyledSwitchItem>
@@ -129,7 +145,7 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
             <StyledSwitchIcon>
               <SpeedIcon />
             </StyledSwitchIcon>
-            <StyledSwitchLabel>{i18n.speed || 'Velocidad'}</StyledSwitchLabel>
+            <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
             <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
           </StyledSwitchItem>
         </StyledSwitchesGrid>
@@ -143,14 +159,14 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, onChangeSetting
               {qualities.map((q) => (
                 <StyledOptionItem
                   key={q.value}
-                  active={q.value === selectedQuality}
+                  active={!isAutoQuality && q.value === selectedQuality}
                   onClick={handleQualityClick(q.value)}
                 >
                   {q.label}
                 </StyledOptionItem>
               ))}
-              <StyledOptionItem active={selectedQuality === null} onClick={handleQualityClick(0)}>
-                auto
+              <StyledOptionItem active={isAutoQuality} onClick={handleQualityClick(0)}>
+                {i18n.auto}
               </StyledOptionItem>
             </StyledOptionList>
           )}
@@ -173,6 +189,7 @@ MobileSettingsPanel.propTypes = {
   visible: PropTypes.bool.isRequired,
   qualities: PropTypes.array.isRequired,
   playbackRate: PropTypes.number.isRequired,
+  playbackQuality: PropTypes.number,
   onChangeSettings: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };

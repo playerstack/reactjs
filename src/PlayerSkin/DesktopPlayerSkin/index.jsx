@@ -55,8 +55,10 @@ const DesktopPlayerSkin = React.forwardRef(
       qualities,
       spriteVTTFile,
       chapters,
+      heatmapData,
       fullHDQualityBreak,
       playbackRate,
+      playbackQuality,
       loop,
       poster,
       onPlayClick,
@@ -228,6 +230,7 @@ const DesktopPlayerSkin = React.forwardRef(
             <TimeSlider
               spriteVTTFile={spriteVTTFile}
               chapters={chapters}
+              heatmapData={heatmapData}
               currentTime={currentTime}
               duration={duration}
               buffered={buffered}
@@ -243,6 +246,7 @@ const DesktopPlayerSkin = React.forwardRef(
                   live={live}
                   qualities={qualities}
                   playbackRate={playbackRate}
+                  playbackQuality={playbackQuality}
                   fullscreen={fullscreen}
                   fullHDQualityBreak={fullHDQualityBreak}
                   changeSettings={handleChangeSettings}

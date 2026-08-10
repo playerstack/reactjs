@@ -22,6 +22,12 @@ export interface IChapterProps {
   startTime: number;
 }
 
+export interface IHeatmapDataPoint {
+  startTime: number;
+  endTime: number;
+  value: number;
+}
+
 export interface IOnProgressProps {
   played: number;
   playedSeconds: number;
@@ -52,6 +58,7 @@ export interface IBaseReactJSMediaPlayerCommons {
   poster?: string;
   spriteVTTFile?: string;
   chapters?: IChapterProps[];
+  heatmapData?: IHeatmapDataPoint[];
   onReady?: (player: PlayerStack) => void;
   onStart?: () => void;
   onPlay?: () => void;

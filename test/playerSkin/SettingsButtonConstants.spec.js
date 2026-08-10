@@ -18,6 +18,10 @@ describe('buildSettingsLabel', () => {
   test('returns raw value for unknown label', () => {
     expect(buildSettingsLabel({ label: 'other', value: 'foo', i18n: en })).toBe('foo');
   });
+
+  test('returns i18n.auto for quality value "0"', () => {
+    expect(buildSettingsLabel({ label: 'quality', value: '0', i18n: en })).toBe('Auto');
+  });
 });
 
 describe('settingsOverlayFn', () => {
@@ -39,7 +43,11 @@ describe('settingsOverlayFn', () => {
     const options = settingsOverlayFn({ qualityOptions, live: false, i18n: en });
     const qualityOption = options.find((o) => o.value === 'quality');
     expect(qualityOption).toBeDefined();
-    expect(qualityOption.options).toBe(qualityOptions);
+    // Should include all provided qualities plus the "Auto" option
+    expect(qualityOption.options).toHaveLength(qualityOptions.length + 1);
+    expect(qualityOption.options[0]).toEqual(qualityOptions[0]);
+    expect(qualityOption.options[qualityOption.options.length - 1].value).toBe('0');
+    expect(qualityOption.options[qualityOption.options.length - 1].label).toBe('Auto');
   });
 
   test('does not include quality option when qualityOptions is empty', () => {

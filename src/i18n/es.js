@@ -12,6 +12,7 @@ export default {
   settings: 'Configuración',
   speed: 'Velocidad',
   quality: 'Calidad',
+  auto: 'Automática',
   hd: 'HD',
   live: 'En vivo',
   seconds: 'segundos',

@@ -18,7 +18,15 @@ import { StyledDropdownOverlayScrolled } from './DropdownOverlay/DropdownOverlay
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 import useSettingsOptions from '../../../../../../hooks/useSettingsOptions';
 
-const SettingsButton = ({ live, qualities, playbackRate, fullHDQualityBreak, changeSettings, fullscreen }) => {
+const SettingsButton = ({
+  live,
+  qualities,
+  playbackRate,
+  playbackQuality,
+  fullHDQualityBreak,
+  changeSettings,
+  fullscreen,
+}) => {
   const { i18n } = useAppSelector();
 
   const {
@@ -36,6 +44,7 @@ const SettingsButton = ({ live, qualities, playbackRate, fullHDQualityBreak, cha
     fullHDQualityBreak,
     qualities,
     playbackRate,
+    playbackQuality,
     changeSettings,
     fullscreen,
   });
@@ -99,6 +108,7 @@ SettingsButton.propTypes = {
     }).isRequired,
   ).isRequired,
   playbackRate: PropTypes.number.isRequired,
+  playbackQuality: PropTypes.number,
   fullHDQualityBreak: PropTypes.number,
   changeSettings: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool.isRequired,
@@ -110,6 +120,7 @@ export default React.memo(
     p.live === n.live &&
     p.qualities === n.qualities &&
     p.playbackRate === n.playbackRate &&
+    p.playbackQuality === n.playbackQuality &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&
     p.changeSettings === n.changeSettings &&
     p.fullscreen === n.fullscreen,

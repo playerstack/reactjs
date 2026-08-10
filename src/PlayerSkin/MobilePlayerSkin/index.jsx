@@ -46,8 +46,10 @@ const MobilePlayerSkin = React.forwardRef(
       qualities,
       spriteVTTFile,
       chapters,
+      heatmapData,
       fullHDQualityBreak,
       playbackRate,
+      playbackQuality,
       loop,
       poster,
       onPlayClick,
@@ -218,6 +220,7 @@ const MobilePlayerSkin = React.forwardRef(
           visible={settingsPanelVisible}
           qualities={qualities}
           playbackRate={playbackRate}
+          playbackQuality={playbackQuality}
           onChangeSettings={handleChangeSettings}
           onClose={handleCloseSettings}
         />
@@ -244,6 +247,7 @@ const MobilePlayerSkin = React.forwardRef(
           buffered={buffered}
           fullscreen={fullscreen}
           chapters={segments}
+          heatmapData={heatmapData}
           getChapterAtTime={getChapterAtTime}
           i18n={i18n}
           onChangeCurrentTime={changeCurrentTime}
@@ -348,6 +352,7 @@ export default React.memo(
     p.fullscreen === n.fullscreen &&
     p.qualities === n.qualities &&
     p.playbackRate === n.playbackRate &&
+    p.playbackQuality === n.playbackQuality &&
     p.loop === n.loop &&
     p.kernelMsg === n.kernelMsg &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&

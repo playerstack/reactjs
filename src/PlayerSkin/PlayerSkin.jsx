@@ -26,6 +26,13 @@ PlayerSkin.propTypes = {
       startTime: PropTypes.number.isRequired,
     }),
   ),
+  heatmapData: PropTypes.arrayOf(
+    PropTypes.shape({
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
+    }),
+  ),
   videoRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(HTMLVideoElement) })])
     .isRequired,
   playerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(HTMLDivElement) })])
@@ -84,6 +91,7 @@ export default React.memo(
   (p, n) =>
     p.spriteVTTFile === n.spriteVTTFile &&
     p.chapters === n.chapters &&
+    p.heatmapData === n.heatmapData &&
     p.videoRef === n.videoRef &&
     p.playerRef === n.playerRef &&
     p.live === n.live &&
@@ -105,6 +113,7 @@ export default React.memo(
     p.fullscreen === n.fullscreen &&
     p.qualities === n.qualities &&
     p.playbackRate === n.playbackRate &&
+    p.playbackQuality === n.playbackQuality &&
     p.loop === n.loop &&
     p.kernelMsg === n.kernelMsg &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&

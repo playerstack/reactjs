@@ -19,6 +19,7 @@ const MobileBottomBar = ({
   buffered,
   fullscreen,
   chapters,
+  heatmapData,
   getChapterAtTime,
   i18n,
   onChangeCurrentTime,
@@ -38,6 +39,7 @@ const MobileBottomBar = ({
             duration={duration}
             buffered={buffered}
             chapters={chapters}
+            heatmapData={heatmapData}
             getChapterAtTime={getChapterAtTime}
             onChange={onChangeCurrentTime}
             onSeeking={onSeeking}
@@ -66,6 +68,13 @@ MobileBottomBar.propTypes = {
       title: PropTypes.string.isRequired,
       startTime: PropTypes.number.isRequired,
       endTime: PropTypes.number.isRequired,
+    }),
+  ),
+  heatmapData: PropTypes.arrayOf(
+    PropTypes.shape({
+      startTime: PropTypes.number.isRequired,
+      endTime: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired,
     }),
   ),
   getChapterAtTime: PropTypes.func,

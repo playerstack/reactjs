@@ -92,18 +92,36 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       const playerProxy = props.player;
       const playerElement = playerProxy.getPlayer();
 
-      const timer = setTimeout(() => {
-        setPlayerStyles({
-          width: `${playerElement.offsetWidth}px`,
-          height: `${playerElement.offsetHeight}px`,
-        });
-      }, 500);
+      const updateSize = () => {
+        const width = playerElement.offsetWidth;
+        const height = playerElement.offsetHeight;
+        // Only apply fixed dimensions when the video has meaningful size
+        // (metadata loaded). Otherwise fall back to prop-based sizing.
+        if (width > 0 && height > 0) {
+          setPlayerStyles({
+            width: `${width}px`,
+            height: `${height}px`,
+          });
+        } else {
+          setPlayerStyles({
+            width: props.width || '100%',
+            height: props.height || '100%',
+          });
+        }
+      };
+
+      const timer = setTimeout(updateSize, 500);
+
+      // Re-calculate when video metadata loads (fixes slow-network case)
+      const handleMetadata = () => updateSize();
+      playerElement.addEventListener('loadedmetadata', handleMetadata);
 
       return () => {
         clearTimeout(timer);
+        playerElement.removeEventListener('loadedmetadata', handleMetadata);
       };
     }
-  }, [props.player, playerState.isLoading]);
+  }, [props.player, props.width, props.height, playerState.isLoading]);
 
   const { videoUrl, ...playerProxy } = usePlayerProxy({
     onBuffer: props.onBuffer,
@@ -195,6 +213,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         hasAudio={playerState.hasAudio}
         spriteVTTFile={props.spriteVTTFile}
         chapters={props.chapters}
+        heatmapData={props.heatmapData}
         hasResource={typeof videoUrl === 'string' || props.sources.length > 0}
         kernelMsg={playerState.kernelError}
         loading={playerState.isLoading}
@@ -210,6 +229,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         currentTime={playerState.played}
         volume={playerState.volume}
         playbackRate={playerState.playbackRate}
+        playbackQuality={playerState.playbackQuality}
         pictureInPictureEnabled={true}
         pip={playerState.isPIP}
         loop={playerState.loop}
@@ -238,6 +258,7 @@ export default React.memo(
     p.fullHDQualityBreak === n.fullHDQualityBreak &&
     p.spriteVTTFile === n.spriteVTTFile &&
     p.chapters === n.chapters &&
+    p.heatmapData === n.heatmapData &&
     p.prevented === n.prevented &&
     p.waiting === n.waiting &&
     p.playing === n.playing &&

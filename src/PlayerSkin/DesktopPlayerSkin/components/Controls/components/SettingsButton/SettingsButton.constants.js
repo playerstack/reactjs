@@ -41,7 +41,7 @@ export const settingsOverlayFn = ({ qualityOptions, live, i18n }) => {
     options.push({
       label: i18n.quality,
       value: 'quality',
-      options: qualityOptions,
+      options: [...qualityOptions, { label: i18n.auto, value: '0', isFullHD: false }],
     });
   }
 

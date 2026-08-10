@@ -78,7 +78,7 @@ describe('MobileSettingsPanel', () => {
 
   describe('Quality submenu', () => {
     test('opens quality submenu on click', () => {
-      const { getByText, queryByText } = renderPanel();
+      const { getByText, getAllByText } = renderPanel();
 
       // Click quality switch
       fireEvent.click(getByText('Quality'));
@@ -86,7 +86,8 @@ describe('MobileSettingsPanel', () => {
       // Should show quality options
       expect(getByText('720p')).toBeTruthy();
       expect(getByText('1080p')).toBeTruthy();
-      expect(getByText('auto')).toBeTruthy();
+      // "Auto" appears both in switch value and option list
+      expect(getAllByText('Auto').length).toBeGreaterThanOrEqual(1);
     });
 
     test('quality option click calls onChangeSettings and onClose', () => {
@@ -106,10 +107,12 @@ describe('MobileSettingsPanel', () => {
 
     test('auto quality option passes value 0', () => {
       const onChangeSettings = jest.fn();
-      const { getByText } = renderPanel({ onChangeSettings });
+      const { getByText, getAllByText } = renderPanel({ onChangeSettings });
 
       fireEvent.click(getByText('Quality'));
-      fireEvent.click(getByText('auto'));
+      // Click the Auto option in the quality list (last matching "Auto" element)
+      const autoElements = getAllByText('Auto');
+      fireEvent.click(autoElements[autoElements.length - 1]);
 
       expect(onChangeSettings).toHaveBeenCalledWith({ quality: { value: '0' } });
     });

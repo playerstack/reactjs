@@ -7,17 +7,29 @@ import { buildSettingsLabel } from '../PlayerSkin/DesktopPlayerSkin/components/C
 import { settingsOverlayFn } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.constants';
 import { buildIconProps } from '../PlayerSkin/Commons/constants';
 
-const useSettingsOptions = ({ live, fullHDQualityBreak, qualities, playbackRate, changeSettings, fullscreen }) => {
+const useSettingsOptions = ({
+  live,
+  fullHDQualityBreak,
+  qualities,
+  playbackRate,
+  playbackQuality,
+  changeSettings,
+  fullscreen,
+}) => {
   const { i18n } = useAppSelector();
   const dispatch = useAppDispatch();
 
   const dropdownRef = React.useRef(null);
+  const playbackQualityRef = React.useRef(playbackQuality);
+  playbackQualityRef.current = playbackQuality;
+
   const [settings, setSettings] = React.useState(initialSettings);
+  const [isAutoQuality, setIsAutoQuality] = React.useState(true);
   const [values, setValues] = React.useState({
     quality: {
-      label: qualities[0]?.label ?? '',
-      value: qualities[0]?.value ?? '',
-      isFullHD: qualities[0]?.isFullHD ?? false,
+      label: i18n.auto,
+      value: '0',
+      isFullHD: false,
     },
     speed: {
       label: i18n.normal,
@@ -40,6 +52,27 @@ const useSettingsOptions = ({ live, fullHDQualityBreak, qualities, playbackRate,
     }));
   }, [i18n, playbackRate]);
 
+  // Sync quality value when auto-selection or external change updates playbackQuality
+  useEffect(() => {
+    if (playbackQuality == null || playbackQuality === 0 || qualities.length === 0) return;
+    const qualityStr = playbackQuality.toString();
+    if (isAutoQuality) {
+      // Show "Auto (720p)" format in the menu
+      const autoLabel = `${i18n.auto} (${qualityStr}p)`;
+      setValues((prev) => {
+        if (prev.quality?.value === '0' && prev.quality?.label === autoLabel) return prev;
+        return {
+          ...prev,
+          quality: {
+            label: autoLabel,
+            value: '0',
+            isFullHD: fullHDQualityBreak !== undefined && Number(qualityStr) >= fullHDQualityBreak,
+          },
+        };
+      });
+    }
+  }, [playbackQuality, qualities, i18n, fullHDQualityBreak, isAutoQuality]);
+
   const handleButtonClick = React.useCallback(
     (e) => {
       e.stopPropagation();
@@ -61,18 +94,41 @@ const useSettingsOptions = ({ live, fullHDQualityBreak, qualities, playbackRate,
   const handleMenuClick = React.useCallback(
     (itemValue) => {
       return (value) => {
-        setValues((prev) => ({
-          ...prev,
-          [itemValue]: {
-            label: buildSettingsLabel({
-              label: itemValue,
-              value,
-              i18n,
-            }),
-            value: value,
-            isFullHD: fullHDQualityBreak !== undefined && Number(value ?? '0') >= fullHDQualityBreak,
-          },
-        }));
+        if (itemValue === 'quality') {
+          if (value === '0') {
+            setIsAutoQuality(true);
+            // Build auto label with the current real quality resolution
+            const realQuality = playbackQualityRef.current;
+            const autoLabel = realQuality && realQuality !== 0 ? `${i18n.auto} (${realQuality}p)` : i18n.auto;
+            setValues((prev) => ({
+              ...prev,
+              quality: {
+                label: autoLabel,
+                value: '0',
+                isFullHD: fullHDQualityBreak !== undefined && Number(realQuality ?? 0) >= fullHDQualityBreak,
+              },
+            }));
+          } else {
+            setIsAutoQuality(false);
+            setValues((prev) => ({
+              ...prev,
+              quality: {
+                label: buildSettingsLabel({ label: 'quality', value, i18n }),
+                value: value,
+                isFullHD: fullHDQualityBreak !== undefined && Number(value ?? '0') >= fullHDQualityBreak,
+              },
+            }));
+          }
+        } else {
+          setValues((prev) => ({
+            ...prev,
+            [itemValue]: {
+              label: buildSettingsLabel({ label: itemValue, value, i18n }),
+              value: value,
+              isFullHD: fullHDQualityBreak !== undefined && Number(value ?? '0') >= fullHDQualityBreak,
+            },
+          }));
+        }
         dispatch({
           menuVisible: false,
           subMenuVisible: false,
