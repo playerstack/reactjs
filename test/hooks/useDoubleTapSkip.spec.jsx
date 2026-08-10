@@ -205,7 +205,7 @@ describe('useDoubleTapSkip', () => {
 
   // ─── Skip Display Duration ────────────────────────────────────────────────────
   describe('skip display duration', () => {
-    test('skipState becomes invisible after SKIP_DISPLAY_DURATION (800ms)', () => {
+    test('skipState becomes invisible after SKIP_DISPLAY_DURATION (1000ms)', () => {
       const { result } = getHook();
 
       act(() => result.current.handleTapRight());
@@ -213,7 +213,7 @@ describe('useDoubleTapSkip', () => {
 
       expect(result.current.skipState.visible).toBe(true);
 
-      act(() => jest.advanceTimersByTime(800));
+      act(() => jest.advanceTimersByTime(1000));
 
       expect(result.current.skipState).toEqual({ direction: null, visible: false, seconds: 0 });
     });
@@ -237,8 +237,8 @@ describe('useDoubleTapSkip', () => {
       act(() => jest.advanceTimersByTime(500));
       expect(result.current.skipState.visible).toBe(true);
 
-      // Full 800ms from last skip
-      act(() => jest.advanceTimersByTime(300));
+      // Full 1000ms from last skip
+      act(() => jest.advanceTimersByTime(500));
       expect(result.current.skipState.visible).toBe(false);
     });
   });

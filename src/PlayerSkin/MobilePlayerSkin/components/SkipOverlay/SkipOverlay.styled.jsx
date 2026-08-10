@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const seekFade = keyframes`
   0%, 100% {
@@ -13,17 +13,22 @@ export const StyledSkipOverlay = styled.div`
   position: absolute;
   top: 0;
   ${({ direction }) => (direction === 'forward' ? 'right: 0;' : 'left: 0;')}
-  width: 50%;
+  width: 55%;
   height: 100%;
   z-index: 8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-  transition: opacity 0.2s linear;
   pointer-events: none;
+  ${({ direction }) =>
+    direction === 'forward'
+      ? css`
+          background: linear-gradient(to left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+        `
+      : css`
+          background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+        `}
 `;
 
 export const StyledSkipIconContainer = styled.div`

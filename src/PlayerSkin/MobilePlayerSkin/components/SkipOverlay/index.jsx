@@ -29,7 +29,7 @@ const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
       <StyledSkipTapArea direction="forward" onClick={handleTapRight} aria-label="Skip forward" />
 
       {skipState.visible && skipState.direction === 'backward' && (
-        <StyledSkipOverlay direction="backward" $visible>
+        <StyledSkipOverlay direction="backward">
           <StyledSkipIconContainer direction="backward">
             <SkipChevronIcon />
             <SkipChevronIcon />
@@ -42,7 +42,7 @@ const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
       )}
 
       {skipState.visible && skipState.direction === 'forward' && (
-        <StyledSkipOverlay direction="forward" $visible>
+        <StyledSkipOverlay direction="forward">
           <StyledSkipIconContainer direction="forward">
             <SkipChevronIcon />
             <SkipChevronIcon />

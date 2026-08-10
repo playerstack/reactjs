@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 const DOUBLE_TAP_DELAY = 300;
 const SKIP_SECONDS = 10;
-const SKIP_DISPLAY_DURATION = 800;
+const SKIP_DISPLAY_DURATION = 1000;
 
 /**
  * Hook for double-tap skip forward/backward behavior on mobile.
@@ -58,7 +58,7 @@ export default function useDoubleTapSkip({ currentTime, duration, changeCurrentT
         tapCountLeft.current = 0;
         if (showControls) showControls();
       }, DOUBLE_TAP_DELAY);
-    } else if (tapCountLeft.current >= 2) {
+    } else {
       clearTimeout(tapTimerLeft.current);
       tapCountLeft.current = 0;
       doSkip('backward');
@@ -72,7 +72,7 @@ export default function useDoubleTapSkip({ currentTime, duration, changeCurrentT
         tapCountRight.current = 0;
         if (showControls) showControls();
       }, DOUBLE_TAP_DELAY);
-    } else if (tapCountRight.current >= 2) {
+    } else {
       clearTimeout(tapTimerRight.current);
       tapCountRight.current = 0;
       doSkip('forward');
