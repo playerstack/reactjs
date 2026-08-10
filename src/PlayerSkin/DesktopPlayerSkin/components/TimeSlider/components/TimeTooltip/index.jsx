@@ -3,17 +3,9 @@ import PropTypes from 'prop-types';
 
 import { StyledTip, StyledTooltip, StyledChapterLabel } from './TimeTooltip.styled';
 import { getMouseTranslateX } from '../../utils';
-import { formatTime } from '../../../../../../utils';
+import { formatTime } from '@playerstack/core';
 
-const TimeTooltip = ({
-  sliderRef,
-  duration,
-  tooltip,
-  showTooltip,
-  showTooltipOnly = false,
-  chapterTitle,
-  fullscreen,
-}) => {
+const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, fullscreen }) => {
   const tooltipRef = React.useRef(null);
   const [translateX, setTranslateX] = React.useState('0');
 
@@ -33,7 +25,7 @@ const TimeTooltip = ({
       style={{ display: showTooltip ? 'block' : '', transform: `translateX(${translateX}%)` }}
       isFullscreen={fullscreen}
     >
-      <StyledTip ref={tooltipRef} isFullscreen={fullscreen} showTooltipOnly={showTooltipOnly}>
+      <StyledTip ref={tooltipRef} isFullscreen={fullscreen}>
         {chapterTitle && <StyledChapterLabel isFullscreen={fullscreen}>{chapterTitle}</StyledChapterLabel>}
         {formatTime(tooltip)}
       </StyledTip>
@@ -46,7 +38,6 @@ TimeTooltip.propTypes = {
   duration: PropTypes.number.isRequired,
   tooltip: PropTypes.number.isRequired,
   showTooltip: PropTypes.bool.isRequired,
-  showTooltipOnly: PropTypes.bool,
   chapterTitle: PropTypes.string,
   fullscreen: PropTypes.bool.isRequired,
 };
@@ -58,7 +49,6 @@ export default React.memo(
     p.duration === n.duration &&
     p.tooltip === n.tooltip &&
     p.showTooltip === n.showTooltip &&
-    p.showTooltipOnly === n.showTooltipOnly &&
     p.chapterTitle === n.chapterTitle &&
     p.fullscreen === n.fullscreen,
 );

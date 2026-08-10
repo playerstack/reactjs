@@ -137,7 +137,6 @@ const TimeSlider = ({
         showTooltip={showTooltip}
         duration={duration}
         tooltip={timeSliderSliding ? timeSliderState.value : timeSliderState.tooltip}
-        showTooltipOnly={!spriteVTTFile}
         chapterTitle={hoveredChapter?.title}
         fullscreen={fullscreen}
       />

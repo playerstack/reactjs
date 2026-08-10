@@ -45,7 +45,11 @@ export const createMediaPlayer = (player) => {
         this.wrapper = wrapper;
       },
       player: (player) => {
-        this.player = player;
+        if (player && player !== this.player) {
+          this.player = player;
+          // Force re-render so MediaPlayerSkin receives the player instance
+          this.forceUpdate();
+        }
       },
     };
 

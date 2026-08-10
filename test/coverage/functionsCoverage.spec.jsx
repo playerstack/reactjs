@@ -486,11 +486,10 @@ describe('usePlayerSkinWrapper – additional callback coverage', () => {
       { wrapper },
     );
 
-  test('changePlayBackQuality does nothing when player is null', () => {
+  test('changePlayBackQuality updates state even when player is null', () => {
     const { result } = getHook({ player: null });
     act(() => result.current.memorizedProps.changePlayBackQuality(720));
-    // updateState should NOT be called since playerRef2.current is null
-    expect(updateState).not.toHaveBeenCalled();
+    expect(updateState).toHaveBeenCalled();
   });
 
   test('onSeeking calls updateState with seeking value', () => {

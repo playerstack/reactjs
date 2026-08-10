@@ -21,7 +21,7 @@ export const StyledTooltip = styled(Tooltip)`
   `}
 `;
 
-export const Tip = React.forwardRef(({ isFullscreen, showTooltipOnly, ...rest }, ref) => <div ref={ref} {...rest} />);
+export const Tip = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
 
 Tip.displayName = 'Tip';
 
@@ -34,22 +34,7 @@ export const StyledTip = styled(Tip)`
   font-weight: 500;
   text-align: center;
   color: #fff;
-  ${({ showTooltipOnly }) =>
-    showTooltipOnly &&
-    `
-    border-radius: 4px;
-    background: #333;
-    &:after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      margin-left: -5px;
-      border-width: 5px;
-      border-style: solid;
-      border-color: #333 transparent transparent transparent;
-    }
-  `}
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
   ${({ isFullscreen }) =>
     isFullscreen
       ? `

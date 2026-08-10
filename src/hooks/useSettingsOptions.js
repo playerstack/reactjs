@@ -173,7 +173,11 @@ const useSettingsOptions = ({
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (!dropdownRef.current) return;
+      // Use composedPath() to correctly detect clicks inside Shadow DOM
+      const path = event.composedPath ? event.composedPath() : [];
+      const isInside = path.includes(dropdownRef.current) || dropdownRef.current.contains(event.target);
+      if (!isInside) {
         dispatch({
           menuVisible: false,
           subMenuVisible: false,

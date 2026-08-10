@@ -95,30 +95,24 @@ const usePlayerSkinWrapper = ({
   onMutedClickRef.current = onMutedClick;
   const changeCurrentTimeRef = React.useRef(changeCurrentTime);
   changeCurrentTimeRef.current = changeCurrentTime;
-  const playerRef2 = React.useRef(player);
-  playerRef2.current = player;
-
   const memorizedProps = React.useMemo(() => {
     return {
-      onPlayClick: () => playerRef2.current && updateState((prev) => ({ ...prev, playing: true })),
-      onPauseClick: () => playerRef2.current && updateState((prev) => ({ ...prev, playing: false })),
+      onPlayClick: () => updateState((prev) => ({ ...prev, playing: true })),
+      onPauseClick: () => updateState((prev) => ({ ...prev, playing: false })),
       onTogglePlay: () =>
-        playerRef2.current &&
         updateState((prev) => ({
           ...prev,
           playing: !prev.playing,
         })),
-      changePlaybackRate: (rate) => playerRef2.current && updateState((prev) => ({ ...prev, playbackRate: rate })),
+      changePlaybackRate: (rate) => updateState((prev) => ({ ...prev, playbackRate: rate })),
       changePlayBackQuality: (quality) => {
-        if (playerRef2.current) {
-          updateState((prev) => ({ ...prev, playbackQuality: quality }));
-        }
+        updateState((prev) => ({ ...prev, playbackQuality: quality }));
       },
-      requestPictureInPicture: () => playerRef2.current && updateState((prev) => ({ ...prev, isPIP: true })),
-      exitPictureInPicture: () => playerRef2.current && updateState((prev) => ({ ...prev, isPIP: false })),
-      onSeeking: (seeking) => playerRef2.current && updateState((prev) => reduceSeekState(prev, seeking)),
-      onMutedClick: () => playerRef2.current && onMutedClickRef.current(),
-      onLoopClick: () => playerRef2.current && updateState((prev) => ({ ...prev, loop: !prev.loop })),
+      requestPictureInPicture: () => updateState((prev) => ({ ...prev, isPIP: true })),
+      exitPictureInPicture: () => updateState((prev) => ({ ...prev, isPIP: false })),
+      onSeeking: (seeking) => updateState((prev) => reduceSeekState(prev, seeking)),
+      onMutedClick: () => onMutedClickRef.current(),
+      onLoopClick: () => updateState((prev) => ({ ...prev, loop: !prev.loop })),
       onPreventedClick: () => updateState((prev) => ({ ...prev, isMuted: false, volume: 1 })),
       changeCurrentTime: (time) => changeCurrentTimeRef.current(time),
     };

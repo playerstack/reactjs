@@ -26,7 +26,12 @@ const Timelens = React.forwardRef(
       (async () => {
         try {
           const vttString = await fetch(spriteVTTFile).then((e) => e.text());
-          const vttArray = parseVTT(vttString);
+          // Resolve relative image paths to absolute using VTT file's base URL
+          const baseUrl = spriteVTTFile.substring(0, spriteVTTFile.lastIndexOf('/') + 1);
+          const resolved = vttString.replace(/^([^#?\n]+\.(png|jpg|jpeg|webp))/gim, (match) =>
+            match.startsWith('http') ? match : `${baseUrl}${match}`,
+          );
+          const vttArray = parseVTT(resolved);
 
           setVttArray(vttArray);
         } catch (error) {
