@@ -90,6 +90,16 @@ const useTimeSlider = ({ timelensRef, currentTime, duration, onChange, onSeeking
       if (timelensRef.current) {
         timelensRef.current.setShowTimelens(false);
       }
+      // Hide tooltip if pointer is no longer over the slider
+      if (sliderRef.current) {
+        const rect = sliderRef.current.getBoundingClientRect();
+        const clientX = e.clientX ?? e.changedTouches?.[0]?.clientX ?? 0;
+        const clientY = e.clientY ?? e.changedTouches?.[0]?.clientY ?? 0;
+        const isOutside = clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom;
+        if (isOutside) {
+          setShowTooltip(false);
+        }
+      }
     },
     [onChange, duration, timeSliderRect, dispatch, onSeeking, timelensRef],
   );

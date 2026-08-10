@@ -17,7 +17,7 @@ const TimeTooltip = ({
   const tooltipRef = React.useRef(null);
   const [translateX, setTranslateX] = React.useState('0');
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const translate = getMouseTranslateX({
       duration,
       currentTime: tooltip,
@@ -26,7 +26,7 @@ const TimeTooltip = ({
     });
 
     setTranslateX(translate);
-  }, [duration, tooltip, tooltipRef, sliderRef]);
+  }, [duration, tooltip, chapterTitle, sliderRef]);
 
   return (
     <StyledTooltip
