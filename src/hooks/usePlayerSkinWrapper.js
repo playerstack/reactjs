@@ -5,6 +5,7 @@ import useFullscreen from './useFullscreen';
 import { buildSettingsLabel } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay.constants';
 import useAppSelector from './context/useAppSelector';
 import { eventsKeyCodes, keyMappings } from '../PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.constants';
+import { reduceSeekState } from './reducers/playerState.reducers';
 
 const usePlayerSkinWrapper = ({
   ref,
@@ -115,7 +116,7 @@ const usePlayerSkinWrapper = ({
       },
       requestPictureInPicture: () => playerRef2.current && updateState((prev) => ({ ...prev, isPIP: true })),
       exitPictureInPicture: () => playerRef2.current && updateState((prev) => ({ ...prev, isPIP: false })),
-      onSeeking: (seeking) => playerRef2.current && updateState((prev) => ({ ...prev, seeking: seeking })),
+      onSeeking: (seeking) => playerRef2.current && updateState((prev) => reduceSeekState(prev, seeking)),
       onMutedClick: () => playerRef2.current && onMutedClickRef.current(),
       onLoopClick: () => playerRef2.current && updateState((prev) => ({ ...prev, loop: !prev.loop })),
       onPreventedClick: () => updateState((prev) => ({ ...prev, isMuted: false, volume: 1 })),

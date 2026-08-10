@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 
 import Duration from './components/Duration';
 import screenfull from './utils/fullscreen';
-import PlayerStack from '../../../lib';
+import PlayerStack from '../../../src';
 import { version } from '../../../package.json';
 import { IState } from './types/App.types';
 

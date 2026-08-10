@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import PauseIcon from '../../../../../Commons/Icons/PauseIcon';
 import PlayIcon from '../../../../../Commons/Icons/PlayIcon';
+import ReplayIcon from '../../../../../Commons/Icons/ReplayIcon';
 import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 
@@ -11,7 +12,22 @@ const PlayButton = ({ fullscreen, paused, ended, onPlayClick, onPauseClick }) =>
   const { i18n } = useAppSelector();
   const iconProps = React.useMemo(() => buildIconProps(fullscreen), [fullscreen]);
 
-  return paused || ended ? (
+  if (ended) {
+    return (
+      <StyledGeneralButton
+        type="button"
+        aria-label={i18n.replay}
+        title={i18n.replay}
+        onClick={onPlayClick}
+        isFullscreen={fullscreen}
+        isTooltipActive
+      >
+        <ReplayIcon {...iconProps} />
+      </StyledGeneralButton>
+    );
+  }
+
+  return paused ? (
     <StyledGeneralButton
       type="button"
       aria-label={i18n.play}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { StyledPlayButton } from './PlayState.styled';
 import PlayIcon from '../../../Commons/Icons/PlayIcon';
+import ReplayIcon from '../../../Commons/Icons/ReplayIcon';
 import SpinnerLoading from '../../../Commons/Icons/SpinnerLoading';
 
 const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kernelMsg, onClick }) => {
@@ -15,7 +16,7 @@ const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kern
   } else {
     return (
       <StyledPlayButton showing={paused || ended} onClick={onClick}>
-        <PlayIcon width="20%" height="100%" />
+        {ended ? <ReplayIcon width="14%" height="100%" /> : <PlayIcon width="20%" height="100%" />}
       </StyledPlayButton>
     );
   }

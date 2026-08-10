@@ -4,6 +4,7 @@ export default {
   exitFullscreen: 'Salir de pantalla completa',
   fullscreen: 'Pantalla completa',
   play: 'Reproducir',
+  replay: 'Volver a reproducir',
   pause: 'Pausar',
   previous: 'Anterior',
   next: 'Siguiente',

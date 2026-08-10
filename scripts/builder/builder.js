@@ -109,9 +109,11 @@ export async function build(positionals, args) {
     await ctx.watch();
 
     if (args.servedir) {
-      await ctx.serve({
+      const { host, port } = await ctx.serve({
         servedir: args.servedir,
+        port: 8000,
       });
+      console.log(`[serve] http://${host}:${port}`);
     }
 
     return;

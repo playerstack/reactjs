@@ -7,7 +7,7 @@ import {
   StyledMobileNavButton,
   StyledMobileSpinner,
 } from './MobileCenterControls.styled';
-import { PlayIcon, PauseIcon, PrevIcon, NextIcon } from '../../icons';
+import { PlayIcon, PauseIcon, ReplayIcon, PrevIcon, NextIcon } from '../../icons';
 
 const MobileCenterControls = ({
   visible,
@@ -71,7 +71,7 @@ const MobileCenterControls = ({
         </StyledMobileSpinner>
       ) : (
         <StyledMobilePlayButton aria-label={paused ? i18n.play : i18n.pause} onClick={handlePlayPause}>
-          {paused || ended ? <PlayIcon /> : <PauseIcon />}
+          {ended ? <ReplayIcon /> : paused ? <PlayIcon /> : <PauseIcon />}
         </StyledMobilePlayButton>
       )}
 
