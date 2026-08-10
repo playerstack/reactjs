@@ -30,6 +30,23 @@ const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, 
   const shouldStayVisibleRef = React.useRef(shouldStayVisible);
   shouldStayVisibleRef.current = shouldStayVisible;
 
+  // shouldStayVisible WITHOUT controlsHovering — for use in hideControls
+  const shouldStayVisibleWithoutHover =
+    hasResource === false ||
+    loading ||
+    prevented ||
+    paused ||
+    ended ||
+    waiting ||
+    seeking ||
+    timeSliding ||
+    menuVisible ||
+    subMenuVisible ||
+    kernelMsg;
+
+  const shouldStayVisibleWithoutHoverRef = React.useRef(shouldStayVisibleWithoutHover);
+  shouldStayVisibleWithoutHoverRef.current = shouldStayVisibleWithoutHover;
+
   const showControls = React.useCallback(() => {
     if (typeof window !== 'undefined') {
       window.clearTimeout(timerControls.current);
@@ -49,8 +66,11 @@ const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, 
     if (typeof window !== 'undefined') {
       window.clearTimeout(timerControls.current);
     }
+    // Reset controlsHovering — mouse left player container entirely
+    dispatch({ type: 'controlsHovering', payload: false });
 
-    if (shouldStayVisibleRef.current) {
+    // Respect all stay-visible conditions EXCEPT controlsHovering
+    if (shouldStayVisibleWithoutHoverRef.current) {
       dispatch({ type: 'hiding', payload: false });
       return;
     }

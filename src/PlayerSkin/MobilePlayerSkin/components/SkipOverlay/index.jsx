@@ -7,10 +7,26 @@ import { SkipChevronIcon } from '../../icons';
 const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
   const secondsLabel = i18n?.seconds || 'seconds';
 
+  const handleTapLeft = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      onTapLeft();
+    },
+    [onTapLeft],
+  );
+
+  const handleTapRight = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      onTapRight();
+    },
+    [onTapRight],
+  );
+
   return (
     <>
-      <StyledSkipTapArea direction="backward" onClick={onTapLeft} aria-label="Skip backward" />
-      <StyledSkipTapArea direction="forward" onClick={onTapRight} aria-label="Skip forward" />
+      <StyledSkipTapArea direction="backward" onClick={handleTapLeft} aria-label="Skip backward" />
+      <StyledSkipTapArea direction="forward" onClick={handleTapRight} aria-label="Skip forward" />
 
       {skipState.visible && skipState.direction === 'backward' && (
         <StyledSkipOverlay direction="backward" $visible>

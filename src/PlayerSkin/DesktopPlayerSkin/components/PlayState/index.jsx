@@ -11,7 +11,7 @@ const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kern
     return null;
   }
 
-  if (waiting || seeking) {
+  if (waiting) {
     return <SpinnerLoading />;
   } else {
     return (

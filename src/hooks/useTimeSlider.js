@@ -120,13 +120,14 @@ const useTimeSlider = ({ timelensRef, currentTime, duration, onChange, onSeeking
           ...prev,
           value,
         }));
+        onChange(value);
         if (timelensRef.current) {
           timelensRef.current.handleTimelens({ clientX, pageX });
         }
         rafRef.current = null;
       });
     },
-    [duration, timeSliderRect, timelensRef],
+    [duration, timeSliderRect, timelensRef, onChange],
   );
 
   React.useEffect(() => {

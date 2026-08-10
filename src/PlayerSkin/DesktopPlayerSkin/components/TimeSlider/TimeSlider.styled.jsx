@@ -52,10 +52,10 @@ export const StyledSliderHandle = styled(SliderHandle)`
 `;
 
 const commonsSliderHandleStyles = `
-  -moz-transform: none;
-  -ms-transform: none;
-  -webkit-transform: none;
-  transform: none;
+  -moz-transform: none !important;
+  -ms-transform: none !important;
+  -webkit-transform: none !important;
+  transform: none !important;
   -moz-transition: -moz-transform 0.1s cubic-bezier(0, 0, 0.2, 1);
   -webkit-transition: -webkit-transform 0.1s cubic-bezier(0, 0, 0.2, 1);
   -ms-transition: -ms-transform 0.1s cubic-bezier(0, 0, 0.2, 1);

@@ -23,6 +23,7 @@ import { PreviousButton, NextButton } from './components/Controls/components/Nav
 import FullscreenButton from './components/Controls/components/FullscreenButton';
 
 import useAutoHide from '../../hooks/useAutoHide';
+import SpritePreview from '../Commons/SpritePreview';
 import SettingsButton from './components/Controls/components/SettingsButton';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
@@ -208,6 +209,10 @@ const DesktopPlayerSkin = React.forwardRef(
           position={contextMenuPosition}
           menuItems={contextMenuItems}
         />
+        {/* Full-area sprite preview when seeking via timeline (same as mobile) */}
+        {spriteVTTFile && (
+          <SpritePreview spriteVTTFile={spriteVTTFile} duration={duration} seekTime={currentTime} visible={seeking} />
+        )}
         <PlayState
           hasResource={hasResource}
           loading={loading}

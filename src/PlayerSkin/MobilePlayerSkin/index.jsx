@@ -90,7 +90,7 @@ const MobilePlayerSkin = React.forwardRef(
       currentTime,
       duration,
       changeCurrentTime,
-      showControls,
+      showControls: toggleControls,
     });
 
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({

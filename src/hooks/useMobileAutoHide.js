@@ -12,7 +12,7 @@ export default function useMobileAutoHide({ hasResource, loading, prevented, pau
   const [controlsVisible, setControlsVisible] = useState(true);
   const timerRef = useRef(null);
 
-  const shouldStayVisible = !hasResource || loading || prevented || paused || ended || waiting;
+  const shouldStayVisible = !hasResource || loading || prevented || paused || ended || waiting || seeking;
 
   const startHideTimer = useCallback(() => {
     clearTimeout(timerRef.current);
