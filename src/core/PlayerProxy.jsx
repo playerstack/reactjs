@@ -62,7 +62,7 @@ export default class PlayerProxy extends React.Component {
       // Clear any existing progress loop to prevent multiple simultaneous loops
       clearTimeout(this.progressTimeout);
       if (this.isLoading && !activePlayer?.forceLoad && !disableDeferredLoading && !isMediaStream(url)) {
-        console.warn(`ReactJSMediaPlayer: the attempt to load ${url} is being deferred until the player has loaded`);
+        console.warn(`PlayerStack: the attempt to load ${url} is being deferred until the player has loaded`);
         this.loadOnReady = url;
         return;
       }
@@ -212,7 +212,7 @@ export default class PlayerProxy extends React.Component {
       // Convert fraction to seconds based on duration
       const duration = this.player.getDuration();
       if (!duration) {
-        console.warn('ReactJSMediaPlayer: could not seek using fraction – duration not yet available');
+        console.warn('PlayerStack: could not seek using fraction – duration not yet available');
         return;
       }
       this.player.seekTo(duration * amount, keepPlaying);

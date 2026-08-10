@@ -20,7 +20,7 @@ export type TReactJSMediaPlayerProps =
   | (IReactJSMediaPlayerLibWithUrl & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithUrlNever)
   | (IReactJSMediaPlayerLibWithSources & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithSourcesNever);
 
-export default class ReactJSMediaPlayer extends BaseReactJSMediaPlayer<TReactJSMediaPlayerProps> {
+export default class PlayerStack extends BaseReactJSMediaPlayer<TReactJSMediaPlayerProps> {
   seekTo(amount: number, type?: 'seconds' | 'fraction'): void;
   getCurrentTime(): number;
   getSecondsLoaded(): number;

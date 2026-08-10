@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import ReactJSMediaPlayer from '../src';
+import PlayerStack from '../src';
 
-describe('ReactJSMediaPlayer - props', () => {
+describe('PlayerStack - props', () => {
   const renderComponent = (props) => {
-    return render(<ReactJSMediaPlayer {...props} />);
+    return render(<PlayerStack {...props} />);
   };
 
   test('className', () => {

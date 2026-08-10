@@ -1,6 +1,6 @@
 import { Component, ReactElement, CSSProperties } from 'react';
 
-import ReactJSMediaPlayer from './lib';
+import PlayerStack from './lib';
 import dashjs from './dashjs';
 import hlsjs from './hlsjs';
 import flvJs from './flvjs';
@@ -52,7 +52,7 @@ export interface IBaseReactJSMediaPlayerCommons {
   poster?: string;
   spriteVTTFile?: string;
   chapters?: IChapterProps[];
-  onReady?: (player: ReactJSMediaPlayer) => void;
+  onReady?: (player: PlayerStack) => void;
   onStart?: () => void;
   onPlay?: () => void;
   onPause?: () => void;

@@ -1,23 +1,23 @@
-import ReactJSMediaPlayer from '../src';
+import PlayerStack from '../src';
 
 const COMMON_METHODS = ['getDuration', 'getCurrentTime', 'getSecondsLoaded', 'getInternalPlayer'];
 
 describe('COMMON_METHODS', () => {
   test.each(COMMON_METHODS)('%s() - valid value', (method) => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     instance.references.player({ [method]: () => 123 });
     expect(instance[method]()).toBe(123);
   });
 
   test.each(COMMON_METHODS)('%s() - null', (method) => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     expect(instance[method]()).toBe(null);
   });
 });
 
 describe('Other methods', () => {
   test('getInternalPlayer() - default', async () => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     const mockGetInternalPlayer = jest.fn().mockReturnValue('abc');
     instance.references.player({
       getInternalPlayer: mockGetInternalPlayer,
@@ -29,7 +29,7 @@ describe('Other methods', () => {
   });
 
   test('seekTo()', async () => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     const mockSeekTo = jest.fn();
     instance.references.player({ seekTo: mockSeekTo });
     instance.seekTo(5, 'seconds', true);
@@ -39,13 +39,13 @@ describe('Other methods', () => {
   });
 
   test('seekTo() - null', async () => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     expect(instance.seekTo()).toBe(null);
   });
 
   test('onReady()', () => {
     const mockOnReady = jest.fn();
-    const instance = new ReactJSMediaPlayer({
+    const instance = new PlayerStack({
       onReady: mockOnReady,
     });
     instance.handleReady();
@@ -54,7 +54,7 @@ describe('Other methods', () => {
   });
 
   test('refs', async () => {
-    const instance = new ReactJSMediaPlayer();
+    const instance = new PlayerStack();
     instance.references.player('abc');
     instance.references.wrapper('def');
 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 
 import Duration from './components/Duration';
 import screenfull from './utils/fullscreen';
-import ReactJSMediaPlayer from '../../../lib';
+import PlayerStack from '../../../lib';
 import { version } from '../../../package.json';
 import { IState } from './types/App.types';
 
@@ -161,9 +161,9 @@ const App = () => {
   return (
     <div className="app">
       <section className="section">
-        <h1>ReactJSMediaPlayer Demo</h1>
+        <h1>PlayerStack Demo</h1>
         <div className="player-wrapper">
-          <ReactJSMediaPlayer
+          <PlayerStack
             ref={ref}
             className="reactjs-player"
             width="100%"
@@ -258,7 +258,7 @@ const App = () => {
                 <button onClick={handleStop}>Stop</button>
                 <button onClick={handlePlayPause}>{state.playing ? 'Pause' : 'Play'}</button>
                 <button onClick={handleClickFullscreen}>Fullscreen</button>
-                {ReactJSMediaPlayer.canEnablePIP(state.urlFile) && (
+                {PlayerStack.canEnablePIP(state.urlFile) && (
                   <button onClick={handleTogglePIP}>{state.pip ? 'Disable PiP' : 'Enable PiP'}</button>
                 )}
               </td>

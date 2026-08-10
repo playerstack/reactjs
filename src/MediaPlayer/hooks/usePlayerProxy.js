@@ -99,7 +99,7 @@ const usePlayerProxy = ({
     if (fullHDQualityBreak !== undefined && !(fullHDQualityBreak in sourcesByResolution)) {
       const resolutions = Object.keys(sourcesByResolution).join(', ');
       console.error(
-        `ReactJSMediaPlayer: Invalid fullHDQualityBreak value "${fullHDQualityBreak}". Accepted resolutions are: ${resolutions}. Falling back to highest available.`,
+        `PlayerStack: Invalid fullHDQualityBreak value "${fullHDQualityBreak}". Accepted resolutions are: ${resolutions}. Falling back to highest available.`,
       );
     }
   }, [sourcesByResolution, fullHDQualityBreak]);
