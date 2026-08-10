@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import PlayerSkin from './PlayerSkin';
 import { AppContextProvider } from '../context/AppContextProvider';
 import PlayerProxy from '../core/PlayerProxy';
-import i18n from '../i18n';
+import { en, es } from '@playerstack/core';
 import usePlayerSkinWrapper from '../hooks/usePlayerSkinWrapper';
+
+const i18n = { en, es };
 
 const PlayerSkinWrapper = React.forwardRef(
   (

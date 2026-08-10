@@ -1,6 +1,6 @@
-import i18n from '../../src/i18n';
-import en from '../../src/i18n/en';
-import es from '../../src/i18n/es';
+import { en, es } from '@playerstack/core';
+
+const i18n = { en, es };
 
 describe('i18n', () => {
   const requiredKeys = [

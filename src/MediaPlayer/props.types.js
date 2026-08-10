@@ -1,6 +1,7 @@
 import PropTypes, { node } from 'prop-types';
-import i18n from '../i18n';
+import { en, es } from '@playerstack/core';
 
+const i18n = { en, es };
 const { string, bool, number, array, oneOfType, shape, object, func } = PropTypes;
 
 const availableLanguages = Object.keys(i18n);

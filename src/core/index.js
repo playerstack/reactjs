@@ -1,5 +1,5 @@
+import { canPlay } from '@playerstack/core';
 import { lazy, supportsWebKitPresentationMode } from '../utils/player';
-import { canPlay } from '../patterns';
 
 export default {
   key: 'core',

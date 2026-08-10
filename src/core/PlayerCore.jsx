@@ -9,10 +9,13 @@ import {
   DASH_GLOBAL,
   FLV_SDK_URL,
   FLV_GLOBAL,
-} from './core.constants';
+  canPlay,
+  HLS_EXTENSIONS,
+  DASH_EXTENSIONS,
+  FLV_EXTENSIONS,
+} from '@playerstack/core';
 import { isMediaStream } from '../utils';
 import { getSDK, hasAudio, supportsWebKitPresentationMode } from '../utils/player';
-import { canPlay, HLS_EXTENSIONS, DASH_EXTENSIONS, FLV_EXTENSIONS } from '../patterns';
 
 export default class PlayerCore extends React.Component {
   static displayName = 'PlayerCore';

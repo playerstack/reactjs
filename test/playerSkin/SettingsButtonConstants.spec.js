@@ -1,6 +1,6 @@
 import { buildSettingsLabel } from '../../src/PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay.constants';
 import { settingsOverlayFn } from '../../src/PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.constants';
-import en from '../../src/i18n/en';
+import { en } from '@playerstack/core';
 
 describe('buildSettingsLabel', () => {
   test('returns quality label as "<value>p" for quality type', () => {
