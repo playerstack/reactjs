@@ -11,7 +11,7 @@ const generateSinglePlayer = async () => {
         lazyPlayer: Player
       }])
     `;
-  await writeFile(join('.', 'player-stack.js'), file);
+  await writeFile(join('.', 'playerstack.js'), file);
 };
 
 generateSinglePlayer();

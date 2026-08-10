@@ -229,7 +229,7 @@ export const createMediaPlayer = (player) => {
         <Wrapper
           ref={wrapperRef}
           data-testid="media-player-skin"
-          className={`player-stack${className ? ` ${className}` : ''}`}
+          className={`playerstack${className ? ` ${className}` : ''}`}
           {...attributes}
         >
           <UniversalSuspense fallback={this.props.fallback}>

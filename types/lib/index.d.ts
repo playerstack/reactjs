@@ -1,26 +1,26 @@
-import BaseReactJSMediaPlayer, {
-  IBaseReactJSMediaPlayerCommons,
-  IBaseReactJSMediaPlayerWithSources,
-  IBaseReactJSMediaPlayerWithSourcesNever,
-  IBaseReactJSMediaPlayerWithUrl,
-  IBaseReactJSMediaPlayerWithUrlNever,
+import BasePlayerStack, {
+  IBasePlayerStackCommons,
+  IBasePlayerStackWithSources,
+  IBasePlayerStackWithSourcesNever,
+  IBasePlayerStackWithUrl,
+  IBasePlayerStackWithUrlNever,
 } from '../base';
 
 import { IPlayerCoreConfig } from '../core';
 
-export interface IReactJSMediaPlayerLibWithUrl extends IBaseReactJSMediaPlayerWithUrl {
+export interface IPlayerStackLibWithUrl extends IBasePlayerStackWithUrl {
   config?: IPlayerCoreConfig;
 }
 
-export interface IReactJSMediaPlayerLibWithSources extends IBaseReactJSMediaPlayerWithSources {
+export interface IPlayerStackLibWithSources extends IBasePlayerStackWithSources {
   config?: IPlayerCoreConfig;
 }
 
-export type TReactJSMediaPlayerProps =
-  | (IReactJSMediaPlayerLibWithUrl & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithUrlNever)
-  | (IReactJSMediaPlayerLibWithSources & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithSourcesNever);
+export type TPlayerStackProps =
+  | (IPlayerStackLibWithUrl & IBasePlayerStackCommons & IBasePlayerStackWithUrlNever)
+  | (IPlayerStackLibWithSources & IBasePlayerStackCommons & IBasePlayerStackWithSourcesNever);
 
-export default class PlayerStack extends BaseReactJSMediaPlayer<TReactJSMediaPlayerProps> {
+export default class PlayerStack extends BasePlayerStack<TPlayerStackProps> {
   seekTo(amount: number, type?: 'seconds' | 'fraction'): void;
   getCurrentTime(): number;
   getSecondsLoaded(): number;

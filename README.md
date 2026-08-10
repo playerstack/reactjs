@@ -3,8 +3,8 @@
 </h1>
 
 <p align='center'>
-  <a href='https://www.npmjs.com/package/player-stack'><img src='https://img.shields.io/npm/v/player-stack.svg' alt='Latest npm version'></a>
-  <a href='https://codecov.io/gh/soyvillareal/player-stack'><img src='https://img.shields.io/codecov/c/github/soyvillareal/player-stack.svg' alt='Test Coverage'></a>
+  <a href='https://www.npmjs.com/package/@playerstack/reactjs'><img src='https://img.shields.io/npm/v/@playerstack/reactjs.svg' alt='Latest npm version'></a>
+  <a href='https://codecov.io/gh/playerstack/reactjs'><img src='https://img.shields.io/codecov/c/github/playerstack/reactjs.svg' alt='Test Coverage'></a>
   <a href='https://www.patreon.com/soyvillareal'><img src='https://img.shields.io/badge/sponsor-patreon-fa6854.svg' alt='Become a sponsor on Patreon'></a>
 </p>
 
@@ -13,7 +13,7 @@
   Not using React? <a href='#standalone-player'>No problem ;)</a>
 </p>
 
-> **Note:** This package was previously published as [`reactjs-media-player`](https://www.npmjs.com/package/reactjs-media-player). That package is now deprecated — please use `player-stack` instead.
+> **Note:** This package was previously published as [`reactjs-media-player`](https://www.npmjs.com/package/reactjs-media-player). That package is now deprecated — please use `@playerstack/reactjs` instead.
 
 ---
 
@@ -25,30 +25,30 @@ Player Stack is and will remain open source, for a higher rate of fixes and rele
 ### Usage
 
 ```bash
-npm install player-stack # or yarn add player-stack
+npm install @playerstack/reactjs # or yarn add @playerstack/reactjs
 ```
 
 ```jsx
 import React from 'react';
-import PlayerStack from 'player-stack';
+import PlayerStack from '@playerstack/reactjs';
 
 // Render a HLS video player
 <PlayerStack url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />;
 ```
 
-If your build system supports `import()` statements, use `player-stack/lazy` to lazy load the appropriate player for the `url` you pass in. This adds several `Player Stack` chunks to your output, but reduces your main bundle size.
+If your build system supports `import()` statements, use `@playerstack/reactjs/lazy` to lazy load the appropriate player for the `url` you pass in. This adds several `Player Stack` chunks to your output, but reduces your main bundle size.
 
 ```jsx
 import React from 'react';
-import PlayerStackLazy from 'player-stack/lazy';
+import PlayerStackLazy from '@playerstack/reactjs/lazy';
 
 // Lazy load the player
 <PlayerStackLazy url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />;
 ```
 
-Demo page: [`https://soyvillareal.github.io/player-stack`](https://soyvillareal.github.io/player-stack)
+Demo page: [`https://playerstack.github.io/reactjs`](https://playerstack.github.io/reactjs)
 
-The component parses a URL and loads in the appropriate markup and external SDKs to play media from [various sources](#supported-media). [Props](#props) can be passed in to control playback and react to events such as buffering or media ending. See [the demo source](https://github.com/soyvillareal/player-stack/blob/master/examples/react/src/App.jsx) for a full example.
+The component parses a URL and loads in the appropriate markup and external SDKs to play media from [various sources](#supported-media). [Props](#props) can be passed in to control playback and react to events such as buffering or media ending. See [the demo source](https://github.com/playerstack/reactjs/blob/master/examples/react/src/App.jsx) for a full example.
 
 For platforms without direct use of `npm` modules, a minified version of `Player Stack` is located in `dist` after installing. To generate this file yourself, checkout the repo and run `npm run build:dist`.
 
@@ -147,7 +147,7 @@ Method | Description
 ```jsx
 <div className="player-wrapper">
   <PlayerStack
-    className="player-stack"
+    className="playerstack"
     url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
     width="100%"
     height="100%"
@@ -161,7 +161,7 @@ Method | Description
   padding-top: 56.25%;
 }
 
-.player-stack {
+.playerstack {
   position: absolute;
   top: 0;
   left: 0;
@@ -173,7 +173,7 @@ Method | Description
 If you aren't using React, you can still render a player using the standalone library:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/player-stack/dist/PlayerStack.standalone.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@playerstack/reactjs/dist/PlayerStack.standalone.js"></script>
 <script>
   const container = document.getElementById('container');
   const url = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
@@ -217,9 +217,9 @@ If you aren't using React, you can still render a player using the standalone li
 
 ### Contributing
 
-See the [contribution guidelines](https://github.com/soyvillareal/player-stack/blob/master/CONTRIBUTING.md) before creating a pull request.
+See the [contribution guidelines](https://github.com/playerstack/reactjs/blob/master/CONTRIBUTING.md) before creating a pull request.
 
 ### Thanks
 
-- Thanks to anyone who has [contributed](https://github.com/soyvillareal/player-stack/graphs/contributors).
+- Thanks to anyone who has [contributed](https://github.com/playerstack/reactjs/graphs/contributors).
 - Big thanks to my [Patreon](https://patreon.com/soyvillareal) supporters!

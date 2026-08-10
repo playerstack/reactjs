@@ -1,9 +1,9 @@
-import BaseReactJSMediaPlayer, {
-  IBaseReactJSMediaPlayerCommons,
-  IBaseReactJSMediaPlayerWithSources,
-  IBaseReactJSMediaPlayerWithSourcesNever,
-  IBaseReactJSMediaPlayerWithUrl,
-  IBaseReactJSMediaPlayerWithUrlNever,
+import BasePlayerStack, {
+  IBasePlayerStackCommons,
+  IBasePlayerStackWithSources,
+  IBasePlayerStackWithSourcesNever,
+  IBasePlayerStackWithUrl,
+  IBasePlayerStackWithUrlNever,
 } from './base';
 import { HlsConfig } from './hlsjs.js';
 
@@ -32,19 +32,19 @@ export interface IPlayerCoreConfig {
   loopOnEnded: boolean;
 }
 
-export interface IPlayerCoreWithUrl extends IBaseReactJSMediaPlayerWithUrl {
+export interface IPlayerCoreWithUrl extends IBasePlayerStackWithUrl {
   config?: IPlayerCoreConfig;
 }
 
-export interface IPlayerCoreWithSources extends IBaseReactJSMediaPlayerWithSources {
+export interface IPlayerCoreWithSources extends IBasePlayerStackWithSources {
   config?: IPlayerCoreConfig;
 }
 
 export type TPlayerCoreProps =
-  | (IPlayerCoreWithUrl & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithUrlNever)
-  | (IPlayerCoreWithSources & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithSourcesNever);
+  | (IPlayerCoreWithUrl & IBasePlayerStackCommons & IBasePlayerStackWithUrlNever)
+  | (IPlayerCoreWithSources & IBasePlayerStackCommons & IBasePlayerStackWithSourcesNever);
 
-export default class PlayerCore extends BaseReactJSMediaPlayer<TPlayerCoreProps> {
+export default class PlayerCore extends BasePlayerStack<TPlayerCoreProps> {
   seekTo(_amount: number, _type?: 'seconds' | 'fraction'): void;
   getCurrentTime(): number;
   getSecondsLoaded(): number;

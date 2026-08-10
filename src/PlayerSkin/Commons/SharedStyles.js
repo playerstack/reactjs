@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
 
-  div[data-testid="media-player-skin"].player-stack {
+  div[data-testid="media-player-skin"].playerstack {
     *, *::before, *::after {
       box-sizing: border-box;
     }

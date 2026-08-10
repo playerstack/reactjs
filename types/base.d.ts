@@ -37,7 +37,7 @@ export interface IOnProgressProps {
 
 export type TLanguage = 'es' | 'en';
 
-export interface IBaseReactJSMediaPlayerCommons {
+export interface IBasePlayerStackCommons {
   prevented?: boolean;
   waiting?: boolean;
   playing?: boolean;
@@ -79,28 +79,28 @@ export interface IBaseReactJSMediaPlayerCommons {
   showNavButtons?: boolean;
 }
 
-export interface IBaseReactJSMediaPlayerWithUrlNever {
+export interface IBasePlayerStackWithUrlNever {
   sources?: never;
 }
 
-export interface IBaseReactJSMediaPlayerWithSourcesNever {
+export interface IBasePlayerStackWithSourcesNever {
   url?: never;
 }
 
-export interface IBaseReactJSMediaPlayerWithUrl {
+export interface IBasePlayerStackWithUrl {
   url: string;
 }
 
-export interface IBaseReactJSMediaPlayerWithSources {
+export interface IBasePlayerStackWithSources {
   sources: ISourceProps[];
   fullHDQualityBreak?: number;
 }
 
-type TBaseReactJSMediaPlayerProps =
-  | (IBaseReactJSMediaPlayerWithUrl & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithUrlNever)
-  | (IBaseReactJSMediaPlayerWithSources & IBaseReactJSMediaPlayerCommons & IBaseReactJSMediaPlayerWithSourcesNever);
+type TBasePlayerStackProps =
+  | (IBasePlayerStackWithUrl & IBasePlayerStackCommons & IBasePlayerStackWithUrlNever)
+  | (IBasePlayerStackWithSources & IBasePlayerStackCommons & IBasePlayerStackWithSourcesNever);
 
-export default abstract class BaseReactJSMediaPlayer<P extends TBaseReactJSMediaPlayerProps> extends Component<P, any> {
+export default abstract class BasePlayerStack<P extends TBasePlayerStackProps> extends Component<P, any> {
   static canPlay(url: string): boolean;
   static canEnablePIP(url: string): boolean;
 
