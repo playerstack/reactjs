@@ -33,7 +33,11 @@ export async function build(positionals, args) {
   // https://github.com/evanw/esbuild/issues/337
   const plugins = {
     'global-externals': (arg) => {
-      const options = JSON.parse(arg);
+      // Add quotes around unquoted keys/values for lenient JSON parsing
+      const normalized = arg
+        .replace(/([{,])\s*([^"{}\s:,]+)\s*:/g, '$1"$2":')
+        .replace(/:\s*([^"{}\s:,]+)\s*([,}])/g, ':"$1"$2');
+      const options = JSON.parse(normalized);
 
       return {
         name: 'global-externals-plugin',
