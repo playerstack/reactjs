@@ -1,5 +1,5 @@
 {
-  "name": "player-stack",
+  "name": "@playerstack/reactjs",
   "version": "0.1.8-alpha.0",
   "description": "A React component for playing video and audio with HLS, DASH, FLV and native formats",
   "main": "lib/index.js",
@@ -29,14 +29,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soyvillareal/player-stack.git"
+    "url": "git+https://github.com/playerstack/reactjs.git"
   },
   "author": "Oscar Garcés (https://github.com/soyvillareal)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soyvillareal/player-stack/issues"
+    "url": "https://github.com/playerstack/reactjs/issues"
   },
-  "homepage": "https://soyvillareal.github.io/player-stack",
+  "homepage": "https://playerstack.github.io/reactjs",
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
