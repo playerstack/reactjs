@@ -20,6 +20,8 @@ import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import useAppSelector from '../../hooks/context/useAppSelector';
 import useChapters from '../../hooks/useChapters';
+import useCaptions from '../../hooks/useCaptions';
+import CaptionOverlay from '../Commons/CaptionOverlay';
 
 const MobilePlayerSkin = React.forwardRef(
   (
@@ -52,6 +54,9 @@ const MobilePlayerSkin = React.forwardRef(
       playbackQuality,
       loop,
       poster,
+      captions,
+      activeCaption,
+      onCaptionChange,
       onPlayClick,
       onPauseClick,
       onTogglePlay,
@@ -107,6 +112,11 @@ const MobilePlayerSkin = React.forwardRef(
     });
 
     const { segments, getChapterAtTime } = useChapters({ chapters, duration });
+
+    const { cues, captionStyle } = useCaptions({
+      captions,
+      activeCaption,
+    });
 
     React.useEffect(() => {
       dispatch({
@@ -208,9 +218,23 @@ const MobilePlayerSkin = React.forwardRef(
         {/* Double-tap skip areas */}
         <SkipOverlay skipState={skipState} onTapLeft={handleTapLeft} onTapRight={handleTapRight} i18n={i18n} />
 
+        {/* Caption overlay — after skip areas so it wins at same z-index */}
+        {activeCaption && cues.length > 0 && (
+          <CaptionOverlay
+            cues={cues}
+            currentTime={currentTime}
+            captionStyle={captionStyle}
+            isFullscreen={fullscreen}
+            controlsVisible={paused || ended || loading || waiting}
+          />
+        )}
+
         {/* Settings button — top right */}
         <MobileTopBar
           visible={controlsVisible && !settingsPanelVisible}
+          captions={captions}
+          activeCaption={activeCaption}
+          onCaptionChange={onCaptionChange}
           onOpenSettings={handleOpenSettings}
           settingsLabel={i18n.settings || 'Settings'}
         />
@@ -219,9 +243,12 @@ const MobilePlayerSkin = React.forwardRef(
         <MobileSettingsPanel
           visible={settingsPanelVisible}
           qualities={qualities}
+          captions={captions}
+          activeCaption={activeCaption}
           playbackRate={playbackRate}
           playbackQuality={playbackQuality}
           onChangeSettings={handleChangeSettings}
+          onCaptionChange={onCaptionChange}
           onClose={handleCloseSettings}
         />
 
@@ -324,6 +351,9 @@ MobilePlayerSkin.propTypes = {
   fullHDQualityBreak: PropTypes.number,
   poster: PropTypes.string.isRequired,
   hasAudio: PropTypes.bool,
+  captions: PropTypes.array,
+  activeCaption: PropTypes.string,
+  onCaptionChange: PropTypes.func,
 };
 
 export default React.memo(
@@ -374,5 +404,8 @@ export default React.memo(
     p.onPreventedClick === n.onPreventedClick &&
     p.onPrevious === n.onPrevious &&
     p.onNext === n.onNext &&
-    p.showNavButtons === n.showNavButtons,
+    p.showNavButtons === n.showNavButtons &&
+    p.captions === n.captions &&
+    p.activeCaption === n.activeCaption &&
+    p.onCaptionChange === n.onCaptionChange,
 );

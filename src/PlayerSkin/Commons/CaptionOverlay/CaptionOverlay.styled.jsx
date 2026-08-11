@@ -8,9 +8,9 @@ CaptionContainer.displayName = 'CaptionContainer';
 
 export const StyledCaptionContainer = styled(CaptionContainer)`
   position: absolute;
-  z-index: 4;
   pointer-events: auto;
   user-select: none;
+  touch-action: none;
   transform: translateX(-50%);
   text-align: center;
   ${({ positionX, positionY }) => `
@@ -18,7 +18,9 @@ export const StyledCaptionContainer = styled(CaptionContainer)`
     top: ${positionY}%;
   `}
   ${({ isDragging }) =>
-    isDragging ? 'cursor: grabbing; transition: none;' : 'cursor: grab; transition: top 0.3s ease;'}
+    isDragging
+      ? 'cursor: grabbing; transition: none; z-index: 9;'
+      : 'cursor: grab; transition: top 0.3s ease; z-index: 6;'}
 `;
 
 const CaptionWindow = React.forwardRef(({ backgroundColor, ...rest }, ref) => <div ref={ref} {...rest} />);

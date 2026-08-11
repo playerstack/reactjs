@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import useAppDispatch from './context/useAppDispatch';
 
 const HIDE_DELAY = 3000;
 
@@ -11,8 +12,14 @@ const HIDE_DELAY = 3000;
 export default function useMobileAutoHide({ hasResource, loading, prevented, paused, ended, waiting, seeking }) {
   const [controlsVisible, setControlsVisible] = useState(true);
   const timerRef = useRef(null);
+  const dispatch = useAppDispatch();
 
   const shouldStayVisible = !hasResource || loading || prevented || paused || ended || waiting || seeking;
+
+  // Sync hiding state to AppContext so CaptionOverlay can react
+  useEffect(() => {
+    dispatch({ type: 'hiding', payload: !controlsVisible });
+  }, [controlsVisible, dispatch]);
 
   const startHideTimer = useCallback(() => {
     clearTimeout(timerRef.current);

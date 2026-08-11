@@ -13,6 +13,13 @@ const MAX_Y_CONTROLS_HIDDEN = 88;
 const DEFAULT_Y_CONTROLS_VISIBLE = 74;
 // Default resting Y when controls are hidden (bottom with reasonable padding)
 const DEFAULT_Y_CONTROLS_HIDDEN = 88;
+// Min Y — prevents caption from overlapping top bar buttons (settings gear)
+const MIN_Y = 12;
+// Min/Max Y for center zone — prevents overlapping center play button area
+const CENTER_ZONE_MIN_Y = 42;
+const CENTER_ZONE_MAX_Y = 58;
+const CENTER_ZONE_MIN_X = 40;
+const CENTER_ZONE_MAX_X = 60;
 
 const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, controlsVisible }) => {
   const containerRef = React.useRef(null);
@@ -36,6 +43,7 @@ const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, control
   const onDragStart = React.useCallback(
     (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
       const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
       dragStartRef.current = { x: clientX, y: clientY, startX: position.x, startY: position.y };
@@ -61,13 +69,42 @@ const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, control
       const deltaX = ((clientX - dragStartRef.current.x) / parentRect.width) * 100;
       const deltaY = ((clientY - dragStartRef.current.y) / parentRect.height) * 100;
 
-      // Hard limit: never beyond maxY (timeline boundary)
-      const newX = Math.max(halfW, Math.min(100 - halfW, dragStartRef.current.startX + deltaX));
-      const newY = Math.max(2, Math.min(maxY, dragStartRef.current.startY + deltaY));
+      // Hard limit: never beyond maxY (timeline boundary) or above MIN_Y (top bar)
+      let newX = Math.max(halfW, Math.min(100 - halfW, dragStartRef.current.startX + deltaX));
+      let newY = Math.max(MIN_Y, Math.min(maxY, dragStartRef.current.startY + deltaY));
+
+      // Push caption out of center play button zone when controls are visible
+      if (areControlsVisible && containerRef.current) {
+        const captionH = (containerRef.current.offsetHeight / parentRect.height) * 100;
+        const captionW = (containerRef.current.offsetWidth / parentRect.width) * 100;
+        const captionTop = newY;
+        const captionBottom = newY + captionH;
+        const captionLeft = newX - captionW / 2;
+        const captionRight = newX + captionW / 2;
+
+        const overlapsCenter =
+          captionRight > CENTER_ZONE_MIN_X &&
+          captionLeft < CENTER_ZONE_MAX_X &&
+          captionBottom > CENTER_ZONE_MIN_Y &&
+          captionTop < CENTER_ZONE_MAX_Y;
+
+        if (overlapsCenter) {
+          // Push vertically to the nearest edge of the center zone
+          const distToTop = captionBottom - CENTER_ZONE_MIN_Y;
+          const distToBottom = CENTER_ZONE_MAX_Y - captionTop;
+          if (distToTop <= distToBottom) {
+            newY = CENTER_ZONE_MIN_Y - captionH;
+          } else {
+            newY = CENTER_ZONE_MAX_Y;
+          }
+          // Clamp again after push
+          newY = Math.max(MIN_Y, Math.min(maxY, newY));
+        }
+      }
 
       setPosition({ x: newX, y: newY });
     },
-    [isDragging, maxY],
+    [isDragging, maxY, areControlsVisible],
   );
 
   const onDragEnd = React.useCallback(() => {
