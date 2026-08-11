@@ -2,8 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { AppContextProvider } from '../../src/context/AppContextProvider';
 import { AppContext } from '../../src/context/AppContext';
-import en from '../../src/i18n/en';
-import es from '../../src/i18n/es';
+import { en, es } from '@playerstack/core';
 
 const TestConsumer = () => {
   const { state } = React.useContext(AppContext);

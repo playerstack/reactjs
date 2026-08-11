@@ -6,6 +6,9 @@ export const StyledMobileTopBar = styled.div`
   right: 0;
   z-index: 7;
   padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   transition: opacity 0.25s cubic-bezier(0, 0, 0.2, 1);
   ${({ $visible }) =>
     $visible

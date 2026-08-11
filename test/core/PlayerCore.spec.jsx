@@ -7,7 +7,7 @@ import {
   FLV_SDK_URL,
   HLS_GLOBAL,
   HLS_SDK_URL,
-} from '../../src/core/core.constants';
+} from '@playerstack/core';
 import { getSDK, hasAudio, supportsWebKitPresentationMode } from '../../src/utils/player';
 
 jest.mock('../../src/utils/player');

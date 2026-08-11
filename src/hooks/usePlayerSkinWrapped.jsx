@@ -24,26 +24,17 @@ const usePlayerSkinWrapped = ({
       event.preventDefault();
       const contextMenuWidth = contextMenuRef.current?.offsetWidth || 0;
       const contextMenuHeight = contextMenuRef.current?.offsetHeight || 0;
-      const contextMenuPageX = event.pageX;
-      const contextMenuPageY = event.pageY;
-      const documentElement = document.documentElement;
-      const playerScrollLeft = documentElement.scrollLeft || 0;
-      const playerScrollTop = documentElement.scrollTop || 0;
-      const playerClientLeft = documentElement.clientLeft || 0;
-      const playerClientTop = documentElement.clientTop || 0;
-      const playerInnerWidth = window.innerWidth || 0;
-      const playerInnerHeight = window.innerHeight || 0;
 
-      const calcScrollAndDocumentLeft = (window.pageXOffset || playerScrollLeft) - (playerClientLeft || 0);
-      const calcScrollAndDocumentTop = (window.pageYOffset || playerScrollTop) - (playerClientTop || 0);
-      const left =
-        contextMenuPageX + contextMenuWidth > playerInnerWidth + calcScrollAndDocumentLeft
-          ? contextMenuPageX - contextMenuWidth
-          : contextMenuPageX;
-      const top =
-        contextMenuPageY + contextMenuHeight > playerInnerHeight + calcScrollAndDocumentTop
-          ? contextMenuPageY - contextMenuHeight
-          : contextMenuPageY;
+      // Get position relative to player container (for Shadow DOM compatibility)
+      const containerRect = event.currentTarget.getBoundingClientRect();
+      const relativeX = event.clientX - containerRect.left;
+      const relativeY = event.clientY - containerRect.top;
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+
+      const left = relativeX + contextMenuWidth > containerWidth ? relativeX - contextMenuWidth : relativeX;
+      const top = relativeY + contextMenuHeight > containerHeight ? relativeY - contextMenuHeight : relativeY;
+
       setCMPosition({ x: left, y: top });
       dispatch({
         type: 'contextMenuVisible',

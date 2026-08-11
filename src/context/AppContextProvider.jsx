@@ -2,7 +2,9 @@ import React from 'react';
 
 import { reducer } from './AppReducer';
 import { initialState, AppContext } from './AppContext';
-import i18n from '../i18n';
+import { en, es } from '@playerstack/core';
+
+const i18n = { en, es };
 
 const AppContextProvider = ({ children, language }) => {
   const [state, dispatch] = React.useReducer(reducer, {

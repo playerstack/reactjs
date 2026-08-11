@@ -17,7 +17,7 @@ import {
   StyledOptionList,
   StyledMainPage,
 } from './MobileSettingsPanel.styled';
-import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon } from '../../icons';
+import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon, CaptionsIcon } from '../../icons';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
 const SPEED_OPTIONS = [
@@ -30,9 +30,19 @@ const SPEED_OPTIONS = [
   { label: '0.25', value: 0.25 },
 ];
 
-const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality, onChangeSettings, onClose }) => {
+const MobileSettingsPanel = ({
+  visible,
+  qualities,
+  captions,
+  activeCaption,
+  playbackRate,
+  playbackQuality,
+  onChangeSettings,
+  onCaptionChange,
+  onClose,
+}) => {
   const { i18n } = useAppSelector();
-  const [subMenu, setSubMenu] = React.useState(null); // null | 'quality' | 'speed'
+  const [subMenu, setSubMenu] = React.useState(null); // null | 'quality' | 'speed' | 'captions'
   const [isAutoQuality, setIsAutoQuality] = React.useState(true);
   const [selectedQuality, setSelectedQuality] = React.useState(null); // null = auto
 
@@ -88,6 +98,22 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality
     [onChangeSettings, onClose],
   );
 
+  const handleCaptionClick = React.useCallback(
+    (language) => (e) => {
+      e.stopPropagation();
+      onCaptionChange(language);
+      setSubMenu(null);
+      onClose();
+    },
+    [onCaptionChange, onClose],
+  );
+
+  const currentCaptionLabel = React.useMemo(() => {
+    if (!activeCaption || !captions || captions.length === 0) return i18n.off || 'Off';
+    const found = captions.find((c) => c.language === activeCaption);
+    return found ? found.label : i18n.off || 'Off';
+  }, [activeCaption, captions, i18n]);
+
   const currentSpeedLabel = React.useMemo(() => {
     const found = SPEED_OPTIONS.find((s) => s.value === playbackRate);
     return found ? found.label : 'Normal';
@@ -116,7 +142,13 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality
           </StyledIconButton>
         )}
         <StyledHeaderTitle>
-          {!isSubMenuOpen ? i18n.settings : subMenu === 'quality' ? i18n.quality : i18n.speed}
+          {!isSubMenuOpen
+            ? i18n.settings
+            : subMenu === 'quality'
+              ? i18n.quality
+              : subMenu === 'captions'
+                ? i18n.captions || 'Captions'
+                : i18n.speed}
         </StyledHeaderTitle>
         <StyledIconButton $position="right" onClick={handleClose} aria-label="Close">
           <CloseIcon />
@@ -148,6 +180,15 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality
             <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
             <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
           </StyledSwitchItem>
+          {captions && captions.length > 0 && (
+            <StyledSwitchItem onClick={() => setSubMenu('captions')}>
+              <StyledSwitchIcon>
+                <CaptionsIcon />
+              </StyledSwitchIcon>
+              <StyledSwitchLabel>{i18n.captions || 'Captions'}</StyledSwitchLabel>
+              <StyledSwitchValue>{currentCaptionLabel}</StyledSwitchValue>
+            </StyledSwitchItem>
+          )}
         </StyledSwitchesGrid>
       </StyledMainPage>
 
@@ -179,6 +220,22 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality
               ))}
             </StyledOptionList>
           )}
+          {subMenu === 'captions' && (
+            <StyledOptionList>
+              <StyledOptionItem active={activeCaption === null} onClick={handleCaptionClick(null)}>
+                {i18n.off || 'Off'}
+              </StyledOptionItem>
+              {(captions || []).map((c) => (
+                <StyledOptionItem
+                  key={c.language}
+                  active={activeCaption === c.language}
+                  onClick={handleCaptionClick(c.language)}
+                >
+                  {c.label}
+                </StyledOptionItem>
+              ))}
+            </StyledOptionList>
+          )}
         </StyledSubContent>
       </StyledSubPage>
     </StyledSettingsOverlay>
@@ -188,9 +245,12 @@ const MobileSettingsPanel = ({ visible, qualities, playbackRate, playbackQuality
 MobileSettingsPanel.propTypes = {
   visible: PropTypes.bool.isRequired,
   qualities: PropTypes.array.isRequired,
+  captions: PropTypes.array,
+  activeCaption: PropTypes.string,
   playbackRate: PropTypes.number.isRequired,
   playbackQuality: PropTypes.number,
   onChangeSettings: PropTypes.func.isRequired,
+  onCaptionChange: PropTypes.func,
   onClose: PropTypes.func.isRequired,
 };
 

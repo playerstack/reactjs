@@ -175,11 +175,13 @@ const usePlayerProxy = ({
         if (callbacksRef.current.onBuffer) {
           callbacksRef.current.onBuffer(...args);
         }
+        updateStateRef.current((prev) => ({ ...prev, isBuffering: true }));
       },
       onBufferEnd: (...args) => {
         if (callbacksRef.current.onBufferEnd) {
           callbacksRef.current.onBufferEnd(...args);
         }
+        updateStateRef.current((prev) => ({ ...prev, isBuffering: false }));
       },
       onDisablePIP: (e) => {
         if (callbacksRef.current.onDisablePIP) {
@@ -244,12 +246,18 @@ const usePlayerProxy = ({
         if (callbacksRef.current.onPlay) {
           callbacksRef.current.onPlay(e);
         }
-        updateStateRef.current((prev) => ({
-          ...prev,
-          playing: true,
-          isEnded: false,
-          hasAudio: preventedRef.current ? true : (e?.hasAudio ?? false),
-        }));
+        updateStateRef.current((prev) => {
+          // During quality switch, hasAudio check may fire before audio metadata loads.
+          // Preserve previous hasAudio=true to avoid false "no sound" state.
+          const audioFromEvent = e?.hasAudio ?? false;
+          const resolvedHasAudio = preventedRef.current ? true : audioFromEvent || prev.hasAudio || false;
+          return {
+            ...prev,
+            playing: true,
+            isEnded: false,
+            hasAudio: resolvedHasAudio,
+          };
+        });
       },
       onPlayBackQualityChange: (quality) => {
         if (callbacksRef.current.onPlayBackQualityChange) {

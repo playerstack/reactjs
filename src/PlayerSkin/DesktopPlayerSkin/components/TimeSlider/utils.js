@@ -131,22 +131,19 @@ export const parseVTT = (vttString) => {
   let from = 0;
   let to = 0;
   let vttArray = [];
+
   for (var i of vttString.split('\n')) {
     if (/-->/.test(i)) {
       const [timeFrom, timeTo] = (i.match(/(.*) --> (.*)/) || []).slice(1);
       from = timeCodeToSeconds(timeFrom);
       to = timeCodeToSeconds(timeTo);
-    } else if (/png/.test(i)) {
-      const [file, x, y, w, h] = (i.match(/(.*)\?xywh=(.*),(.*),(.*),(.*)/) || []).slice(1);
-      vttArray.push({
-        from,
-        to,
-        file,
-        x,
-        y,
-        w,
-        h,
-      });
+    } else if (/\.(png|jpg|jpeg|webp)/i.test(i)) {
+      // Support both #xywh= and ?xywh= separators
+      const match = i.match(/(.*)[#?]xywh=(.*),(.*),(.*),(.*)/);
+      if (match) {
+        const [, file, x, y, w, h] = match;
+        vttArray.push({ from, to, file, x, y, w, h });
+      }
     }
   }
   return vttArray;

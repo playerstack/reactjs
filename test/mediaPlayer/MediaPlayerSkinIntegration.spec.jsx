@@ -49,7 +49,7 @@ const baseProps = {
   waiting: false,
   disableDeferredLoading: true,
   progressFrequency: 100,
-  forceMobile: false,
+  skinMode: 'desktop',
   config: {
     attributes: {},
     tracks: [],

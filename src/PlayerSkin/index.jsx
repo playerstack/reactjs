@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import PlayerSkin from './PlayerSkin';
 import { AppContextProvider } from '../context/AppContextProvider';
 import PlayerProxy from '../core/PlayerProxy';
-import i18n from '../i18n';
+import { en, es } from '@playerstack/core';
 import usePlayerSkinWrapper from '../hooks/usePlayerSkinWrapper';
+
+const i18n = { en, es };
 
 const PlayerSkinWrapper = React.forwardRef(
   (
@@ -148,6 +150,8 @@ export default React.memo(
     p.url === n.url &&
     p.sources === n.sources &&
     p.chapters === n.chapters &&
+    p.captions === n.captions &&
+    p.activeCaption === n.activeCaption &&
     p.poster === n.poster &&
-    p.forceMobile === n.forceMobile,
+    p.skinMode === n.skinMode,
 );

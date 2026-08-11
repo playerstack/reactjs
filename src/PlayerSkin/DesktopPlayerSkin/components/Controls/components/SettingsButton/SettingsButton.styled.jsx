@@ -41,12 +41,8 @@ export const StyledDropdownOverlay = styled(DropdownOverlay)`
     `;
   }}
   ${({ singleOption }) => {
-    return !singleOption
-      ? `
-      height: 100px;
-    `
-      : `
-      height: 60px;
+    return `
+      height: auto;
     `;
   }}
 `;

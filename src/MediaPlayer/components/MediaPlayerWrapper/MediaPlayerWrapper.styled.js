@@ -1,12 +1,8 @@
 import styled from 'styled-components';
 
 export const StyledMediaPlayerWrapper = styled.div`
-  display: -ms-flexbox;
-  display: -webkit-flex;
   display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   overflow: hidden;
   width: 100%;
   height: 100%;

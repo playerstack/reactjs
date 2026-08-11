@@ -25,9 +25,12 @@ import FullscreenButton from './components/Controls/components/FullscreenButton'
 import useAutoHide from '../../hooks/useAutoHide';
 import SpritePreview from '../Commons/SpritePreview';
 import SettingsButton from './components/Controls/components/SettingsButton';
+import CaptionsButton from './components/Controls/components/CaptionsButton';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import ContextMenu from './components/ContextMenu';
+import CaptionOverlay from '../Commons/CaptionOverlay';
+import useCaptions from '../../hooks/useCaptions';
 import useChapters from '../../hooks/useChapters';
 
 const DesktopPlayerSkin = React.forwardRef(
@@ -53,6 +56,8 @@ const DesktopPlayerSkin = React.forwardRef(
       pip,
       fullscreen,
       qualities,
+      captions,
+      activeCaption,
       spriteVTTFile,
       chapters,
       heatmapData,
@@ -75,6 +80,7 @@ const DesktopPlayerSkin = React.forwardRef(
       exitFullscreen,
       onSeeking,
       onLoopClick,
+      onCaptionChange,
       onPreventedClick,
       onPrevious,
       onNext,
@@ -113,6 +119,11 @@ const DesktopPlayerSkin = React.forwardRef(
 
     const { getChapterAtTime } = useChapters({ chapters, duration });
     const activeChapter = React.useMemo(() => getChapterAtTime(currentTime), [getChapterAtTime, currentTime]);
+
+    const { cues, captionStyle, updateCaptionStyle } = useCaptions({
+      captions,
+      activeCaption,
+    });
 
     React.useEffect(() => {
       dispatch({
@@ -215,6 +226,15 @@ const DesktopPlayerSkin = React.forwardRef(
         {spriteVTTFile && (
           <SpritePreview spriteVTTFile={spriteVTTFile} duration={duration} seekTime={currentTime} visible={seeking} />
         )}
+        {activeCaption && cues.length > 0 && (
+          <CaptionOverlay
+            cues={cues}
+            currentTime={currentTime}
+            captionStyle={captionStyle}
+            isFullscreen={fullscreen}
+            controlsVisible={paused || ended || loading || waiting}
+          />
+        )}
         <PlayState
           hasResource={hasResource}
           loading={loading}
@@ -242,14 +262,25 @@ const DesktopPlayerSkin = React.forwardRef(
           <ControlBar
             extra={
               <>
+                <CaptionsButton
+                  fullscreen={fullscreen}
+                  captions={captions}
+                  activeCaption={activeCaption}
+                  onCaptionChange={onCaptionChange}
+                />
                 <SettingsButton
                   live={live}
                   qualities={qualities}
+                  captions={captions}
+                  activeCaption={activeCaption}
                   playbackRate={playbackRate}
                   playbackQuality={playbackQuality}
                   fullscreen={fullscreen}
                   fullHDQualityBreak={fullHDQualityBreak}
                   changeSettings={handleChangeSettings}
+                  onCaptionChange={onCaptionChange}
+                  captionStyle={captionStyle}
+                  onCaptionStyleChange={updateCaptionStyle}
                 />
                 <FullscreenButton
                   fullscreen={fullscreen}

@@ -17,7 +17,7 @@ export const StyledControls = styled(Controls)`
     content: '';
     position: absolute;
     bottom: 0;
-    z-index: 4;
+    z-index: 2;
     width: 100%;
     height: 2000%;
     pointer-events: none;

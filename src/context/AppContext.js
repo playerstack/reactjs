@@ -1,6 +1,7 @@
 import { createContext } from 'react';
 
 const initialState = {
+  captionDragging: false,
   contextMenuVisible: false,
   controlsHovering: false,
   timeSliding: false,

@@ -8,7 +8,7 @@ import { StyledPlayerSkin } from '../../../../../DesktopPlayerSkin.styled';
 
 export const StyledDropdownOverlayScrolled = styled(DropdownOverlay)`
   width: 250px;
-  height: 283.5px;
+  height: auto;
   max-height: 283.5px;
   position: absolute;
   overflow: hidden;

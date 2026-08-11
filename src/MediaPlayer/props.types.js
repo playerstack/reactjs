@@ -1,6 +1,7 @@
 import PropTypes, { node } from 'prop-types';
-import i18n from '../i18n';
+import { en, es } from '@playerstack/core';
 
+const i18n = { en, es };
 const { string, bool, number, array, oneOfType, shape, object, func } = PropTypes;
 
 const availableLanguages = Object.keys(i18n);
@@ -21,6 +22,14 @@ export const propTypes = {
       startTime: PropTypes.number.isRequired,
     }),
   ),
+  captions: PropTypes.arrayOf(
+    PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      language: PropTypes.string.isRequired,
+      kind: PropTypes.string,
+    }),
+  ),
   heatmapData: PropTypes.arrayOf(
     PropTypes.shape({
       startTime: PropTypes.number.isRequired,
@@ -30,6 +39,7 @@ export const propTypes = {
   ),
   playing: bool,
   loop: bool,
+  live: bool,
   volume: number,
   muted: bool,
   playbackRate: number,
@@ -45,7 +55,7 @@ export const propTypes = {
   waiting: bool,
   prevented: bool,
   wrapper: oneOfType([string, func, shape({ render: func.isRequired })]),
-  forceMobile: bool,
+  skinMode: PropTypes.oneOf(['auto', 'mobile', 'desktop']),
   config: shape({
     attributes: object,
     tracks: array,
@@ -86,9 +96,11 @@ export const defaultProps = {
   url: '',
   sources: [],
   chapters: [],
+  captions: [],
   heatmapData: [],
   playing: false,
   loop: false,
+  live: false,
   volume: null,
   muted: false,
   playbackRate: 1,
@@ -102,7 +114,7 @@ export const defaultProps = {
   waiting: false,
   prevented: false,
   wrapper: 'div',
-  forceMobile: undefined,
+  skinMode: 'auto',
   language: availableLanguages[0],
   poster: '',
   config: {

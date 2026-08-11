@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import {
   StyledContextMenuChecked,
@@ -25,16 +24,11 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
 
   const menuRef = React.useRef();
 
-  const portalRool = React.useMemo(() => {
-    if (fullscreen && state.playerRef?.current) {
-      return state.playerRef.current;
-    }
-    return document.body;
-  }, [fullscreen, state.playerRef]);
-
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      const path = event.composedPath ? event.composedPath() : [];
+      const isInside = (menuRef.current && path.includes(menuRef.current)) || menuRef.current?.contains(event.target);
+      if (!isInside) {
         dispatch({
           type: 'contextMenuVisible',
           payload: false,
@@ -48,7 +42,7 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
     };
   }, [dispatch, menuRef]);
 
-  const menuContent = (
+  return (
     <StyledContextMenuContainer
       ref={mergeRefs([ref, menuRef])}
       showing={state.contextMenuVisible}
@@ -83,8 +77,6 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
       })}
     </StyledContextMenuContainer>
   );
-
-  return ReactDOM.createPortal(menuContent, portalRool);
 });
 
 ContextMenu.displayName = 'ContextMenu';

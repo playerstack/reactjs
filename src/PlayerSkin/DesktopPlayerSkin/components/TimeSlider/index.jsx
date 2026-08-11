@@ -31,7 +31,7 @@ const TimeSlider = ({
   onSeeking,
   fullscreen,
 }) => {
-  const { i18n } = useAppSelector();
+  const { i18n, captionDragging } = useAppSelector();
   const timelensRef = React.useRef(null);
 
   const {
@@ -92,6 +92,7 @@ const TimeSlider = ({
       onFocus={() => {}}
       isSliding={timeSliderSliding}
       isFullscreen={fullscreen}
+      style={captionDragging ? { pointerEvents: 'none' } : undefined}
     >
       {hasChapters ? (
         <>
@@ -137,7 +138,6 @@ const TimeSlider = ({
         showTooltip={showTooltip}
         duration={duration}
         tooltip={timeSliderSliding ? timeSliderState.value : timeSliderState.tooltip}
-        showTooltipOnly={!spriteVTTFile}
         chapterTitle={hoveredChapter?.title}
         fullscreen={fullscreen}
       />

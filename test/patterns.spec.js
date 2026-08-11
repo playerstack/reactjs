@@ -1,4 +1,4 @@
-import { canPlay, VIDEO_EXTENSIONS, HLS_EXTENSIONS, DASH_EXTENSIONS, FLV_EXTENSIONS } from '../src/patterns';
+import { canPlay, VIDEO_EXTENSIONS, HLS_EXTENSIONS, DASH_EXTENSIONS, FLV_EXTENSIONS } from '@playerstack/core';
 
 describe('patterns', () => {
   describe('VIDEO_EXTENSIONS regex', () => {

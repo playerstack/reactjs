@@ -9,6 +9,7 @@ export const playerStateInitial = {
   isEnded: false,
   isPIP: false,
   isLoading: true,
+  isBuffering: false,
   volume: 0.8,
   playbackRate: 1,
   playbackQuality: null,
@@ -17,4 +18,5 @@ export const playerStateInitial = {
   loop: false,
   playing: false,
   isMuted: false,
+  activeCaption: null,
 };

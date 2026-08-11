@@ -55,8 +55,11 @@ describe('usePlayerSkinWrapped', () => {
     const { result } = renderHook(() => usePlayerSkinWrapped(defaults), { wrapper });
     const mockEvent = {
       preventDefault: jest.fn(),
-      pageX: 200,
-      pageY: 150,
+      clientX: 200,
+      clientY: 150,
+      currentTarget: {
+        getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 450 }),
+      },
     };
     act(() => result.current.handleContextMenu(mockEvent));
     expect(mockEvent.preventDefault).toHaveBeenCalled();

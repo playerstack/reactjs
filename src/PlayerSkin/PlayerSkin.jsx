@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 
 import DesktopPlayerSkin from './DesktopPlayerSkin';
 import MobilePlayerSkin from './MobilePlayerSkin';
-import { isMobile } from '../utils/device';
+import { isMobile } from '@playerstack/core';
 
 const PlayerSkin = React.forwardRef((props, ref) => {
-  const { forceMobile, ...rest } = props;
-  const useMobileSkin = forceMobile ?? isMobile;
+  const { skinMode, ...rest } = props;
+
+  const useMobileSkin = skinMode === 'mobile' || (skinMode !== 'desktop' && isMobile);
 
   if (useMobileSkin) {
     return <MobilePlayerSkin ref={ref} {...rest} />;
@@ -83,7 +84,7 @@ PlayerSkin.propTypes = {
   ]),
   fullHDQualityBreak: PropTypes.number,
   poster: PropTypes.string.isRequired,
-  forceMobile: PropTypes.bool,
+  skinMode: PropTypes.oneOf(['auto', 'mobile', 'desktop']),
 };
 
 export default React.memo(
@@ -118,7 +119,7 @@ export default React.memo(
     p.kernelMsg === n.kernelMsg &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&
     p.poster === n.poster &&
-    p.forceMobile === n.forceMobile &&
+    p.skinMode === n.skinMode &&
     p.onPauseClick === n.onPauseClick &&
     p.onPlayClick === n.onPlayClick &&
     p.onTogglePlay === n.onTogglePlay &&
@@ -132,7 +133,10 @@ export default React.memo(
     p.exitFullscreen === n.exitFullscreen &&
     p.onSeeking === n.onSeeking &&
     p.onLoopClick === n.onLoopClick &&
+    p.onCaptionChange === n.onCaptionChange &&
     p.onPreventedClick === n.onPreventedClick &&
+    p.captions === n.captions &&
+    p.activeCaption === n.activeCaption &&
     p.onPrevious === n.onPrevious &&
     p.onNext === n.onNext &&
     p.showNavButtons === n.showNavButtons,

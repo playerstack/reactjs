@@ -12,7 +12,10 @@ import StyledGeneralButton from '../../../../../../Commons/Buttons/StyledGeneral
 import useAppSelector from '../../../../../../../hooks/context/useAppSelector';
 
 const DropdownOverlay = React.forwardRef(
-  ({ title, options, value, hiding, isFullscreen, onClick, goBack, ...rest }, ref) => {
+  (
+    { title, options, value, hiding, isFullscreen, onClick, goBack, showOptionsButton, onOptionsClick, ...rest },
+    ref,
+  ) => {
     const { i18n } = useAppSelector();
     const [show, setShow] = React.useState(false);
 
@@ -28,10 +31,32 @@ const DropdownOverlay = React.forwardRef(
     return (
       <div ref={ref} {...rest}>
         <StyledDropdownHeader>
-          <StyledGeneralButton onClick={goBack} isFullscreen={isFullscreen} isText>
+          <StyledGeneralButton
+            onClick={goBack}
+            isFullscreen={isFullscreen}
+            isText
+            style={showOptionsButton ? { width: 'auto' } : undefined}
+          >
             <ArrowLeftIcon width={28} height={28} />
             <span>{title}</span>
           </StyledGeneralButton>
+          {showOptionsButton && onOptionsClick && (
+            <StyledGeneralButton
+              onClick={onOptionsClick}
+              isFullscreen={isFullscreen}
+              isText
+              style={{
+                marginLeft: 'auto',
+                fontSize: '12px',
+                textDecoration: 'underline',
+                opacity: 0.8,
+                width: 'auto',
+                padding: '20px 15px',
+              }}
+            >
+              {i18n.captionOptions || 'Options'}
+            </StyledGeneralButton>
+          )}
         </StyledDropdownHeader>
         <StyledDropdownContent show={show}>
           <StyledDropdownList>

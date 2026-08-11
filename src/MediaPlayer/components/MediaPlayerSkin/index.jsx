@@ -1,4 +1,5 @@
 import React from 'react';
+import isEqual from 'react-fast-compare';
 
 import PlayerProxy from '../../../core/PlayerProxy';
 import PlayerSkin from '../../../PlayerSkin';
@@ -8,7 +9,10 @@ import usePlayerProxy from '../../hooks/usePlayerProxy';
 import { StyledPlayerContainer } from './MediaPlayerSkin.styled';
 
 const MediaPlayerSkin = React.forwardRef((props, ref) => {
-  const [playerStyles, setPlayerStyles] = React.useState({});
+  const [playerStyles, setPlayerStyles] = React.useState({
+    width: props.width || '100%',
+    height: props.height || '100%',
+  });
   const [playerState, setPlayerState] = React.useState({
     ...playerStateInitial,
     isPIP: props.pip,
@@ -75,6 +79,42 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
 
   const playerSkinRef = React.useRef(null);
   const playerRef = React.useRef(null);
+
+  // Track previous url/sources to detect source changes and reset state/dimensions
+  const prevUrlRef = React.useRef(props.url);
+  const prevSourcesRef = React.useRef(props.sources);
+
+  React.useEffect(() => {
+    const urlChanged = prevUrlRef.current !== props.url;
+    const sourcesChanged = !isEqual(prevSourcesRef.current, props.sources);
+
+    if (urlChanged || sourcesChanged) {
+      prevUrlRef.current = props.url;
+      prevSourcesRef.current = props.sources;
+
+      // Reset dimensions to flexible so the container doesn't distort while
+      // the new video loads its metadata and reports its real size.
+      setPlayerStyles({
+        width: props.width || '100%',
+        height: props.height || '100%',
+      });
+
+      // Reset playback-related state so stale values from the previous source
+      // don't leak into the new one (duration, progress, ended overlay, etc.)
+      setPlayerState((prev) => ({
+        ...prev,
+        isLoading: true,
+        isBuffering: false,
+        duration: 0,
+        played: 0,
+        loaded: 0,
+        seek: 0,
+        isEnded: false,
+        kernelError: null,
+        seeking: false,
+      }));
+    }
+  }, [props.url, props.sources, props.width, props.height]);
 
   // Use a stable callback that reads the ref at call time,
   // not at render time, so keyboard shortcuts work after PlayerSkin mounts.
@@ -198,6 +238,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             width={props.width}
             height={props.height}
             playing={playerState.playing}
+            activeCaption={playerState.activeCaption}
             config={playerConfig}
             disableDeferredLoading={props.disableDeferredLoading}
             progressFrequency={props.progressFrequency}
@@ -213,6 +254,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         hasAudio={playerState.hasAudio}
         spriteVTTFile={props.spriteVTTFile}
         chapters={props.chapters}
+        captions={props.captions}
         heatmapData={props.heatmapData}
         hasResource={typeof videoUrl === 'string' || props.sources.length > 0}
         kernelMsg={playerState.kernelError}
@@ -224,7 +266,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         buffered={playerState.loaded}
         ended={playerState.isEnded}
         seeking={playerState.seeking}
-        waiting={props.waiting}
+        waiting={playerState.isBuffering || props.waiting}
         duration={playerState.duration}
         currentTime={playerState.played}
         volume={playerState.volume}
@@ -233,13 +275,14 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         pictureInPictureEnabled={true}
         pip={playerState.isPIP}
         loop={playerState.loop}
+        activeCaption={playerState.activeCaption}
         fullscreen={playerState.isFullScreen}
         fullHDQualityBreak={props.fullHDQualityBreak}
         language={props.language}
         poster={props.poster}
         updateState={setPlayerState}
         player={props.player}
-        forceMobile={props.forceMobile}
+        skinMode={props.skinMode}
         onPrevious={props.onPrevious}
         onNext={props.onNext}
         showNavButtons={props.showNavButtons}
@@ -282,7 +325,7 @@ export default React.memo(
     p.language === n.language &&
     p.poster === n.poster &&
     p.config === n.config &&
-    p.forceMobile === n.forceMobile &&
+    p.skinMode === n.skinMode &&
     p.onReady === n.onReady &&
     p.onStart === n.onStart &&
     p.onPlay === n.onPlay &&

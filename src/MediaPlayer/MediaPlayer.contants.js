@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from '../utils/cookie';
+import { getCookie, setCookie } from '@playerstack/core';
 
 export const measureNetworkSpeedGeneratedFile = async () => {
   // Use a small file (~200KB) for fast measurement with minimal data usage

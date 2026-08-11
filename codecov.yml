@@ -6,7 +6,7 @@ coverage:
   status:
     project:
       default:
-        enabled: false
+        target: 90%
     patch:
       default:
-        enabled: false
+        target: 90%

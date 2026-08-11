@@ -22,7 +22,12 @@ const SpritePreview = ({ spriteVTTFile, duration, seekTime, visible }) => {
       try {
         const vttString = await fetch(spriteVTTFile).then((r) => r.text());
         if (cancelled) return;
-        const parsed = parseVTT(vttString);
+        // Resolve relative image paths to absolute using VTT file's base URL
+        const baseUrl = spriteVTTFile.substring(0, spriteVTTFile.lastIndexOf('/') + 1);
+        const resolved = vttString.replace(/^([^#?\n]+\.(png|jpg|jpeg|webp))/gim, (match) =>
+          match.startsWith('http') ? match : `${baseUrl}${match}`,
+        );
+        const parsed = parseVTT(resolved);
         setVttArray(parsed);
 
         const urls = [...new Set(parsed.map((item) => item.file))];
