@@ -108,19 +108,23 @@ const SettingsButton = ({
           options={item.options}
           value={values[item.value]?.value}
           isFullscreen={fullscreen}
-          onClick={item.value === 'captions'
-            ? (value) => {
-                if (value === '__options__') {
-                  setShowCaptionOptions(true);
-                } else {
-                  handleMenuClick(item.value)(value);
+          onClick={
+            item.value === 'captions'
+              ? (value) => {
+                  if (value === '__options__') {
+                    setShowCaptionOptions(true);
+                  } else {
+                    handleMenuClick(item.value)(value);
+                  }
                 }
-              }
-            : handleMenuClick(item.value)
+              : handleMenuClick(item.value)
           }
           goBack={handleGoBack(item.value)}
           showOptionsButton={item.value === 'captions'}
-          onOptionsClick={(e) => { e.stopPropagation(); setShowCaptionOptions(true); }}
+          onOptionsClick={(e) => {
+            e.stopPropagation();
+            setShowCaptionOptions(true);
+          }}
         />
       ))}
       {showCaptionOptions && captionStyle && (

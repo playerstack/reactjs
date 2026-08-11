@@ -14,10 +14,7 @@ export const StyledOptionsContainer = styled(OptionsContainer)`
   background: rgba(15, 15, 15, 0.95);
   border-radius: 6px;
   padding: 4px 0;
-  ${({ isFullscreen }) => isFullscreen
-    ? `right: -52px; bottom: 60px;`
-    : `right: -35px; bottom: 45px;`
-  }
+  ${({ isFullscreen }) => (isFullscreen ? `right: -52px; bottom: 60px;` : `right: -35px; bottom: 45px;`)}
   &::-webkit-scrollbar {
     width: 6px;
     background-color: #333;
@@ -63,7 +60,7 @@ export const StyledOptionsItem = styled(OptionsItem)`
   &:hover {
     background: rgba(255, 255, 255, 0.1);
   }
-  ${({ isFullscreen }) => isFullscreen ? 'height: 49px;' : ''}
+  ${({ isFullscreen }) => (isFullscreen ? 'height: 49px;' : '')}
 `;
 
 export const StyledOptionsLabel = styled.span`
@@ -104,8 +101,12 @@ OptionsContent.displayName = 'OptionsContent';
 export const StyledOptionsContent = styled(OptionsContent)`
   opacity: 0;
   transform: translate(100px, 0);
-  transition: opacity 0.15s linear, transform 0.15s ease-out;
-  ${({ show }) => show && `
+  transition:
+    opacity 0.15s linear,
+    transform 0.15s ease-out;
+  ${({ show }) =>
+    show &&
+    `
     opacity: 1;
     transform: translate(0, 0);
   `}

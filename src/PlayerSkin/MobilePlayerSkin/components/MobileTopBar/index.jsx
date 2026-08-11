@@ -23,10 +23,7 @@ const MobileTopBar = ({ visible, captions, activeCaption, onCaptionChange, onOpe
   return (
     <StyledMobileTopBar $visible={visible}>
       {hasCaptions && (
-        <StyledMobileSettingsButton
-          onClick={handleCaptionToggle}
-          aria-label="Captions"
-        >
+        <StyledMobileSettingsButton onClick={handleCaptionToggle} aria-label="Captions">
           <CaptionsIcon width={24} height={24} active={!!activeCaption} />
         </StyledMobileSettingsButton>
       )}

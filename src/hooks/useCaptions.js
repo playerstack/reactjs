@@ -49,7 +49,9 @@ const useCaptions = ({ captions, activeCaption }) => {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [activeCaption, captions]);
 
   // Persist style changes to cookie

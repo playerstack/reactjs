@@ -29,32 +29,41 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
     return () => clearTimeout(timer);
   }, []);
 
-  const OPTIONS_MAP = React.useMemo(() => [
-    { key: 'fontFamily', label: i18n.fontFamily },
-    { key: 'fontColor', label: i18n.fontColor },
-    { key: 'fontSize', label: i18n.fontSize },
-    { key: 'fontOpacity', label: i18n.fontOpacity },
-    { key: 'backgroundColor', label: i18n.backgroundColor },
-    { key: 'backgroundOpacity', label: i18n.backgroundOpacity },
-    { key: 'windowColor', label: i18n.windowColor },
-    { key: 'windowOpacity', label: i18n.windowOpacity },
-    { key: 'edgeStyle', label: i18n.edgeStyle },
-  ], [i18n]);
+  const OPTIONS_MAP = React.useMemo(
+    () => [
+      { key: 'fontFamily', label: i18n.fontFamily },
+      { key: 'fontColor', label: i18n.fontColor },
+      { key: 'fontSize', label: i18n.fontSize },
+      { key: 'fontOpacity', label: i18n.fontOpacity },
+      { key: 'backgroundColor', label: i18n.backgroundColor },
+      { key: 'backgroundOpacity', label: i18n.backgroundOpacity },
+      { key: 'windowColor', label: i18n.windowColor },
+      { key: 'windowOpacity', label: i18n.windowOpacity },
+      { key: 'edgeStyle', label: i18n.edgeStyle },
+    ],
+    [i18n],
+  );
 
   const handleReset = React.useCallback(() => {
     onStyleChange(DEFAULT_CAPTION_STYLE);
   }, [onStyleChange]);
 
-  const handleSelectValue = React.useCallback((key, value) => {
-    onStyleChange({ ...captionStyle, [key]: value });
-    setSubMenu(null);
-  }, [captionStyle, onStyleChange]);
+  const handleSelectValue = React.useCallback(
+    (key, value) => {
+      onStyleChange({ ...captionStyle, [key]: value });
+      setSubMenu(null);
+    },
+    [captionStyle, onStyleChange],
+  );
 
-  const getCurrentLabel = React.useCallback((key) => {
-    const options = CAPTION_STYLE_OPTIONS[key];
-    const current = options?.find((o) => o.value === captionStyle[key]);
-    return current?.label || captionStyle[key];
-  }, [captionStyle]);
+  const getCurrentLabel = React.useCallback(
+    (key) => {
+      const options = CAPTION_STYLE_OPTIONS[key];
+      const current = options?.find((o) => o.value === captionStyle[key]);
+      return current?.label || captionStyle[key];
+    },
+    [captionStyle],
+  );
 
   // Sub-menu for specific option
   if (subMenu) {
@@ -69,17 +78,17 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
           </StyledGeneralButton>
         </StyledOptionsHeader>
         <StyledOptionsContent show={show}>
-        {options?.map((opt) => (
-          <StyledOptionsItem
-            key={opt.value}
-            selected={captionStyle[subMenu.key] === opt.value}
-            onClick={() => handleSelectValue(subMenu.key, opt.value)}
-            isFullscreen={isFullscreen}
-          >
-            {captionStyle[subMenu.key] === opt.value && '✓ '}
-            {opt.label}
-          </StyledOptionsItem>
-        ))}
+          {options?.map((opt) => (
+            <StyledOptionsItem
+              key={opt.value}
+              selected={captionStyle[subMenu.key] === opt.value}
+              onClick={() => handleSelectValue(subMenu.key, opt.value)}
+              isFullscreen={isFullscreen}
+            >
+              {captionStyle[subMenu.key] === opt.value && '✓ '}
+              {opt.label}
+            </StyledOptionsItem>
+          ))}
         </StyledOptionsContent>
       </StyledOptionsContainer>
     );
@@ -96,20 +105,16 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
       </StyledOptionsHeader>
       <StyledOptionsContent show={show}>
         {OPTIONS_MAP.map((opt) => (
-        <StyledOptionsItem
-          key={opt.key}
-          onClick={() => setSubMenu(opt)}
-          isFullscreen={isFullscreen}
-        >
-          <StyledOptionsLabel>{opt.label}</StyledOptionsLabel>
-          <StyledOptionsValue>
-            {getCurrentLabel(opt.key)} <ArrowRightIcon width={16} height={16} />
-          </StyledOptionsValue>
+          <StyledOptionsItem key={opt.key} onClick={() => setSubMenu(opt)} isFullscreen={isFullscreen}>
+            <StyledOptionsLabel>{opt.label}</StyledOptionsLabel>
+            <StyledOptionsValue>
+              {getCurrentLabel(opt.key)} <ArrowRightIcon width={16} height={16} />
+            </StyledOptionsValue>
+          </StyledOptionsItem>
+        ))}
+        <StyledOptionsItem onClick={handleReset} isFullscreen={isFullscreen}>
+          <StyledOptionsLabel>{i18n.reset}</StyledOptionsLabel>
         </StyledOptionsItem>
-      ))}
-      <StyledOptionsItem onClick={handleReset} isFullscreen={isFullscreen}>
-        <StyledOptionsLabel>{i18n.reset}</StyledOptionsLabel>
-      </StyledOptionsItem>
       </StyledOptionsContent>
     </StyledOptionsContainer>
   );

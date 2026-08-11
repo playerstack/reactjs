@@ -21,4 +21,7 @@ CaptionsIcon.displayName = 'CaptionsIcon';
 
 CaptionsIcon.propTypes = propTypes;
 
-export default React.memo(CaptionsIcon, (p, n) => p.width === n.width && p.height === n.height && p.active === n.active);
+export default React.memo(
+  CaptionsIcon,
+  (p, n) => p.width === n.width && p.height === n.height && p.active === n.active,
+);

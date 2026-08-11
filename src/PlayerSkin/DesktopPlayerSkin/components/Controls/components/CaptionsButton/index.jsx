@@ -23,19 +23,22 @@ const CaptionsButton = ({ fullscreen, captions, activeCaption, onCaptionChange }
     }
   }, [activeCaption]);
 
-  const handleClick = React.useCallback((e) => {
-    e.stopPropagation();
-    if (activeCaption) {
-      // Turn off
-      onCaptionChange(null);
-    } else {
-      // Turn on: use last active or first available
-      const lang = lastActiveLangRef.current || (captions[0]?.language ?? null);
-      if (lang) {
-        onCaptionChange(lang);
+  const handleClick = React.useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (activeCaption) {
+        // Turn off
+        onCaptionChange(null);
+      } else {
+        // Turn on: use last active or first available
+        const lang = lastActiveLangRef.current || (captions[0]?.language ?? null);
+        if (lang) {
+          onCaptionChange(lang);
+        }
       }
-    }
-  }, [activeCaption, captions, onCaptionChange]);
+    },
+    [activeCaption, captions, onCaptionChange],
+  );
 
   if (!captions || captions.length === 0) return null;
 
