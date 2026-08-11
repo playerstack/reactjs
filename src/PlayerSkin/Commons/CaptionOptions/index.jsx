@@ -8,7 +8,6 @@ import {
   StyledOptionsItem,
   StyledOptionsLabel,
   StyledOptionsValue,
-  StyledResetButton,
   StyledOptionsContent,
 } from './CaptionOptions.styled';
 import StyledGeneralButton from '../Buttons/StyledGeneralButton';

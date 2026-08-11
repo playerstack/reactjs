@@ -69,6 +69,8 @@ const useSettingsOptions = ({
       const label = track?.label || activeCaption;
       setValues((prev) => ({ ...prev, captions: { label, value: activeCaption } }));
     }
+    // values.captions?.value is a guard read, not a reactive dependency
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCaption, captions, i18n]);
 
   // Sync quality value when auto-selection or external change updates playbackQuality
