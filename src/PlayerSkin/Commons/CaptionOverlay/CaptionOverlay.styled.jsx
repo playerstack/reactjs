@@ -17,7 +17,8 @@ export const StyledCaptionContainer = styled(CaptionContainer)`
     left: ${positionX}%;
     top: ${positionY}%;
   `}
-  ${({ isDragging }) => isDragging ? 'cursor: grabbing;' : 'cursor: grab;'}
+  ${({ isDragging }) =>
+    isDragging ? 'cursor: grabbing; transition: none;' : 'cursor: grab; transition: top 0.3s ease;'}
 `;
 
 const CaptionWindow = React.forwardRef(({ backgroundColor, ...rest }, ref) => <div ref={ref} {...rest} />);

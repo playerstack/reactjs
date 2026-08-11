@@ -1,5 +1,6 @@
 export const actionTypes = [
   'i18n',
+  'captionDragging',
   'contextMenuVisible',
   'controlsHovering',
   'hiding',

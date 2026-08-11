@@ -175,11 +175,13 @@ const usePlayerProxy = ({
         if (callbacksRef.current.onBuffer) {
           callbacksRef.current.onBuffer(...args);
         }
+        updateStateRef.current((prev) => ({ ...prev, isBuffering: true }));
       },
       onBufferEnd: (...args) => {
         if (callbacksRef.current.onBufferEnd) {
           callbacksRef.current.onBufferEnd(...args);
         }
+        updateStateRef.current((prev) => ({ ...prev, isBuffering: false }));
       },
       onDisablePIP: (e) => {
         if (callbacksRef.current.onDisablePIP) {

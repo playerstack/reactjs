@@ -3,21 +3,29 @@ import PropTypes from 'prop-types';
 import { getActiveCues, hexToRgba, getEdgeStyleCSS } from '@playerstack/core';
 import { StyledCaptionContainer, StyledCaptionText, StyledCaptionWindow } from './CaptionOverlay.styled';
 import useAppSelector from '../../../hooks/context/useAppSelector';
+import useAppDispatch from '../../../hooks/context/useAppDispatch';
 
-// Max Y when controls visible (% from top). Timeline area is ~last 18%.
-const MAX_Y_CONTROLS_VISIBLE = 78;
+// Max Y when controls visible (% from top). Give same padding as hidden state above timeline.
+const MAX_Y_CONTROLS_VISIBLE = 74;
 // Max Y when controls hidden (allow near bottom with padding)
-const MAX_Y_CONTROLS_HIDDEN = 92;
+const MAX_Y_CONTROLS_HIDDEN = 88;
+// Default resting Y when controls are visible
+const DEFAULT_Y_CONTROLS_VISIBLE = 74;
+// Default resting Y when controls are hidden (bottom with reasonable padding)
+const DEFAULT_Y_CONTROLS_HIDDEN = 88;
 
 const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, controlsVisible }) => {
   const containerRef = React.useRef(null);
   const { hiding } = useAppSelector();
+  const dispatch = useAppDispatch();
   const areControlsVisible = controlsVisible || !hiding;
 
   const maxY = areControlsVisible ? MAX_Y_CONTROLS_VISIBLE : MAX_Y_CONTROLS_HIDDEN;
 
-  const [position, setPosition] = React.useState({ x: 50, y: MAX_Y_CONTROLS_VISIBLE });
+  const [position, setPosition] = React.useState({ x: 50, y: DEFAULT_Y_CONTROLS_VISIBLE });
   const [isDragging, setIsDragging] = React.useState(false);
+  // Track whether the user has manually dragged the caption
+  const userDraggedRef = React.useRef(false);
   const dragStartRef = React.useRef({ x: 0, y: 0, startX: 0, startY: 0 });
 
   const activeCues = React.useMemo(() => {
@@ -32,8 +40,9 @@ const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, control
       const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
       dragStartRef.current = { x: clientX, y: clientY, startX: position.x, startY: position.y };
       setIsDragging(true);
+      dispatch({ type: 'captionDragging', payload: true });
     },
-    [position],
+    [position, dispatch],
   );
 
   const onDragMove = React.useCallback(
@@ -63,15 +72,30 @@ const CaptionOverlay = ({ cues, currentTime, captionStyle, isFullscreen, control
 
   const onDragEnd = React.useCallback(() => {
     setIsDragging(false);
-  }, []);
+    dispatch({ type: 'captionDragging', payload: false });
+    // If user drops the caption near the default resting zone (within 6% of maxY),
+    // treat it as "snapped back" and re-enable auto-positioning.
+    setPosition((prev) => {
+      const threshold = 6;
+      const nearBottom = prev.y >= maxY - threshold;
+      userDraggedRef.current = !nearBottom;
+      return prev;
+    });
+  }, [maxY, dispatch]);
 
-  // When controls hide/show, clamp existing position to new maxY
+  // When controls hide/show, move captions to appropriate resting position.
+  // If user has manually dragged, only clamp to stay within bounds.
   React.useEffect(() => {
-    setPosition((prev) => ({
-      ...prev,
-      y: Math.min(prev.y, maxY),
-    }));
-  }, [maxY]);
+    setPosition((prev) => {
+      if (userDraggedRef.current) {
+        // Only clamp: keep user's chosen position but don't exceed maxY
+        return { ...prev, y: Math.min(prev.y, maxY) };
+      }
+      // Auto-move to default resting position for current controls state
+      const targetY = areControlsVisible ? DEFAULT_Y_CONTROLS_VISIBLE : DEFAULT_Y_CONTROLS_HIDDEN;
+      return { ...prev, y: targetY };
+    });
+  }, [maxY, areControlsVisible]);
 
   React.useEffect(() => {
     if (isDragging) {

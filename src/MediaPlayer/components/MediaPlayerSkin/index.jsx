@@ -1,4 +1,5 @@
 import React from 'react';
+import isEqual from 'react-fast-compare';
 
 import PlayerProxy from '../../../core/PlayerProxy';
 import PlayerSkin from '../../../PlayerSkin';
@@ -78,6 +79,42 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
 
   const playerSkinRef = React.useRef(null);
   const playerRef = React.useRef(null);
+
+  // Track previous url/sources to detect source changes and reset state/dimensions
+  const prevUrlRef = React.useRef(props.url);
+  const prevSourcesRef = React.useRef(props.sources);
+
+  React.useEffect(() => {
+    const urlChanged = prevUrlRef.current !== props.url;
+    const sourcesChanged = !isEqual(prevSourcesRef.current, props.sources);
+
+    if (urlChanged || sourcesChanged) {
+      prevUrlRef.current = props.url;
+      prevSourcesRef.current = props.sources;
+
+      // Reset dimensions to flexible so the container doesn't distort while
+      // the new video loads its metadata and reports its real size.
+      setPlayerStyles({
+        width: props.width || '100%',
+        height: props.height || '100%',
+      });
+
+      // Reset playback-related state so stale values from the previous source
+      // don't leak into the new one (duration, progress, ended overlay, etc.)
+      setPlayerState((prev) => ({
+        ...prev,
+        isLoading: true,
+        isBuffering: false,
+        duration: 0,
+        played: 0,
+        loaded: 0,
+        seek: 0,
+        isEnded: false,
+        kernelError: null,
+        seeking: false,
+      }));
+    }
+  }, [props.url, props.sources, props.width, props.height]);
 
   // Use a stable callback that reads the ref at call time,
   // not at render time, so keyboard shortcuts work after PlayerSkin mounts.
@@ -229,7 +266,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         buffered={playerState.loaded}
         ended={playerState.isEnded}
         seeking={playerState.seeking}
-        waiting={props.waiting}
+        waiting={playerState.isBuffering || props.waiting}
         duration={playerState.duration}
         currentTime={playerState.played}
         volume={playerState.volume}
