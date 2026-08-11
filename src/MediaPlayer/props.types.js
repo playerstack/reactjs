@@ -55,7 +55,7 @@ export const propTypes = {
   waiting: bool,
   prevented: bool,
   wrapper: oneOfType([string, func, shape({ render: func.isRequired })]),
-  forceMobile: bool,
+  skinMode: PropTypes.oneOf(['auto', 'mobile', 'desktop']),
   config: shape({
     attributes: object,
     tracks: array,
@@ -114,7 +114,7 @@ export const defaultProps = {
   waiting: false,
   prevented: false,
   wrapper: 'div',
-  forceMobile: undefined,
+  skinMode: 'auto',
   language: availableLanguages[0],
   poster: '',
   config: {

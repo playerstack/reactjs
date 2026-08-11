@@ -226,7 +226,7 @@ export const createMediaPlayer = (player) => {
           captions={this.props.captions}
           heatmapData={this.props.heatmapData}
           poster={this.props.poster}
-          forceMobile={this.props.forceMobile}
+          skinMode={this.props.skinMode}
         />
       );
     };

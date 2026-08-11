@@ -153,5 +153,5 @@ export default React.memo(
     p.captions === n.captions &&
     p.activeCaption === n.activeCaption &&
     p.poster === n.poster &&
-    p.forceMobile === n.forceMobile,
+    p.skinMode === n.skinMode,
 );
