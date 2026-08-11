@@ -150,6 +150,8 @@ export default React.memo(
     p.url === n.url &&
     p.sources === n.sources &&
     p.chapters === n.chapters &&
+    p.captions === n.captions &&
+    p.activeCaption === n.activeCaption &&
     p.poster === n.poster &&
     p.forceMobile === n.forceMobile,
 );

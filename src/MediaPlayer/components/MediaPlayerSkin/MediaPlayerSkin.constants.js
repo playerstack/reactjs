@@ -17,4 +17,5 @@ export const playerStateInitial = {
   loop: false,
   playing: false,
   isMuted: false,
+  activeCaption: null,
 };

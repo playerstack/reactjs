@@ -113,6 +113,7 @@ const usePlayerSkinWrapper = ({
       onSeeking: (seeking) => updateState((prev) => reduceSeekState(prev, seeking)),
       onMutedClick: () => onMutedClickRef.current(),
       onLoopClick: () => updateState((prev) => ({ ...prev, loop: !prev.loop })),
+      onCaptionChange: (language) => updateState((prev) => ({ ...prev, activeCaption: language })),
       onPreventedClick: () => updateState((prev) => ({ ...prev, isMuted: false, volume: 1 })),
       changeCurrentTime: (time) => changeCurrentTimeRef.current(time),
     };

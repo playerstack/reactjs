@@ -11,9 +11,12 @@ const useSettingsOptions = ({
   live,
   fullHDQualityBreak,
   qualities,
+  captions,
+  activeCaption,
   playbackRate,
   playbackQuality,
   changeSettings,
+  onCaptionChange,
   fullscreen,
 }) => {
   const { i18n } = useAppSelector();
@@ -35,6 +38,10 @@ const useSettingsOptions = ({
       label: i18n.normal,
       value: '1',
     },
+    captions: {
+      label: i18n.off,
+      value: 'off',
+    },
   });
 
   useEffect(() => {
@@ -51,6 +58,18 @@ const useSettingsOptions = ({
       },
     }));
   }, [i18n, playbackRate]);
+
+  // Sync captions value when activeCaption changes externally (e.g. CC button toggle)
+  useEffect(() => {
+    const currentValue = values.captions?.value;
+    if (activeCaption === null && currentValue !== 'off') {
+      setValues((prev) => ({ ...prev, captions: { label: i18n.off, value: 'off' } }));
+    } else if (activeCaption && currentValue !== activeCaption) {
+      const track = captions?.find((c) => c.language === activeCaption);
+      const label = track?.label || activeCaption;
+      setValues((prev) => ({ ...prev, captions: { label, value: activeCaption } }));
+    }
+  }, [activeCaption, captions, i18n]);
 
   // Sync quality value when auto-selection or external change updates playbackQuality
   useEffect(() => {
@@ -85,7 +104,7 @@ const useSettingsOptions = ({
       });
       setSettings((state) => ({
         ...initialSettings,
-        generalMenu: !state.speed && !state.quality ? !state.generalMenu : false,
+        generalMenu: !state.speed && !state.quality && !state.captions ? !state.generalMenu : false,
       }));
     },
     [dispatch],
@@ -97,7 +116,6 @@ const useSettingsOptions = ({
         if (itemValue === 'quality') {
           if (value === '0') {
             setIsAutoQuality(true);
-            // Build auto label with the current real quality resolution
             const realQuality = playbackQualityRef.current;
             const autoLabel = realQuality && realQuality !== 0 ? `${i18n.auto} (${realQuality}p)` : i18n.auto;
             setValues((prev) => ({
@@ -119,6 +137,16 @@ const useSettingsOptions = ({
               },
             }));
           }
+        } else if (itemValue === 'captions') {
+          const selectedCaption = captions?.find((c) => c.language === value);
+          const label = value === 'off' ? i18n.off : selectedCaption?.label || value;
+          setValues((prev) => ({
+            ...prev,
+            captions: { label, value },
+          }));
+          if (onCaptionChange) {
+            onCaptionChange(value === 'off' ? null : value);
+          }
         } else {
           setValues((prev) => ({
             ...prev,
@@ -136,7 +164,7 @@ const useSettingsOptions = ({
         setSettings(initialSettings);
       };
     },
-    [fullHDQualityBreak, i18n, dispatch],
+    [fullHDQualityBreak, i18n, dispatch, captions, onCaptionChange],
   );
 
   const handleMenuItemClick = React.useCallback(
@@ -190,13 +218,22 @@ const useSettingsOptions = ({
     return () => document.body.removeEventListener('click', handleClickOutside);
   }, [dispatch]);
 
+  const captionOptions = React.useMemo(() => {
+    if (!captions || captions.length === 0) return [];
+    return captions.map((c) => ({
+      label: c.label,
+      value: c.language,
+    }));
+  }, [captions]);
+
   const settingsOptions = React.useMemo(() => {
     return settingsOverlayFn({
       qualityOptions: qualities,
+      captionOptions,
       live,
       i18n,
     });
-  }, [live, qualities, i18n]);
+  }, [live, qualities, captionOptions, i18n]);
 
   const iconProps = React.useMemo(() => buildIconProps(fullscreen), [fullscreen]);
 

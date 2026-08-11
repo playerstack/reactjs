@@ -13,6 +13,7 @@ import {
 } from './SettingsButton.styled';
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import SettingsIcon from '../../../../../Commons/Icons/SetttingsIcon';
+import CaptionOptions from '../../../../../Commons/CaptionOptions';
 import ArrowRightIcon from '../../../../../Commons/Icons/ArrowRightIcon';
 import { StyledDropdownOverlayScrolled } from './DropdownOverlay/DropdownOverlay.styled';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
@@ -21,13 +22,19 @@ import useSettingsOptions from '../../../../../../hooks/useSettingsOptions';
 const SettingsButton = ({
   live,
   qualities,
+  captions,
+  activeCaption,
   playbackRate,
   playbackQuality,
   fullHDQualityBreak,
   changeSettings,
+  onCaptionChange,
+  captionStyle,
+  onCaptionStyleChange,
   fullscreen,
 }) => {
   const { i18n } = useAppSelector();
+  const [showCaptionOptions, setShowCaptionOptions] = React.useState(false);
 
   const {
     dropdownRef,
@@ -43,11 +50,21 @@ const SettingsButton = ({
     live,
     fullHDQualityBreak,
     qualities,
+    captions,
+    activeCaption,
     playbackRate,
     playbackQuality,
     changeSettings,
+    onCaptionChange,
     fullscreen,
   });
+
+  // Close CaptionOptions when settings menu closes (click outside)
+  React.useEffect(() => {
+    if (!settings.captions && showCaptionOptions) {
+      setShowCaptionOptions(false);
+    }
+  }, [settings.captions, showCaptionOptions]);
 
   return (
     <StyledDropdownContainer ref={dropdownRef}>
@@ -66,7 +83,7 @@ const SettingsButton = ({
       </StyledDropdownButton>
       <StyledDropdownOverlay
         hiding={settings.generalMenu}
-        singleOption={live || qualities.length === 0}
+        singleOption={live || (qualities.length === 0 && (!captions || captions.length === 0))}
         isFullscreen={fullscreen}
       >
         <StyledDropdownList>
@@ -86,15 +103,38 @@ const SettingsButton = ({
       {settingsOptions.map((item, i) => (
         <StyledDropdownOverlayScrolled
           key={i}
-          hiding={settings[item.value]}
+          hiding={settings[item.value] && !(item.value === 'captions' && showCaptionOptions)}
           title={item.label}
           options={item.options}
           value={values[item.value]?.value}
           isFullscreen={fullscreen}
-          onClick={handleMenuClick(item.value)}
+          onClick={item.value === 'captions'
+            ? (value) => {
+                if (value === '__options__') {
+                  setShowCaptionOptions(true);
+                } else {
+                  handleMenuClick(item.value)(value);
+                }
+              }
+            : handleMenuClick(item.value)
+          }
           goBack={handleGoBack(item.value)}
+          showOptionsButton={item.value === 'captions'}
+          onOptionsClick={(e) => { e.stopPropagation(); setShowCaptionOptions(true); }}
         />
       ))}
+      {showCaptionOptions && captionStyle && (
+        <CaptionOptions
+          captionStyle={captionStyle}
+          onStyleChange={onCaptionStyleChange}
+          onClose={() => {
+            setShowCaptionOptions(false);
+            // Re-show captions submenu
+            handleMenuItemClick('captions');
+          }}
+          isFullscreen={fullscreen}
+        />
+      )}
     </StyledDropdownContainer>
   );
 };
@@ -107,10 +147,12 @@ SettingsButton.propTypes = {
       value: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
+  captions: PropTypes.array,
   playbackRate: PropTypes.number.isRequired,
   playbackQuality: PropTypes.number,
   fullHDQualityBreak: PropTypes.number,
   changeSettings: PropTypes.func.isRequired,
+  onCaptionChange: PropTypes.func,
   fullscreen: PropTypes.bool.isRequired,
 };
 
@@ -119,9 +161,14 @@ export default React.memo(
   (p, n) =>
     p.live === n.live &&
     p.qualities === n.qualities &&
+    p.captions === n.captions &&
+    p.activeCaption === n.activeCaption &&
     p.playbackRate === n.playbackRate &&
     p.playbackQuality === n.playbackQuality &&
     p.fullHDQualityBreak === n.fullHDQualityBreak &&
     p.changeSettings === n.changeSettings &&
+    p.onCaptionChange === n.onCaptionChange &&
+    p.captionStyle === n.captionStyle &&
+    p.onCaptionStyleChange === n.onCaptionStyleChange &&
     p.fullscreen === n.fullscreen,
 );

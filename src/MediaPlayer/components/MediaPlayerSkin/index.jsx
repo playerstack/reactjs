@@ -8,7 +8,10 @@ import usePlayerProxy from '../../hooks/usePlayerProxy';
 import { StyledPlayerContainer } from './MediaPlayerSkin.styled';
 
 const MediaPlayerSkin = React.forwardRef((props, ref) => {
-  const [playerStyles, setPlayerStyles] = React.useState({});
+  const [playerStyles, setPlayerStyles] = React.useState({
+    width: props.width || '100%',
+    height: props.height || '100%',
+  });
   const [playerState, setPlayerState] = React.useState({
     ...playerStateInitial,
     isPIP: props.pip,
@@ -198,6 +201,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             width={props.width}
             height={props.height}
             playing={playerState.playing}
+            activeCaption={playerState.activeCaption}
             config={playerConfig}
             disableDeferredLoading={props.disableDeferredLoading}
             progressFrequency={props.progressFrequency}
@@ -213,6 +217,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         hasAudio={playerState.hasAudio}
         spriteVTTFile={props.spriteVTTFile}
         chapters={props.chapters}
+        captions={props.captions}
         heatmapData={props.heatmapData}
         hasResource={typeof videoUrl === 'string' || props.sources.length > 0}
         kernelMsg={playerState.kernelError}
@@ -233,6 +238,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         pictureInPictureEnabled={true}
         pip={playerState.isPIP}
         loop={playerState.loop}
+        activeCaption={playerState.activeCaption}
         fullscreen={playerState.isFullScreen}
         fullHDQualityBreak={props.fullHDQualityBreak}
         language={props.language}

@@ -111,9 +111,18 @@ export const createMediaPlayer = (player) => {
     });
 
     getPlayerConfig = memoize((config) => {
+      // Merge captions prop into tracks
+      const captionTracks = (this.props.captions || []).map((c) => ({
+        kind: c.kind || 'subtitles',
+        src: c.src,
+        srcLang: c.language,
+        label: c.label,
+      }));
+      const allTracks = [...(config.tracks || []), ...captionTracks];
+
       return {
         attributes: config.attributes,
-        tracks: config.tracks,
+        tracks: allTracks,
         forceVideo: config.forceVideo,
         forceHLS: config.forceHLS,
         dashVersion: config.dashVersion,
@@ -214,6 +223,7 @@ export const createMediaPlayer = (player) => {
           progressFrequency={this.props.progressFrequency}
           spriteVTTFile={this.props.spriteVTTFile}
           chapters={this.props.chapters}
+          captions={this.props.captions}
           heatmapData={this.props.heatmapData}
           poster={this.props.poster}
           forceMobile={this.props.forceMobile}

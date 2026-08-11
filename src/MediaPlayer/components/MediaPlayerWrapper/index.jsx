@@ -53,6 +53,12 @@ const MediaPlayerWrapper = React.forwardRef(({ children, style, ...props }, ref)
         ul, ol { list-style: none; margin: 0; padding: 0; }
         li { margin: 0; padding: 0; }
         a { color: inherit; text-decoration: none; }
+        video::cue {
+          background: rgba(0, 0, 0, 0.7);
+          color: #fff;
+          font-size: 1.1em;
+          line-height: 1.4;
+        }
       `;
       shadow.appendChild(resetStyle);
 

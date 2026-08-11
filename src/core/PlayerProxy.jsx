@@ -113,6 +113,24 @@ export default class PlayerProxy extends React.Component {
     if (prevProps.playbackRate !== playbackRate && this.player.setPlaybackRate) {
       this.player.setPlaybackRate(playbackRate);
     }
+    // Handle caption track activation/deactivation
+    if (prevProps.activeCaption !== this.props.activeCaption) {
+      const videoElement = this.player.getPlayer();
+      if (videoElement && videoElement.textTracks) {
+        for (let i = 0; i < videoElement.textTracks.length; i++) {
+          const track = videoElement.textTracks[i];
+          if (this.props.activeCaption === null) {
+            track.mode = 'disabled';
+          } else if (track.language === this.props.activeCaption) {
+            // Use 'hidden' to get cue events without native rendering
+            // (custom CaptionOverlay handles display)
+            track.mode = 'hidden';
+          } else {
+            track.mode = 'disabled';
+          }
+        }
+      }
+    }
   }
 
   handlePlayerMount = (player) => {
