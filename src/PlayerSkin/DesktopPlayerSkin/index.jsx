@@ -262,6 +262,12 @@ const DesktopPlayerSkin = React.forwardRef(
           <ControlBar
             extra={
               <>
+                <CaptionsButton
+                  fullscreen={fullscreen}
+                  captions={captions}
+                  activeCaption={activeCaption}
+                  onCaptionChange={onCaptionChange}
+                />
                 <SettingsButton
                   live={live}
                   qualities={qualities}
@@ -275,12 +281,6 @@ const DesktopPlayerSkin = React.forwardRef(
                   onCaptionChange={onCaptionChange}
                   captionStyle={captionStyle}
                   onCaptionStyleChange={updateCaptionStyle}
-                />
-                <CaptionsButton
-                  fullscreen={fullscreen}
-                  captions={captions}
-                  activeCaption={activeCaption}
-                  onCaptionChange={onCaptionChange}
                 />
                 <FullscreenButton
                   fullscreen={fullscreen}
