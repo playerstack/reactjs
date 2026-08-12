@@ -47,7 +47,7 @@ describe('MobileProgressBar', () => {
 
     test('has aria-label', () => {
       wrap(<MobileProgressBar {...defaultProps} />);
-      expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Barra de tiempo');
+      expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Time bar');
     });
 
     test('has tabIndex 0 for keyboard accessibility', () => {

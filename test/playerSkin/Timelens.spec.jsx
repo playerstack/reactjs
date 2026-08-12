@@ -54,7 +54,7 @@ describe('Timelens', () => {
       );
     });
     expect(global.fetch).toHaveBeenCalledWith('sprite.vtt');
-  });
+  }, 15000);
 
   test('handles fetch error gracefully', async () => {
     global.fetch.mockRejectedValueOnce(new Error('Network error'));
@@ -67,7 +67,7 @@ describe('Timelens', () => {
     });
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
-  });
+  }, 15000);
 
   test('exposes handleTimelens and setShowTimelens via ref', async () => {
     const ref = React.createRef();

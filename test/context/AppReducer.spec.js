@@ -110,3 +110,65 @@ describe('AppReducer', () => {
     });
   });
 });
+
+describe('AppReducer — function actions and bail-out branches', () => {
+  const initialState = {
+    i18n: {},
+    captionDragging: false,
+    contextMenuVisible: false,
+    controlsHovering: false,
+    hiding: false,
+    menuVisible: false,
+    subMenuVisible: false,
+    timeSliding: false,
+    volumeSliding: false,
+    videoRef: null,
+    playerRef: null,
+  };
+
+  test('supports function action (updater pattern)', () => {
+    const action = (prev) => ({ hiding: !prev.hiding });
+    const newState = reducer(initialState, action);
+    expect(newState.hiding).toBe(true);
+  });
+
+  test('function action returning null returns same state', () => {
+    const action = () => null;
+    const result = reducer(initialState, action);
+    expect(result).toBe(initialState);
+  });
+
+  test('function action returning non-object returns same state', () => {
+    const action = () => 'invalid';
+    const result = reducer(initialState, action);
+    expect(result).toBe(initialState);
+  });
+
+  test('type-based action bails out when payload matches current value', () => {
+    const state = { ...initialState, hiding: true };
+    const action = { type: 'hiding', payload: true };
+    const result = reducer(state, action);
+    // Returns same reference (bail out)
+    expect(result).toBe(state);
+  });
+
+  test('object-based action returns same reference when nothing changed', () => {
+    const state = { ...initialState, hiding: false, menuVisible: false };
+    const action = { hiding: false, menuVisible: false };
+    const result = reducer(state, action);
+    expect(result).toBe(state);
+  });
+
+  test('object-based action returns new reference when at least one key changed', () => {
+    const state = { ...initialState, hiding: false };
+    const action = { hiding: true };
+    const result = reducer(state, action);
+    expect(result).not.toBe(state);
+    expect(result.hiding).toBe(true);
+  });
+
+  test('handles captionDragging action type', () => {
+    const result = reducer(initialState, { type: 'captionDragging', payload: true });
+    expect(result.captionDragging).toBe(true);
+  });
+});

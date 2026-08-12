@@ -29,9 +29,6 @@ import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGene
 describe('StyledGeneralButton – CSS interpolation coverage', () => {
   const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
 
-  // Override useAppSelector to provide a real playerRef for tooltip positioning
-  const useAppSelector = require('../../src/hooks/context/useAppSelector');
-
   test('renders with isFullscreen=true and isText=false (triggers fullscreenButton css)', () => {
     const { container } = render(
       <StyledGeneralButton title="FS" isFullscreen={true} isText={false} data-testid="btn">
@@ -92,87 +89,43 @@ describe('StyledGeneralButton – CSS interpolation coverage', () => {
     expect(screen.getByTestId('btn')).toBeInTheDocument();
   });
 
-  test('StyledTooltipText renders with isFullscreen=true (tooltip font/size branch)', () => {
+  test('StyledGeneralButton with isFullscreen=true (tooltip fullscreen size covered by Tooltip)', () => {
     render(
-      <StyledGeneralButton title="Tooltip FS" isFullscreen={true} isTooltipActive={true} data-testid="btn">
+      <StyledGeneralButton title="Tooltip FS" isFullscreen={true} data-testid="btn">
         TFS
       </StyledGeneralButton>,
       { wrapper },
     );
-    // Trigger mouse enter to render tooltip positioning logic
-    fireEvent.mouseEnter(screen.getByTestId('btn'));
     expect(screen.getByTestId('btn')).toBeInTheDocument();
   });
 
-  test('StyledTooltipText renders with isFullscreen=false (tooltip font/size branch)', () => {
+  test('StyledGeneralButton with isFullscreen=false', () => {
     render(
-      <StyledGeneralButton title="Tooltip NFS" isFullscreen={false} isTooltipActive={true} data-testid="btn">
+      <StyledGeneralButton title="Tooltip NFS" isFullscreen={false} data-testid="btn">
         TNFS
       </StyledGeneralButton>,
       { wrapper },
     );
-    fireEvent.mouseEnter(screen.getByTestId('btn'));
     expect(screen.getByTestId('btn')).toBeInTheDocument();
   });
 
-  test('handleMouseEnter calculates tooltip position with real playerRef', () => {
-    // Set up playerRef with a real DOM container
-    const playerDiv = document.createElement('div');
-    Object.defineProperty(playerDiv, 'getBoundingClientRect', {
-      value: () => ({ width: 800, height: 400, left: 0, top: 0, right: 800, bottom: 400 }),
-    });
-    playerDiv.querySelectorAll = jest.fn(() => []);
-
-    useAppSelector.mockReturnValue({
-      playerRef: { current: playerDiv },
-      i18n: {},
-      hiding: false,
-      contextMenuVisible: false,
-      controlsHovering: false,
-      timeSliding: false,
-      volumeSliding: false,
-      menuVisible: false,
-      subMenuVisible: false,
-    });
-
+  test('mouseEnter and mouseLeave pass through', () => {
+    const onMouseEnter = jest.fn();
+    const onMouseLeave = jest.fn();
     render(
-      <StyledGeneralButton title="Position Test" isFullscreen={false} isTooltipActive={true} data-testid="btn-pos">
+      <StyledGeneralButton title="Position Test" isFullscreen={false} data-testid="btn-pos" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         Pos
       </StyledGeneralButton>,
       { wrapper },
     );
 
     fireEvent.mouseEnter(screen.getByTestId('btn-pos'));
-    expect(screen.getByTestId('btn-pos')).toBeInTheDocument();
-
-    // Reset mock
-    useAppSelector.mockReturnValue({
-      playerRef: { current: null },
-      i18n: {},
-      hiding: false,
-      contextMenuVisible: false,
-      controlsHovering: false,
-      timeSliding: false,
-      volumeSliding: false,
-      menuVisible: false,
-      subMenuVisible: false,
-    });
-  });
-
-  test('handleMouseLeave resets tooltip and calls onMouseLeave', () => {
-    const onMouseLeave = jest.fn();
-    render(
-      <StyledGeneralButton title="Leave" isFullscreen={false} data-testid="btn-leave" onMouseLeave={onMouseLeave}>
-        Leave
-      </StyledGeneralButton>,
-      { wrapper },
-    );
-    fireEvent.mouseEnter(screen.getByTestId('btn-leave'));
-    fireEvent.mouseLeave(screen.getByTestId('btn-leave'));
+    expect(onMouseEnter).toHaveBeenCalled();
+    fireEvent.mouseLeave(screen.getByTestId('btn-pos'));
     expect(onMouseLeave).toHaveBeenCalled();
   });
 
-  test('handleClick resets tooltip when not fakeDisabled', () => {
+  test('handleClick calls onClick', () => {
     const onClick = jest.fn();
     render(
       <StyledGeneralButton title="Click" isFakeDisabled={false} data-testid="btn-click" onClick={onClick}>
@@ -184,7 +137,7 @@ describe('StyledGeneralButton – CSS interpolation coverage', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  test('handleMouseDown resets tooltip when not fakeDisabled', () => {
+  test('handleMouseDown calls onMouseDown', () => {
     const onMouseDown = jest.fn();
     render(
       <StyledGeneralButton title="Down" isFakeDisabled={false} data-testid="btn-down" onMouseDown={onMouseDown}>
