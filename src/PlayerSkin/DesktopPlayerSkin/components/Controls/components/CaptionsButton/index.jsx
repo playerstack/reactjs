@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
+import Tooltip from '../../../../../Commons/Tooltip';
 import CaptionsIcon from '../../../../../Commons/Icons/CaptionsIcon';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
@@ -43,16 +44,11 @@ const CaptionsButton = ({ fullscreen, captions, activeCaption, onCaptionChange }
   if (!captions || captions.length === 0) return null;
 
   return (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.captions}
-      title={i18n.captions}
-      onClick={handleClick}
-      isFullscreen={fullscreen}
-      isTooltipActive
-    >
-      <CaptionsIcon {...iconProps} active={!!activeCaption} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.captions} fullscreen={fullscreen}>
+      <StyledGeneralButton type="button" aria-label={i18n.captions} onClick={handleClick} isFullscreen={fullscreen}>
+        <CaptionsIcon {...iconProps} active={!!activeCaption} />
+      </StyledGeneralButton>
+    </Tooltip>
   );
 };
 

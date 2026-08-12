@@ -33,9 +33,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
   });
 
   // Sync external props to internal state synchronously (during render, not in useEffect)
-  // Only overwrite internal state for properties whose external prop ACTUALLY changed,
-  // so that internal user actions (like muting via the skin) aren't overwritten
-  // when an unrelated prop (like playing) changes.
   if (
     props.pip !== prevProps.pip ||
     props.playbackRate !== prevProps.playbackRate ||
@@ -92,15 +89,11 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       prevUrlRef.current = props.url;
       prevSourcesRef.current = props.sources;
 
-      // Reset dimensions to flexible so the container doesn't distort while
-      // the new video loads its metadata and reports its real size.
       setPlayerStyles({
         width: props.width || '100%',
         height: props.height || '100%',
       });
 
-      // Reset playback-related state so stale values from the previous source
-      // don't leak into the new one (duration, progress, ended overlay, etc.)
       setPlayerState((prev) => ({
         ...prev,
         isLoading: true,
@@ -116,8 +109,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
     }
   }, [props.url, props.sources, props.width, props.height]);
 
-  // Use a stable callback that reads the ref at call time,
-  // not at render time, so keyboard shortcuts work after PlayerSkin mounts.
   const handleKeyDown = React.useCallback((e) => {
     playerSkinRef.current?.handleKeyDown?.(e);
   }, []);
@@ -135,8 +126,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       const updateSize = () => {
         const width = playerElement.offsetWidth;
         const height = playerElement.offsetHeight;
-        // Only apply fixed dimensions when the video has meaningful size
-        // (metadata loaded). Otherwise fall back to prop-based sizing.
         if (width > 0 && height > 0) {
           setPlayerStyles({
             width: `${width}px`,
@@ -152,7 +141,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
 
       const timer = setTimeout(updateSize, 500);
 
-      // Re-calculate when video metadata loads (fixes slow-network case)
       const handleMetadata = () => updateSize();
       playerElement.addEventListener('loadedmetadata', handleMetadata);
 
@@ -239,6 +227,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             height={props.height}
             playing={playerState.playing}
             activeCaption={playerState.activeCaption}
+            viewType="video"
             config={playerConfig}
             disableDeferredLoading={props.disableDeferredLoading}
             progressFrequency={props.progressFrequency}

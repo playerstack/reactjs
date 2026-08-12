@@ -5,7 +5,15 @@ import { StyledMobileTopBar, StyledMobileSettingsButton } from './MobileTopBar.s
 import { SettingsGearIcon } from '../../icons';
 import CaptionsIcon from '../../../Commons/Icons/CaptionsIcon';
 
-const MobileTopBar = ({ visible, captions, activeCaption, onCaptionChange, onOpenSettings, settingsLabel }) => {
+const MobileTopBar = ({
+  visible,
+  captions,
+  activeCaption,
+  onCaptionChange,
+  onOpenSettings,
+  settingsLabel,
+  captionsLabel,
+}) => {
   const hasCaptions = captions && captions.length > 0;
 
   const handleCaptionToggle = React.useCallback(
@@ -23,7 +31,7 @@ const MobileTopBar = ({ visible, captions, activeCaption, onCaptionChange, onOpe
   return (
     <StyledMobileTopBar $visible={visible}>
       {hasCaptions && (
-        <StyledMobileSettingsButton onClick={handleCaptionToggle} aria-label="Captions">
+        <StyledMobileSettingsButton onClick={handleCaptionToggle} aria-label={captionsLabel || 'Captions'}>
           <CaptionsIcon width={24} height={24} active={!!activeCaption} />
         </StyledMobileSettingsButton>
       )}

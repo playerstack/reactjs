@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
+import Tooltip from '../../../../../Commons/Tooltip';
 import PauseIcon from '../../../../../Commons/Icons/PauseIcon';
 import PlayIcon from '../../../../../Commons/Icons/PlayIcon';
 import ReplayIcon from '../../../../../Commons/Icons/ReplayIcon';
@@ -14,41 +15,26 @@ const PlayButton = ({ fullscreen, paused, ended, onPlayClick, onPauseClick }) =>
 
   if (ended) {
     return (
-      <StyledGeneralButton
-        type="button"
-        aria-label={i18n.replay}
-        title={i18n.replay}
-        onClick={onPlayClick}
-        isFullscreen={fullscreen}
-        isTooltipActive
-      >
-        <ReplayIcon {...iconProps} />
-      </StyledGeneralButton>
+      <Tooltip label={i18n.replay} fullscreen={fullscreen}>
+        <StyledGeneralButton type="button" aria-label={i18n.replay} onClick={onPlayClick} isFullscreen={fullscreen}>
+          <ReplayIcon {...iconProps} />
+        </StyledGeneralButton>
+      </Tooltip>
     );
   }
 
   return paused ? (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.play}
-      title={i18n.play}
-      onClick={onPlayClick}
-      isFullscreen={fullscreen}
-      isTooltipActive
-    >
-      <PlayIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.play} fullscreen={fullscreen}>
+      <StyledGeneralButton type="button" aria-label={i18n.play} onClick={onPlayClick} isFullscreen={fullscreen}>
+        <PlayIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   ) : (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.pause}
-      title={i18n.pause}
-      onClick={onPauseClick}
-      isFullscreen={fullscreen}
-      isTooltipActive
-    >
-      <PauseIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.pause} fullscreen={fullscreen}>
+      <StyledGeneralButton type="button" aria-label={i18n.pause} onClick={onPauseClick} isFullscreen={fullscreen}>
+        <PauseIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   );
 };
 

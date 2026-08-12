@@ -1,42 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components';
-
-import { resetCSS } from '../styles';
-
-export const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
-  div[data-testid="media-player-skin"].playerstack {
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    ${resetCSS}
-  }
-  body,
-  html {
-    height: 100%;
-    scroll-behavior: smooth;
-  }
-  html:focus-within {
-    scroll-behavior: smooth;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html:focus-within {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-      transition: none;
-    }
-  }
-`;
+import styled from 'styled-components';
 
 export const StyledOverlayPoster = styled.div`
   position: absolute;

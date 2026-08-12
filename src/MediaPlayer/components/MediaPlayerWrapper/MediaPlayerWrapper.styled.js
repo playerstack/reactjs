@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { scopedResetStyles } from '../../../utils/resetStyles';
 
 export const StyledMediaPlayerWrapper = styled.div`
   display: flex;
@@ -25,4 +26,13 @@ export const StyledMediaPlayerWrapper = styled.div`
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5;
+
+  ${scopedResetStyles}
+
+  & video::cue {
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 1.4;
+  }
 `;

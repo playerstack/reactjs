@@ -1,8 +1,10 @@
 import styled from 'styled-components';
+import { scopedReset } from '../Commons/scopedReset';
 
-export { GlobalStyle, StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
+export { StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
 
 export const StyledPlayerSkin = styled.div`
+  ${scopedReset}
   position: absolute;
   top: 0;
   left: 0;

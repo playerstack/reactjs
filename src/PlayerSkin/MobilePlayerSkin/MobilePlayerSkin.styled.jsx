@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components';
+import { scopedReset } from '../Commons/scopedReset';
 
 export const StyledMobilePlayerSkin = styled.div`
+  ${scopedReset}
   position: absolute;
   top: 0;
   left: 0;
