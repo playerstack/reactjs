@@ -6,8 +6,61 @@ const { string, bool, number, array, oneOfType, shape, object, func } = PropType
 
 const availableLanguages = Object.keys(i18n);
 
-export const propTypes = {
+/**
+ * Props shared by both video and audio player types.
+ */
+const commonPropTypes = {
   url: string,
+  playing: bool,
+  loop: bool,
+  volume: number,
+  muted: bool,
+  playbackRate: number,
+  width: oneOfType([string, number]),
+  height: oneOfType([string, number]),
+  progressInterval: number,
+  playsinline: bool,
+  language: PropTypes.oneOf(availableLanguages),
+  stopOnUnmount: bool,
+  fallback: node,
+  waiting: bool,
+  prevented: bool,
+  wrapper: oneOfType([string, func, shape({ render: func.isRequired })]),
+  skinMode: PropTypes.oneOf(['auto', 'mobile', 'desktop']),
+  config: shape({
+    attributes: object,
+    tracks: array,
+    forceHLS: bool,
+    forceSafariHLS: bool,
+    forceDisableHls: bool,
+    forceDASH: bool,
+    forceFLV: bool,
+    hlsOptions: object,
+    hlsVersion: string,
+    dashVersion: string,
+    flvVersion: string,
+  }),
+  onReady: func,
+  onStart: func,
+  onPlay: func,
+  onPause: func,
+  onBuffer: func,
+  onBufferEnd: func,
+  onEnded: func,
+  onError: func,
+  onDuration: func,
+  onSeek: func,
+  onPlayBackRateChange: func,
+  onProgress: func,
+  onPrevious: func,
+  onNext: func,
+  showNavButtons: bool,
+};
+
+/**
+ * Props exclusive to video player type.
+ */
+const videoPropTypes = {
   sources: PropTypes.arrayOf(
     PropTypes.shape({
       src: PropTypes.string.isRequired,
@@ -37,62 +90,47 @@ export const propTypes = {
       value: PropTypes.number.isRequired,
     }),
   ),
-  playing: bool,
-  loop: bool,
   live: bool,
-  volume: number,
-  muted: bool,
-  playbackRate: number,
-  width: oneOfType([string, number]),
-  height: oneOfType([string, number]),
-  progressInterval: number,
-  playsinline: bool,
-  language: PropTypes.oneOf(availableLanguages),
   poster: string,
   pip: bool,
-  stopOnUnmount: bool,
-  fallback: node,
-  waiting: bool,
-  prevented: bool,
-  wrapper: oneOfType([string, func, shape({ render: func.isRequired })]),
-  skinMode: PropTypes.oneOf(['auto', 'mobile', 'desktop']),
-  config: shape({
-    attributes: object,
-    tracks: array,
-    forceVideo: bool,
-    forceHLS: bool,
-    forceSafariHLS: bool,
-    forceDisableHls: bool,
-    forceDASH: bool,
-    forceFLV: bool,
-    hlsOptions: object,
-    hlsVersion: string,
-    dashVersion: string,
-    flvVersion: string,
-  }),
-  onReady: func,
-  onStart: func,
-  onPlay: func,
-  onPause: func,
-  onBuffer: func,
-  onBufferEnd: func,
-  onEnded: func,
-  onError: func,
-  onDuration: func,
-  onSeek: func,
-  onPlayBackRateChange: func,
   onPlayBackQualityChange: func,
-  onProgress: func,
   onEnablePIP: func,
   onDisablePIP: func,
-  onPrevious: func,
-  onNext: func,
-  showNavButtons: bool,
+};
+
+/**
+ * Props exclusive to audio player type.
+ */
+const audioPropTypes = {
+  /** Title displayed in the audio player skin */
+  title: string,
+  /** Artist/author name displayed in the audio player skin */
+  artist: string,
+  /** Cover art URL for the audio player */
+  poster: string,
+  captions: PropTypes.arrayOf(
+    PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      language: PropTypes.string.isRequired,
+      kind: PropTypes.string,
+    }),
+  ),
+};
+
+export const propTypes = {
+  viewType: PropTypes.oneOf(['video', 'audio']),
+  ...commonPropTypes,
+  // Include all props (both audio and video) for runtime flexibility.
+  // Discriminated prop validation happens via TypeScript types at compile time.
+  ...videoPropTypes,
+  ...audioPropTypes,
 };
 
 const noop = () => {};
 
 export const defaultProps = {
+  viewType: 'video',
   url: '',
   sources: [],
   chapters: [],
@@ -117,10 +155,11 @@ export const defaultProps = {
   skinMode: 'auto',
   language: availableLanguages[0],
   poster: '',
+  title: '',
+  artist: '',
   config: {
     attributes: {},
     tracks: [],
-    forceVideo: false,
     forceHLS: false,
     forceDASH: false,
     forceFLV: false,

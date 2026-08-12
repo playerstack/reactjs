@@ -5,7 +5,8 @@ import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralBut
 
 export const StyledDropdownContainer = styled.div`
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 `;
 
 export const DropdownOverlay = React.forwardRef(({ singleOption, hiding, isFullscreen, ...rest }, ref) => (
@@ -99,6 +100,8 @@ const DropdownButton = React.forwardRef(
     <StyledGeneralButton ref={ref} isFullscreen={isFullscreen} {...props} />
   ),
 );
+
+DropdownButton.displayName = 'DropdownButton';
 
 DropdownButton.displayName = 'DropdownButton';
 

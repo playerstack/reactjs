@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
+import Tooltip from '../../../../../Commons/Tooltip';
 import PreviousTrackIcon from '../../../../../Commons/Icons/PreviousTrackIcon';
 import NextTrackIcon from '../../../../../Commons/Icons/NextTrackIcon';
 import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
@@ -15,17 +16,17 @@ export const PreviousButton = React.memo(({ fullscreen, onPrevious, showNavButto
   if (!hasPrevious && !showNavButtons) return null;
 
   return (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.previous || 'Previous'}
-      title={i18n.previous || 'Previous'}
-      onClick={hasPrevious ? onPrevious : undefined}
-      isFullscreen={fullscreen}
-      isTooltipActive
-      isFakeDisabled={!hasPrevious}
-    >
-      <PreviousTrackIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.previous} fullscreen={fullscreen}>
+      <StyledGeneralButton
+        type="button"
+        aria-label={i18n.previous}
+        onClick={hasPrevious ? onPrevious : undefined}
+        isFullscreen={fullscreen}
+        isFakeDisabled={!hasPrevious}
+      >
+        <PreviousTrackIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   );
 });
 
@@ -45,17 +46,17 @@ export const NextButton = React.memo(({ fullscreen, onNext, showNavButtons = fal
   if (!hasNext && !showNavButtons) return null;
 
   return (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.next || 'Next'}
-      title={i18n.next || 'Next'}
-      onClick={hasNext ? onNext : undefined}
-      isFullscreen={fullscreen}
-      isTooltipActive
-      isFakeDisabled={!hasNext}
-    >
-      <NextTrackIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.next} fullscreen={fullscreen}>
+      <StyledGeneralButton
+        type="button"
+        aria-label={i18n.next}
+        onClick={hasNext ? onNext : undefined}
+        isFullscreen={fullscreen}
+        isFakeDisabled={!hasNext}
+      >
+        <NextTrackIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   );
 });
 

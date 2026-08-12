@@ -5,7 +5,9 @@ import isEqual from 'react-fast-compare';
 
 import { propTypes, defaultProps } from './props.types';
 import MediaPlayerSkin from './components/MediaPlayerSkin';
+import AudioMediaPlayerSkin from './components/AudioMediaPlayerSkin';
 import { omit } from '../utils';
+import { isAudioUrl } from '@playerstack/core';
 
 const IS_BROWSER = typeof window !== 'undefined' && window.document && typeof document !== 'undefined';
 const IS_GLOBAL = typeof global !== 'undefined' && global.window && global.window.document;
@@ -159,6 +161,17 @@ export const createMediaPlayer = (player) => {
       return '';
     };
 
+    /**
+     * Resolve the effective view type: explicit prop takes priority,
+     * otherwise auto-detect from URL extension.
+     */
+    getEffectiveViewType = () => {
+      if (this.props.viewType === 'audio') return 'audio';
+      const url = this.getUrlProp();
+      if (url && isAudioUrl(url)) return 'audio';
+      return 'video';
+    };
+
     renderActivePlayer = (url, sources) => {
       if (!url && !sources) {
         return null;
@@ -173,6 +186,52 @@ export const createMediaPlayer = (player) => {
       const playerConfig = this.getPlayerConfig(config);
       const sourceProps = this.getSourceProps();
       const urlProp = this.getUrlProp();
+      const viewType = this.getEffectiveViewType();
+
+      if (viewType === 'audio') {
+        return (
+          <AudioMediaPlayerSkin
+            key={`${player.key}-audio`}
+            ref={this.references.player}
+            activePlayer={player.lazyPlayer}
+            player={this.player}
+            playbackRate={this.props.playbackRate}
+            playsinline={this.props.playsinline}
+            progressInterval={this.props.progressInterval}
+            stopOnUnmount={this.props.stopOnUnmount}
+            volume={this.props.volume}
+            muted={this.props.muted}
+            loop={this.props.loop}
+            url={urlProp}
+            width={this.props.width}
+            playing={this.props.playing}
+            waiting={this.props.waiting}
+            config={playerConfig}
+            language={this.props.language}
+            poster={this.props.poster}
+            title={this.props.title}
+            artist={this.props.artist}
+            chapters={this.props.chapters}
+            onBuffer={this.props.onBuffer}
+            onBufferEnd={this.props.onBufferEnd}
+            onDuration={this.props.onDuration}
+            onEnded={this.props.onEnded}
+            onError={this.props.onError}
+            onPause={this.props.onPause}
+            onPlay={this.props.onPlay}
+            onPlayBackRateChange={this.props.onPlayBackRateChange}
+            onProgress={this.props.onProgress}
+            onReady={this.handleReady}
+            onSeek={this.props.onSeek}
+            onStart={this.props.onStart}
+            onLoaded={this.props.onLoaded}
+            onMount={this.props.onMount}
+            onPrevious={this.props.onPrevious}
+            onNext={this.props.onNext}
+            showNavButtons={this.props.showNavButtons}
+          />
+        );
+      }
 
       return (
         <MediaPlayerSkin

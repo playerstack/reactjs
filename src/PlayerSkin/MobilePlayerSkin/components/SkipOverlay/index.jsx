@@ -25,8 +25,16 @@ const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
 
   return (
     <>
-      <StyledSkipTapArea direction="backward" onClick={handleTapLeft} aria-label="Skip backward" />
-      <StyledSkipTapArea direction="forward" onClick={handleTapRight} aria-label="Skip forward" />
+      <StyledSkipTapArea
+        direction="backward"
+        onClick={handleTapLeft}
+        aria-label={i18n?.skipBackward || 'Skip backward'}
+      />
+      <StyledSkipTapArea
+        direction="forward"
+        onClick={handleTapRight}
+        aria-label={i18n?.skipForward || 'Skip forward'}
+      />
 
       {skipState.visible && skipState.direction === 'backward' && (
         <StyledSkipOverlay direction="backward">

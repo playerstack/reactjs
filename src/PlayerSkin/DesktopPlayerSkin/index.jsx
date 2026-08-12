@@ -5,7 +5,6 @@ import PlayState from './components/PlayState';
 import TopState from './components/TopState';
 
 import {
-  GlobalStyle,
   StyledBezelTextVolume,
   StyledBezelTextVolumeWrapper,
   StyledOverlayPoster,
@@ -185,7 +184,6 @@ const DesktopPlayerSkin = React.forwardRef(
         onMouseEnter={showControls}
         onClick={showControls}
       >
-        <GlobalStyle />
         <PreventedTip
           hasResource={hasResource}
           prevented={prevented}

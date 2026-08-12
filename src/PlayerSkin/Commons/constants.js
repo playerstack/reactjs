@@ -1,4 +1,4 @@
-export const buildIconProps = (isFullscreen) => {
+export const buildIconProps = (isFullscreen = false) => {
   if (isFullscreen) {
     return {
       width: 54,

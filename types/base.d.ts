@@ -28,6 +28,13 @@ export interface IHeatmapDataPoint {
   value: number;
 }
 
+export interface ICaptionProps {
+  src: string;
+  label: string;
+  language: string;
+  kind?: string;
+}
+
 export interface IOnProgressProps {
   played: number;
   playedSeconds: number;
@@ -36,10 +43,12 @@ export interface IOnProgressProps {
 }
 
 export type TLanguage = 'es' | 'en';
+export type TViewType = 'video' | 'audio';
+export type TSkinMode = 'auto' | 'mobile' | 'desktop';
 
-export interface IBasePlayerStackCommons {
-  prevented?: boolean;
-  waiting?: boolean;
+// ─── Common props shared by both view types ─────────────────────────────────
+
+export interface IPlayerStackCommonProps {
   playing?: boolean;
   loop?: boolean;
   volume?: number;
@@ -50,15 +59,13 @@ export interface IBasePlayerStackCommons {
   style?: CSSProperties;
   progressInterval?: number;
   playsinline?: boolean;
-  pip?: boolean;
   stopOnUnmount?: boolean;
   fallback?: ReactElement;
   language: TLanguage;
-  live?: boolean;
-  poster?: string;
-  spriteVTTFile?: string;
-  chapters?: IChapterProps[];
-  heatmapData?: IHeatmapDataPoint[];
+  prevented?: boolean;
+  waiting?: boolean;
+  wrapper?: string | React.ComponentType | { render: Function };
+  skinMode?: TSkinMode;
   onReady?: (player: PlayerStack) => void;
   onStart?: () => void;
   onPlay?: () => void;
@@ -66,41 +73,134 @@ export interface IBasePlayerStackCommons {
   onBuffer?: () => void;
   onBufferEnd?: () => void;
   onEnded?: () => void;
-  onEnablePIP?: () => void;
-  onDisablePIP?: () => void;
   onError?: TActionErrorEventPlayer;
   onDuration?: (duration: number) => void;
   onSeek?: (seconds: number) => void;
   onProgress?: (state: IOnProgressProps) => void;
   onPlayBackRateChange?: (rate: number) => void;
-  onPlayBackQualityChange?: (quality: number | null) => void;
   onPrevious?: () => void;
   onNext?: () => void;
   showNavButtons?: boolean;
 }
 
+// ─── Video-specific props ───────────────────────────────────────────────────
+
+export interface IVideoPlayerProps extends IPlayerStackCommonProps {
+  viewType?: 'video';
+  live?: boolean;
+  poster?: string;
+  pip?: boolean;
+  spriteVTTFile?: string;
+  chapters?: IChapterProps[];
+  captions?: ICaptionProps[];
+  heatmapData?: IHeatmapDataPoint[];
+  fullHDQualityBreak?: number;
+  onPlayBackQualityChange?: (quality: number | null) => void;
+  onEnablePIP?: () => void;
+  onDisablePIP?: () => void;
+  config?: {
+    attributes?: Record<string, string | boolean>;
+    tracks?: Array<Record<string, unknown>>;
+    forceHLS?: boolean;
+    forceSafariHLS?: boolean;
+    forceDisableHls?: boolean;
+    forceDASH?: boolean;
+    forceFLV?: boolean;
+    hlsOptions?: Record<string, unknown>;
+    hlsVersion?: string;
+    dashVersion?: string;
+    flvVersion?: string;
+  };
+}
+
+// ─── Audio-specific props ───────────────────────────────────────────────────
+
+export interface IAudioPlayerProps extends IPlayerStackCommonProps {
+  viewType: 'audio';
+  /** Title displayed in the audio player skin */
+  title?: string;
+  /** Artist/author name displayed in the audio player skin */
+  artist?: string;
+  /** Cover art URL for the audio player */
+  poster?: string;
+  captions?: ICaptionProps[];
+  config?: {
+    attributes?: Record<string, string | boolean>;
+    tracks?: Array<Record<string, unknown>>;
+    forceHLS?: boolean;
+    forceSafariHLS?: boolean;
+    forceDisableHls?: boolean;
+    forceDASH?: boolean;
+    forceFLV?: boolean;
+    hlsOptions?: Record<string, unknown>;
+    hlsVersion?: string;
+    dashVersion?: string;
+    flvVersion?: string;
+  };
+}
+
+// ─── Source discrimination (url vs sources) ─────────────────────────────────
+
+export interface IWithUrl {
+  url: string;
+  sources?: never;
+}
+
+export interface IWithSources {
+  url?: never;
+  sources: ISourceProps[];
+}
+
+// ─── Discriminated union: viewType determines available props ────────────────
+
+type TVideoWithUrl = IVideoPlayerProps & IWithUrl;
+type TVideoWithSources = IVideoPlayerProps & IWithSources;
+type TAudioWithUrl = IAudioPlayerProps & IWithUrl;
+
+export type TPlayerStackProps = TVideoWithUrl | TVideoWithSources | TAudioWithUrl;
+
+// ─── Legacy compatibility: IBasePlayerStackCommons ──────────────────────────
+
+/** @deprecated Use TPlayerStackProps instead */
+export interface IBasePlayerStackCommons extends IPlayerStackCommonProps {
+  pip?: boolean;
+  live?: boolean;
+  poster?: string;
+  spriteVTTFile?: string;
+  chapters?: IChapterProps[];
+  heatmapData?: IHeatmapDataPoint[];
+  onPlayBackQualityChange?: (quality: number | null) => void;
+  onEnablePIP?: () => void;
+  onDisablePIP?: () => void;
+}
+
+/** @deprecated */
 export interface IBasePlayerStackWithUrlNever {
   sources?: never;
 }
 
+/** @deprecated */
 export interface IBasePlayerStackWithSourcesNever {
   url?: never;
 }
 
+/** @deprecated */
 export interface IBasePlayerStackWithUrl {
   url: string;
 }
 
+/** @deprecated */
 export interface IBasePlayerStackWithSources {
   sources: ISourceProps[];
   fullHDQualityBreak?: number;
 }
 
+/** @deprecated Use TPlayerStackProps */
 type TBasePlayerStackProps =
   | (IBasePlayerStackWithUrl & IBasePlayerStackCommons & IBasePlayerStackWithUrlNever)
   | (IBasePlayerStackWithSources & IBasePlayerStackCommons & IBasePlayerStackWithSourcesNever);
 
-export default abstract class BasePlayerStack<P extends TBasePlayerStackProps> extends Component<P, any> {
+export default abstract class BasePlayerStack<P extends TPlayerStackProps = TPlayerStackProps> extends Component<P, any> {
   static canPlay(url: string): boolean;
   static canEnablePIP(url: string): boolean;
 

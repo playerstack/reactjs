@@ -2,21 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AppContextProvider } from '../../src/context/AppContextProvider';
 
-// We need to mock useAppSelector to provide state with playerRef
-jest.mock('../../src/hooks/context/useAppSelector', () => {
-  return jest.fn(() => ({
-    playerRef: { current: null },
-    i18n: {},
-    hiding: false,
-    contextMenuVisible: false,
-    controlsHovering: false,
-    timeSliding: false,
-    volumeSliding: false,
-    menuVisible: false,
-    subMenuVisible: false,
-  }));
-});
-
 import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
 const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
@@ -43,14 +28,14 @@ describe('StyledGeneralButton', () => {
     expect(screen.getByText('Hello World')).toBeInTheDocument();
   });
 
-  test('renders title in tooltip', () => {
+  test('does not render title attribute on DOM (tooltip handled externally)', () => {
     render(
       <StyledGeneralButton title="My Tooltip" data-testid="btn">
         Content
       </StyledGeneralButton>,
       { wrapper },
     );
-    expect(screen.getByTestId('btn').getAttribute('title')).toBe('My Tooltip');
+    expect(screen.getByTestId('btn').getAttribute('title')).toBeNull();
   });
 
   test('calls onClick when clicked', () => {
@@ -121,22 +106,10 @@ describe('StyledGeneralButton', () => {
     expect(screen.getByTestId('btn')).toBeInTheDocument();
   });
 
-  test('renders with isTooltipActive prop', () => {
-    render(
-      <StyledGeneralButton title="Test" data-testid="btn" isTooltipActive={true}>
-        Tooltip Active
-      </StyledGeneralButton>,
-      { wrapper },
-    );
-    fireEvent.mouseEnter(screen.getByTestId('btn'));
-    // Should not throw
-    expect(screen.getByTestId('btn')).toBeInTheDocument();
-  });
-
   test('renders with isFakeDisabled prop', () => {
     const onClick = jest.fn();
     render(
-      <StyledGeneralButton title="Test" data-testid="btn" isFakeDisabled={true} onClick={onClick}>
+      <StyledGeneralButton title="FD" data-testid="btn" isFakeDisabled={true} onClick={onClick}>
         Disabled
       </StyledGeneralButton>,
       { wrapper },

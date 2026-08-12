@@ -12,6 +12,7 @@ import {
 import MobileChapterSegments from './MobileChapterSegments';
 import HeatmapGraph from '../../../Commons/HeatmapGraph';
 import useHeatmap from '../../../../hooks/useHeatmap';
+import useAppSelector from '../../../../hooks/context/useAppSelector';
 import { formatTime } from '../../../../utils';
 
 const MobileProgressBar = ({
@@ -27,6 +28,7 @@ const MobileProgressBar = ({
   const containerRef = React.useRef(null);
   const isDragging = React.useRef(false);
   const [seeking, setSeeking] = React.useState(false);
+  const { i18n } = useAppSelector();
 
   const progress = duration > 0 ? currentTime / duration : 0;
   const bufferedProgress = buffered || 0;
@@ -118,7 +120,7 @@ const MobileProgressBar = ({
     <StyledMobileProgressContainer
       ref={containerRef}
       role="slider"
-      aria-label="Barra de tiempo"
+      aria-label={i18n.timeBar}
       aria-valuemin={0}
       aria-valuemax={Math.round(duration)}
       aria-valuenow={Math.round(currentTime)}

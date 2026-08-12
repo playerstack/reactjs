@@ -56,11 +56,7 @@ const MobileCenterControls = ({
   return (
     <StyledMobileCenterControls $visible={visible}>
       {showPrevious && (
-        <StyledMobileNavButton
-          aria-label={i18n.previous || 'Previous'}
-          onClick={handlePrevious}
-          disabled={!hasPrevious}
-        >
+        <StyledMobileNavButton aria-label={i18n.previous} onClick={handlePrevious} disabled={!hasPrevious}>
           <PrevIcon />
         </StyledMobileNavButton>
       )}
@@ -76,7 +72,7 @@ const MobileCenterControls = ({
       )}
 
       {showNext && (
-        <StyledMobileNavButton aria-label={i18n.next || 'Next'} onClick={handleNext} disabled={!hasNext}>
+        <StyledMobileNavButton aria-label={i18n.next} onClick={handleNext} disabled={!hasNext}>
           <NextIcon />
         </StyledMobileNavButton>
       )}

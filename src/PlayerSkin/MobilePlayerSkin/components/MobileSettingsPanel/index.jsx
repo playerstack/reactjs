@@ -109,9 +109,9 @@ const MobileSettingsPanel = ({
   );
 
   const currentCaptionLabel = React.useMemo(() => {
-    if (!activeCaption || !captions || captions.length === 0) return i18n.off || 'Off';
+    if (!activeCaption || !captions || captions.length === 0) return i18n.off;
     const found = captions.find((c) => c.language === activeCaption);
-    return found ? found.label : i18n.off || 'Off';
+    return found ? found.label : i18n.off;
   }, [activeCaption, captions, i18n]);
 
   const currentSpeedLabel = React.useMemo(() => {
@@ -133,11 +133,11 @@ const MobileSettingsPanel = ({
       {/* Header — always rendered, content changes based on subMenu state */}
       <StyledSettingsHeader>
         {!isSubMenuOpen ? (
-          <StyledIconButton $position="left" aria-label="Settings">
+          <StyledIconButton $position="left" aria-label={i18n.settings}>
             <SettingsGearIcon />
           </StyledIconButton>
         ) : (
-          <StyledIconButton $position="left" onClick={handleBack} aria-label="Back">
+          <StyledIconButton $position="left" onClick={handleBack} aria-label={i18n.back}>
             <BackIcon />
           </StyledIconButton>
         )}
@@ -147,10 +147,10 @@ const MobileSettingsPanel = ({
             : subMenu === 'quality'
               ? i18n.quality
               : subMenu === 'captions'
-                ? i18n.captions || 'Captions'
+                ? i18n.captions
                 : i18n.speed}
         </StyledHeaderTitle>
-        <StyledIconButton $position="right" onClick={handleClose} aria-label="Close">
+        <StyledIconButton $position="right" onClick={handleClose} aria-label={i18n.close}>
           <CloseIcon />
         </StyledIconButton>
       </StyledSettingsHeader>
@@ -185,7 +185,7 @@ const MobileSettingsPanel = ({
               <StyledSwitchIcon>
                 <CaptionsIcon />
               </StyledSwitchIcon>
-              <StyledSwitchLabel>{i18n.captions || 'Captions'}</StyledSwitchLabel>
+              <StyledSwitchLabel>{i18n.captions}</StyledSwitchLabel>
               <StyledSwitchValue>{currentCaptionLabel}</StyledSwitchValue>
             </StyledSwitchItem>
           )}
@@ -223,7 +223,7 @@ const MobileSettingsPanel = ({
           {subMenu === 'captions' && (
             <StyledOptionList>
               <StyledOptionItem active={activeCaption === null} onClick={handleCaptionClick(null)}>
-                {i18n.off || 'Off'}
+                {i18n.off}
               </StyledOptionItem>
               {(captions || []).map((c) => (
                 <StyledOptionItem

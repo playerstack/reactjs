@@ -5,7 +5,7 @@ import { StyledSliderWrapper } from '../../../Volume/Volume.styled';
 import useVolumeSlider from '../../../../../../hooks/useVolumeSlider';
 import { VolumeSliderContainer, VolumeSliderThumb, VolumeSliderTrack } from './VolumeSlider.styled';
 
-const VolumeSlider = ({ fullscreen, value, isDisabled, onChange }) => {
+const VolumeSlider = ({ fullscreen, value, isDisabled, onChange, onMouseEnter, onMouseLeave }) => {
   const { thumbLeft, sliderRef, thumbRef, onMouseMove, onMouseDown, handleChange } = useVolumeSlider({
     fullscreen,
     value,
@@ -23,6 +23,8 @@ const VolumeSlider = ({ fullscreen, value, isDisabled, onChange }) => {
       onClick={handleChange}
       onMouseDown={onMouseDown}
       onTouchStart={onMouseDown}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       isFullscreen={fullscreen}
     >
       <VolumeSliderContainer onMouseMove={onMouseMove} isFullscreen={fullscreen}>
@@ -45,10 +47,17 @@ VolumeSlider.propTypes = {
   onChange: PropTypes.func.isRequired,
   isDisabled: PropTypes.bool.isRequired,
   fullscreen: PropTypes.bool.isRequired,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
 };
 
 export default React.memo(
   VolumeSlider,
   (p, n) =>
-    p.fullscreen === n.fullscreen && p.value === n.value && p.onChange === n.onChange && p.isDisabled === n.isDisabled,
+    p.fullscreen === n.fullscreen &&
+    p.value === n.value &&
+    p.onChange === n.onChange &&
+    p.isDisabled === n.isDisabled &&
+    p.onMouseEnter === n.onMouseEnter &&
+    p.onMouseLeave === n.onMouseLeave,
 );

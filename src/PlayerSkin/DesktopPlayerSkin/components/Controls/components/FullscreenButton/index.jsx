@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
+import Tooltip from '../../../../../Commons/Tooltip';
 import FullscreenIcon from '../../../../../Commons/Icons/FullscreenIcon';
 import UnfullscreenIcon from '../../../../../Commons/Icons/UnfullscreenIcon';
 import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
@@ -12,31 +13,21 @@ const FullscreenButton = ({ fullscreen, requestFullscreen, exitFullscreen }) => 
   const iconProps = React.useMemo(() => buildIconProps(fullscreen), [fullscreen]);
 
   return fullscreen ? (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.exitFullScreenMode}
-      title={i18n.exitFullScreenMode}
-      onClick={exitFullscreen}
-      isFullscreen
-      isTooltipActive
-    >
-      <UnfullscreenIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.exitFullScreenMode} fullscreen>
+      <StyledGeneralButton type="button" aria-label={i18n.exitFullScreenMode} onClick={exitFullscreen} isFullscreen>
+        <UnfullscreenIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   ) : (
-    <StyledGeneralButton
-      type="button"
-      aria-label={i18n.fullScreen}
-      title={i18n.fullScreen}
-      onClick={requestFullscreen}
-      isTooltipActive
-    >
-      <FullscreenIcon {...iconProps} />
-    </StyledGeneralButton>
+    <Tooltip label={i18n.fullScreen}>
+      <StyledGeneralButton type="button" aria-label={i18n.fullScreen} onClick={requestFullscreen}>
+        <FullscreenIcon {...iconProps} />
+      </StyledGeneralButton>
+    </Tooltip>
   );
 };
 
 FullscreenButton.propTypes = {
-  // fullscreen
   fullscreen: PropTypes.bool.isRequired,
   requestFullscreen: PropTypes.func.isRequired,
   exitFullscreen: PropTypes.func.isRequired,

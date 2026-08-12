@@ -226,3 +226,90 @@ describe('useSettingsOptions — auto quality', () => {
     expect(result.current.values.quality.value).toBe('0');
   });
 });
+
+describe('useSettingsOptions — captions and click-outside', () => {
+  const defaults = {
+    live: false,
+    fullHDQualityBreak: 1080,
+    qualities: qualityOptions,
+    playbackRate: 1,
+    changeSettings: jest.fn(),
+    fullscreen: false,
+    captions: [
+      { language: 'en', label: 'English' },
+      { language: 'es', label: 'Spanish' },
+    ],
+    activeCaption: null,
+    onCaptionChange: jest.fn(),
+  };
+
+  beforeEach(() => jest.clearAllMocks());
+
+  test('settingsOptions includes captions when captions provided', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    const captionOption = result.current.settingsOptions.find((o) => o.value === 'captions');
+    expect(captionOption).toBeDefined();
+  });
+
+  test('handleMenuClick with captions value calls onCaptionChange', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    act(() => {
+      const captionHandler = result.current.handleMenuClick('captions');
+      captionHandler('en');
+    });
+    expect(defaults.onCaptionChange).toHaveBeenCalledWith('en');
+  });
+
+  test('handleMenuClick with captions "off" calls onCaptionChange(null)', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    act(() => {
+      const captionHandler = result.current.handleMenuClick('captions');
+      captionHandler('off');
+    });
+    expect(defaults.onCaptionChange).toHaveBeenCalledWith(null);
+  });
+
+  test('handleMenuClick with captions updates values label', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    act(() => {
+      const captionHandler = result.current.handleMenuClick('captions');
+      captionHandler('es');
+    });
+    expect(result.current.values.captions.label).toBe('Spanish');
+    expect(result.current.values.captions.value).toBe('es');
+  });
+
+  test('handleButtonClick toggles generalMenu and stops propagation', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    const mockEvent = { stopPropagation: jest.fn() };
+    act(() => {
+      result.current.handleButtonClick(mockEvent);
+    });
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
+    expect(result.current.settings.generalMenu).toBe(true);
+  });
+
+  test('handleButtonClick closes menu when submenu was open', () => {
+    const { result } = renderHook(() => useSettingsOptions(defaults), { wrapper });
+    // Open submenu first
+    act(() => {
+      result.current.handleMenuItemClick('speed');
+    });
+    expect(result.current.settings.speed).toBe(true);
+    // Click button should close
+    const mockEvent = { stopPropagation: jest.fn() };
+    act(() => {
+      result.current.handleButtonClick(mockEvent);
+    });
+    expect(result.current.settings.speed).toBe(false);
+  });
+
+  test('captionOptions is empty when no captions prop', () => {
+    const { result } = renderHook(
+      () => useSettingsOptions({ ...defaults, captions: undefined }),
+      { wrapper },
+    );
+    const captionOption = result.current.settingsOptions.find((o) => o.value === 'captions');
+    expect(captionOption).toBeUndefined();
+  });
+});

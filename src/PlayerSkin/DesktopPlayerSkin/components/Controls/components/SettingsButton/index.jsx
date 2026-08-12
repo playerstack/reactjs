@@ -12,6 +12,7 @@ import {
   StyledDropdownValue,
 } from './SettingsButton.styled';
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
+import Tooltip from '../../../../../Commons/Tooltip';
 import SettingsIcon from '../../../../../Commons/Icons/SetttingsIcon';
 import CaptionOptions from '../../../../../Commons/CaptionOptions';
 import ArrowRightIcon from '../../../../../Commons/Icons/ArrowRightIcon';
@@ -68,19 +69,19 @@ const SettingsButton = ({
 
   return (
     <StyledDropdownContainer ref={dropdownRef}>
-      <StyledDropdownButton
-        type="button"
-        aria-label={i18n.settings}
-        title={i18n.settings}
-        aria-expanded={settings.generalMenu}
-        onClick={handleButtonClick}
-        isFullscreen={fullscreen}
-        isFullHD={values.quality?.isFullHD}
-        isExpanded={settings.generalMenu}
-        isTooltipActive
-      >
-        <SettingsIcon {...iconProps} />
-      </StyledDropdownButton>
+      <Tooltip label={i18n.settings} fullscreen={fullscreen}>
+        <StyledDropdownButton
+          type="button"
+          aria-label={i18n.settings}
+          aria-expanded={settings.generalMenu}
+          onClick={handleButtonClick}
+          isFullscreen={fullscreen}
+          isFullHD={values.quality?.isFullHD}
+          isExpanded={settings.generalMenu}
+        >
+          <SettingsIcon {...iconProps} />
+        </StyledDropdownButton>
+      </Tooltip>
       <StyledDropdownOverlay
         hiding={settings.generalMenu}
         singleOption={live || (qualities.length === 0 && (!captions || captions.length === 0))}

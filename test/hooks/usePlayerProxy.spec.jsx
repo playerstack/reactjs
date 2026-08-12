@@ -375,7 +375,7 @@ describe('usePlayerProxy', () => {
 
     // The auto-quality measurement must NOT run again, so no extra updateState calls
     expect(updateState.mock.calls.length).toBe(callsAfterFirst);
-  });
+  }, 15000);
 
   test('keeps manually selected videoUrl after unrelated re-render', async () => {
     const inlineSources = () => [

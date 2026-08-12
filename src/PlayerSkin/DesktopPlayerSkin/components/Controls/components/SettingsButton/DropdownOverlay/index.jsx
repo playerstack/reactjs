@@ -54,7 +54,7 @@ const DropdownOverlay = React.forwardRef(
                 padding: '20px 15px',
               }}
             >
-              {i18n.captionOptions || 'Options'}
+              {i18n.captionOptions}
             </StyledGeneralButton>
           )}
         </StyledDropdownHeader>

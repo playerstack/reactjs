@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import GeneralButton from '../../../Commons/Buttons/StyledGeneralButton';
+import { StyledTooltipWrapper } from '../../../Commons/Tooltip';
 import { sliderWith } from '../../DesktopPlayerSkin.constants';
 
 export const SliderWrapper = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
@@ -46,6 +46,7 @@ SliderContainer.displayName = 'SliderContainer';
 export const StyledSliderContainer = styled(SliderContainer)`
   display: flex;
   padding-right: 3px;
+  position: relative;
   @media (max-width: 575px) {
     display: none;
   }
@@ -61,7 +62,8 @@ export const StyledSliderContainer = styled(SliderContainer)`
       }
       `
       : `
-          & ${GeneralButton}:hover ~ ${StyledSliderWrapper},
+          & ${StyledTooltipWrapper}:hover ~ ${StyledSliderWrapper},
+          &:hover ${StyledSliderWrapper},
           & ${StyledSliderWrapper}:hover {
               width: ${sliderWith(isFullscreen)}px;
               -moz-transition: margin 0.2s cubic-bezier(0, 0, 0.2, 1), width 0.2s cubic-bezier(0, 0, 0.2, 1);

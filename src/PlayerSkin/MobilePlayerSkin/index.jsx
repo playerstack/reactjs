@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledMobilePlayerSkin, StyledOverlay } from './MobilePlayerSkin.styled';
-import { GlobalStyle, StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
+import { StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
 
 import MobileTopBar from './components/MobileTopBar';
 import MobileCenterControls from './components/MobileCenterControls';
@@ -170,8 +170,6 @@ const MobilePlayerSkin = React.forwardRef(
 
     return (
       <StyledMobilePlayerSkin onContextMenu={handleContextMenu} onClick={toggleControls}>
-        <GlobalStyle />
-
         <PreventedTip
           hasResource={hasResource}
           prevented={prevented}
@@ -236,7 +234,8 @@ const MobilePlayerSkin = React.forwardRef(
           activeCaption={activeCaption}
           onCaptionChange={onCaptionChange}
           onOpenSettings={handleOpenSettings}
-          settingsLabel={i18n.settings || 'Settings'}
+          settingsLabel={i18n.settings}
+          captionsLabel={i18n.captions}
         />
 
         {/* Mobile settings panel (fullscreen overlay) */}

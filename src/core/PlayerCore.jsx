@@ -413,16 +413,22 @@ export default class PlayerCore extends React.Component {
   };
 
   render() {
-    const { url, playing, loop, muted, config, width, height } = this.props;
+    const { url, playing, loop, muted, config, width, height, viewType } = this.props;
 
-    const style = {
-      width: width === 'auto' ? width : '100%',
-      height: height === 'auto' ? height : '100%',
-    };
+    const isAudio = viewType === 'audio';
+
+    const style = isAudio
+      ? { display: 'none' }
+      : {
+          width: width === 'auto' ? width : '100%',
+          height: height === 'auto' ? height : '100%',
+        };
+
+    const Element = isAudio ? 'audio' : 'video';
 
     return (
-      <video
-        data-testid="video-element"
+      <Element
+        data-testid={isAudio ? 'audio-element' : 'video-element'}
         ref={this.ref}
         src={this.getSource(url)}
         style={style}
@@ -434,7 +440,7 @@ export default class PlayerCore extends React.Component {
         {...config.attributes}
       >
         {config.tracks?.map(this.renderTrack)}
-      </video>
+      </Element>
     );
   }
 }

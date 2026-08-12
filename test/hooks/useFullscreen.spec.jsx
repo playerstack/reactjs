@@ -131,3 +131,92 @@ describe('useFullscreen', () => {
     removeSpy.mockRestore();
   });
 });
+
+describe('useFullscreen — extra branch coverage', () => {
+  let playerRef;
+  let videoRef;
+  let updateState;
+
+  beforeEach(() => {
+    playerRef = { current: document.createElement('div') };
+    videoRef = { current: document.createElement('video') };
+    updateState = jest.fn();
+    playerRef.current.requestFullscreen = jest.fn();
+    document.exitFullscreen = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('requestFullscreen does nothing when no API available at all', () => {
+    playerRef.current.requestFullscreen = undefined;
+    playerRef.current.msRequestFullscreen = undefined;
+    playerRef.current.webkitRequestFullscreen = undefined;
+    videoRef.current.webkitEnterFullScreen = undefined;
+    const { result } = renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+    // Should not throw
+    expect(() => act(() => result.current.requestFullscreen())).not.toThrow();
+  });
+
+  test('exitFullscreen does nothing when no API available', () => {
+    document.exitFullscreen = undefined;
+    document.msExitFullscreen = undefined;
+    document.webkitExitFullscreen = undefined;
+    const { result } = renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+    expect(() => act(() => result.current.exitFullscreen())).not.toThrow();
+  });
+
+  test('onChange handler calls updateState with fullscreen true when element matches', () => {
+    Object.defineProperty(document, 'fullscreenElement', {
+      value: playerRef.current,
+      configurable: true,
+    });
+    renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+
+    // Trigger fullscreenchange event
+    act(() => {
+      document.dispatchEvent(new Event('fullscreenchange'));
+    });
+
+    expect(updateState).toHaveBeenCalledWith({ fullscreen: true });
+    Object.defineProperty(document, 'fullscreenElement', { value: null, configurable: true });
+  });
+
+  test('onChange handler calls updateState with fullscreen false when no element', () => {
+    Object.defineProperty(document, 'fullscreenElement', {
+      value: null,
+      configurable: true,
+    });
+    renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+
+    act(() => {
+      document.dispatchEvent(new Event('fullscreenchange'));
+    });
+
+    expect(updateState).toHaveBeenCalledWith({ fullscreen: false });
+  });
+
+  test('onChange handler uses webkitFullscreenElement', () => {
+    Object.defineProperty(document, 'fullscreenElement', { value: undefined, configurable: true });
+    Object.defineProperty(document, 'webkitFullscreenElement', {
+      value: playerRef.current,
+      configurable: true,
+    });
+    renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+
+    act(() => {
+      document.dispatchEvent(new Event('fullscreenchange'));
+    });
+
+    expect(updateState).toHaveBeenCalledWith({ fullscreen: true });
+    Object.defineProperty(document, 'webkitFullscreenElement', { value: undefined, configurable: true });
+  });
+
+  test('requestFullscreen handles promise rejection without throwing', () => {
+    playerRef.current.requestFullscreen = jest.fn().mockReturnValue(Promise.reject(new Error('denied')));
+    const { result } = renderHook(() => useFullscreen({ updateState, videoRef, playerRef }));
+    // Should not throw
+    expect(() => act(() => result.current.requestFullscreen())).not.toThrow();
+  });
+});
