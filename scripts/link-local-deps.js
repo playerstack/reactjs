@@ -28,6 +28,12 @@ for (const dep of LOCAL_DEPS) {
   // Remove registry-installed version
   fs.rmSync(targetDir, { recursive: true, force: true });
 
+  // Ensure parent directory exists
+  const parentDir = path.dirname(targetDir);
+  if (!fs.existsSync(parentDir)) {
+    fs.mkdirSync(parentDir, { recursive: true });
+  }
+
   // Create symlink (junction on Windows for cross-drive compat)
   fs.symlinkSync(localAbsolute, targetDir, 'junction');
   console.log(`[link-local-deps] Linked ${dep.name} → ${localAbsolute}`);
