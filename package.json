@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "typings": "types/lib/index.d.ts",
   "scripts": {
+    "postinstall": "node scripts/link-local-deps.js",
     "clean": "rimraf lib lazy demo coverage *.d.ts",
     "start": "cp -r examples/react/public/ demo && builder examples/react/src/index.tsx --format=iife --bundle --outdir=demo --watch --servedir=demo --log-level=debug --livereload",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -42,7 +43,7 @@
     "react-dom": "^18.3.1"
   },
   "dependencies": {
-    "@playerstack/core": "file:../core",
+    "@playerstack/core": "*",
     "deepmerge": "^4.0.0",
     "load-script": "^1.0.0",
     "memoize-one": "^5.1.1",
