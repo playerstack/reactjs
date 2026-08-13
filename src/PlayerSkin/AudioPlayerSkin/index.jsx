@@ -9,11 +9,13 @@ import MutedIcon from '../Commons/Icons/MutedIcon';
 import UnmutedIcon from '../Commons/Icons/UnmutedIcon';
 import SkipBackIcon from '../Commons/Icons/SkipBackIcon';
 import SkipForwardIcon from '../Commons/Icons/SkipForwardIcon';
+import SkipAdIcon from '../Commons/Icons/SkipAdIcon';
 import AudioSettingsMenu from './components/AudioSettingsMenu';
 import Tooltip from '../Commons/Tooltip';
 import { buildIconProps } from '../Commons/constants';
 import { getValue } from '../Commons/TimeTooltip/utils';
 import useChapters from '../../hooks/useChapters';
+import useAds from '../../hooks/useAds';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import useAppSelector from '../../hooks/context/useAppSelector';
 
@@ -85,6 +87,7 @@ const AudioPlayerSkin = React.forwardRef(
       onPrevious,
       onNext,
       showNavButtons,
+      ads = null,
       kernelMsg = null,
     },
     ref,
@@ -94,6 +97,40 @@ const AudioPlayerSkin = React.forwardRef(
     const timelineRef = React.useRef(null);
 
     const { segments, getChapterAtTime } = useChapters({ chapters, duration });
+
+    // Audio pre-roll: ad only activates after first play
+    const [adStarted, setAdStarted] = React.useState(false);
+    const activeAds = adStarted ? ads : null;
+
+    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, onSkipClick } = useAds({
+      ads: activeAds,
+      currentTime,
+      duration,
+      ended,
+      onPauseClick,
+    });
+
+    // Intercept play to trigger ad on first play
+    const handlePlayClick = React.useCallback(() => {
+      if (ads && !adStarted) {
+        setAdStarted(true);
+      }
+      onPlayClick();
+    }, [ads, adStarted, onPlayClick]);
+
+    // Reset adStarted when ads prop is removed (ad completed/skipped)
+    // Auto-activate if player is already playing when ads prop appears
+    const prevAdsExistRef = React.useRef(!!ads);
+    React.useEffect(() => {
+      const adsExist = !!ads;
+      if (!adsExist) {
+        setAdStarted(false);
+      } else if (adsExist && !prevAdsExistRef.current && !paused && !ended) {
+        // ads prop just appeared while already playing — activate immediately
+        setAdStarted(true);
+      }
+      prevAdsExistRef.current = adsExist;
+    }, [ads, paused, ended]);
 
     // Current chapter for paused view label
     const currentChapterTitle = React.useMemo(() => {
@@ -298,39 +335,59 @@ const AudioPlayerSkin = React.forwardRef(
           </StyledAudioTooltip>
         )}
         <StyledControlsRow>
-          {/* Skip back — expands when playing */}
-          <Tooltip label={i18n.skipBack}>
-            <StyledSkipButtonWrapper $visible={isPlaying}>
-              <StyledSkipButton onClick={handleSkipBack} aria-label={i18n.skipBack}>
-                <SkipBackIcon {...iconProps} />
-              </StyledSkipButton>
-            </StyledSkipButtonWrapper>
-          </Tooltip>
+          {/* Skip back — hidden during ads */}
+          {!isAdActive && (
+            <Tooltip label={i18n.skipBack}>
+              <StyledSkipButtonWrapper $visible={isPlaying}>
+                <StyledSkipButton onClick={handleSkipBack} aria-label={i18n.skipBack}>
+                  <SkipBackIcon {...iconProps} />
+                </StyledSkipButton>
+              </StyledSkipButtonWrapper>
+            </Tooltip>
+          )}
 
-          {/* Play/Pause button — always in same position */}
-          <Tooltip label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}>
-            <StyledPlayButton
-              onClick={paused || ended ? onPlayClick : onPauseClick}
-              aria-label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}
-            >
-              {ended ? (
-                <AudioReplayIcon {...iconProps} />
-              ) : paused ? (
-                <AudioPlayIcon {...iconProps} />
-              ) : (
-                <AudioPauseIcon {...iconProps} />
-              )}
-            </StyledPlayButton>
-          </Tooltip>
-
-          {/* Skip forward — expands when playing */}
-          <Tooltip label={i18n.skipForward}>
-            <StyledSkipButtonWrapper $visible={isPlaying}>
-              <StyledSkipButton onClick={handleSkipForward} aria-label={i18n.skipForward}>
-                <SkipForwardIcon {...iconProps} />
-              </StyledSkipButton>
+          {/* Play/Pause button OR Skip Ad button */}
+          {isAdActive && hasSkipTimer ? (
+            <StyledSkipButtonWrapper $visible={true}>
+              <StyledPlayButton
+                onClick={canSkip ? onSkipClick : undefined}
+                aria-label={canSkip ? i18n.skipAd : `${skipCountdown}s`}
+                style={{ opacity: canSkip ? 1 : 0.6, cursor: canSkip ? 'pointer' : 'default' }}
+              >
+                {canSkip ? (
+                  <SkipAdIcon width={24} height={24} />
+                ) : (
+                  <span style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{skipCountdown}s</span>
+                )}
+              </StyledPlayButton>
             </StyledSkipButtonWrapper>
-          </Tooltip>
+          ) : (
+            <Tooltip label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}>
+              <StyledPlayButton
+                onClick={paused || ended ? handlePlayClick : onPauseClick}
+                aria-label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}
+              >
+                {ended ? (
+                  <AudioReplayIcon {...iconProps} />
+                ) : paused ? (
+                  <AudioPlayIcon {...iconProps} />
+                ) : (
+                  <AudioPauseIcon {...iconProps} />
+                )}
+              </StyledPlayButton>
+            </Tooltip>
+          )}
+
+          {/* Skip forward — hidden during ads */}
+          {!isAdActive && (
+            <Tooltip label={i18n.skipForward}>
+              <StyledSkipButtonWrapper $visible={isPlaying}>
+                <StyledSkipButton onClick={handleSkipForward} aria-label={i18n.skipForward}>
+                  <SkipForwardIcon {...iconProps} />
+                </StyledSkipButton>
+              </StyledSkipButtonWrapper>
+            </Tooltip>
+          )}
 
           {/* Content area: label (paused) and timeline (playing) stacked */}
           <StyledContentArea>
@@ -346,9 +403,10 @@ const AudioPlayerSkin = React.forwardRef(
               <StyledTimelineContainer>
                 <StyledTimelineTrack
                   ref={timelineRef}
-                  onMouseDown={handleTimelineMouseDown}
-                  onMouseMove={handleTimelineMouseMove}
-                  onMouseLeave={handleTimelineMouseLeave}
+                  onMouseDown={isAdActive ? undefined : handleTimelineMouseDown}
+                  onMouseMove={isAdActive ? undefined : handleTimelineMouseMove}
+                  onMouseLeave={isAdActive ? undefined : handleTimelineMouseLeave}
+                  style={isAdActive ? { pointerEvents: 'none', cursor: 'default' } : undefined}
                 >
                   <StyledTimelineSegments>
                     {segments.length > 0 ? (
@@ -378,7 +436,9 @@ const AudioPlayerSkin = React.forwardRef(
                             $hovered={hoveredSegmentIndex === index}
                           >
                             <StyledChapterBuffered style={{ width: `${bufferedPercent}%` }} />
-                            <StyledChapterFilled style={{ width: `${fillPercent}%` }} />
+                            <StyledChapterFilled
+                              style={{ width: `${fillPercent}%`, background: isAdActive ? '#fc0' : undefined }}
+                            />
                             {waiting && bufferedPercent < 100 && (
                               <StyledLoadingStripes
                                 style={{ clipPath: `inset(0 0 0 ${Math.max(bufferedPercent, fillPercent)}%)` }}
@@ -390,7 +450,9 @@ const AudioPlayerSkin = React.forwardRef(
                     ) : (
                       <StyledSingleTrack>
                         <StyledTimelineBuffered style={{ width: `${bufferedProgress}%` }} />
-                        <StyledTimelineFilled style={{ width: `${progress}%` }} />
+                        <StyledTimelineFilled
+                          style={{ width: `${progress}%`, background: isAdActive ? '#fc0' : undefined }}
+                        />
                         {waiting && bufferedProgress < 100 && (
                           <StyledLoadingStripes
                             style={{ clipPath: `inset(0 0 0 ${Math.max(bufferedProgress, progress)}%)` }}
@@ -443,7 +505,7 @@ const AudioPlayerSkin = React.forwardRef(
               </Tooltip>
             </StyledVolumeContainer>
 
-            <AudioSettingsMenu playbackRate={playbackRate} changePlaybackRate={changePlaybackRate} />
+            {!isAdActive && <AudioSettingsMenu playbackRate={playbackRate} changePlaybackRate={changePlaybackRate} />}
           </StyledRightControls>
         </StyledControlsRow>
       </StyledAudioPlayerSkin>
@@ -525,5 +587,6 @@ export default React.memo(
     p.onSeeking === n.onSeeking &&
     p.onPrevious === n.onPrevious &&
     p.onNext === n.onNext &&
-    p.showNavButtons === n.showNavButtons,
+    p.showNavButtons === n.showNavButtons &&
+    p.ads === n.ads,
 );

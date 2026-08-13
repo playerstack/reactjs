@@ -18,6 +18,7 @@ const useSettingsOptions = ({
   changeSettings,
   onCaptionChange,
   fullscreen,
+  adMode = false,
 }) => {
   const { i18n } = useAppSelector();
   const dispatch = useAppDispatch();
@@ -233,9 +234,10 @@ const useSettingsOptions = ({
       qualityOptions: qualities,
       captionOptions,
       live,
+      adMode,
       i18n,
     });
-  }, [live, qualities, captionOptions, i18n]);
+  }, [live, adMode, qualities, captionOptions, i18n]);
 
   const iconProps = React.useMemo(() => buildIconProps(fullscreen), [fullscreen]);
 

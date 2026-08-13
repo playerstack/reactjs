@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { backdropImg } from './Controls.constants';
 
-const Controls = React.forwardRef(({ hiding, ...rest }, ref) => <div ref={ref} {...rest} />);
+const Controls = React.forwardRef(({ hiding, menuOpen, ...rest }, ref) => <div ref={ref} {...rest} />);
 
 Controls.displayName = 'Controls';
 
@@ -13,19 +13,7 @@ export const StyledControls = styled(Controls)`
   position: absolute;
   width: 100%;
   transition: opacity 0.3s;
-  &:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    z-index: 2;
-    width: 100%;
-    height: 2000%;
-    pointer-events: none;
-    background-repeat: repeat-x;
-    background-position: bottom;
-    background-image: url(${backdropImg});
-    transition: opacity 0.3s;
-  }
+  ${({ menuOpen }) => (menuOpen ? 'z-index: 20;' : '')}
   ${({ hiding }) => {
     return hiding
       ? `

@@ -32,7 +32,7 @@ const StyledTooltipText = styled.div`
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s ease;
-  z-index: 10;
+  z-index: 12;
   ${({ $fullscreen }) => ($fullscreen ? fullscreenStyles : normalStyles)}
 
   ${StyledTooltipWrapper}:hover & {

@@ -26,6 +26,7 @@ const MobileBottomBar = ({
   onSeeking,
   onRequestFullscreen,
   onExitFullscreen,
+  adMode = false,
 }) => (
   <StyledMobileBottomBar $visible={visible} onClick={(e) => e.stopPropagation()}>
     {false === live && (
@@ -33,7 +34,7 @@ const MobileBottomBar = ({
         <StyledMobileTime>
           {formatTime(Math.round(currentTime))} / {formatTime(Math.round(duration))}
         </StyledMobileTime>
-        <StyledMobileTimeRail>
+        <StyledMobileTimeRail style={adMode ? { pointerEvents: 'none' } : undefined}>
           <MobileProgressBar
             currentTime={currentTime}
             duration={duration}
@@ -43,6 +44,7 @@ const MobileBottomBar = ({
             getChapterAtTime={getChapterAtTime}
             onChange={onChangeCurrentTime}
             onSeeking={onSeeking}
+            adMode={adMode}
           />
         </StyledMobileTimeRail>
       </>

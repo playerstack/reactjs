@@ -66,7 +66,9 @@ const commonsSliderHandleStyles = `
   opacity: 1;
 `;
 
-export const Slider = React.forwardRef(({ isSliding, isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
+export const Slider = React.forwardRef(({ isSliding, isFullscreen, adMode, ...rest }, ref) => (
+  <div ref={ref} {...rest} />
+));
 
 Slider.displayName = 'Slider';
 
@@ -136,6 +138,15 @@ export const StyledSliderContainer = styled(Slider)`
         }
       `;
   }}
+  ${({ adMode }) =>
+    adMode
+      ? `
+    cursor: default;
+    & ${StyledSliderHandle} {
+      display: none !important;
+    }
+  `
+      : ''}
 `;
 
 export const SlideRail = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
@@ -168,12 +179,15 @@ export const StyledSliderBuffered = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
 `;
 
-export const StyledTrack = styled.div`
+const Track = React.forwardRef(({ adMode, ...rest }, ref) => <div ref={ref} {...rest} />);
+Track.displayName = 'Track';
+
+export const StyledTrack = styled(Track)`
   position: absolute;
   width: 100%;
   height: 100%;
   transform: translate(-100%, 0);
-  background: #f00;
+  background: ${({ adMode }) => (adMode ? '#fc0' : '#f00')};
 `;
 
 export const StyledSliderHandleRail = styled.div`

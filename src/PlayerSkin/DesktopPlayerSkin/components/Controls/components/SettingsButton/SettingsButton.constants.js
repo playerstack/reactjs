@@ -1,6 +1,6 @@
-export const settingsOverlayFn = ({ qualityOptions, captionOptions, live, i18n }) => {
+export const settingsOverlayFn = ({ qualityOptions, captionOptions, live, adMode = false, i18n }) => {
   const options = [];
-  if (!live) {
+  if (!live && !adMode) {
     options.push({
       label: i18n.speed,
       value: 'speed',

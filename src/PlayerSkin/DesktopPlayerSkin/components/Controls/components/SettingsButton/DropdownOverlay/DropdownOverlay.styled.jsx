@@ -61,6 +61,7 @@ export const StyledDropdownHeader = styled.div`
     font-size: 91%;
     padding: 20px 5px;
     height: 57px;
+    justify-content: flex-start !important;
   }
 `;
 
@@ -116,6 +117,7 @@ export const StyledDropdownItem = styled(DropdownItem)`
       line-height: 40px;
       padding: 0 15px;
       margin: 0;
+      justify-content: flex-start;
       ${({ isFullscreen }) =>
         isFullscreen
           ? `

@@ -19,7 +19,7 @@ export const StyledDropdownOverlay = styled(DropdownOverlay)`
   width: 250px;
   position: absolute;
   overflow: hidden;
-  z-index: 8;
+  z-index: 20;
   background: rgba(15, 15, 15, 0.9);
   ${({ isFullscreen }) => {
     return isFullscreen
