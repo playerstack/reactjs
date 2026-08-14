@@ -200,7 +200,7 @@ export default class PlayerCore extends React.Component {
   }
 
   load(url, isReady) {
-    const { hlsVersion, hlsOptions, dashVersion, flvVersion } = this.props.config;
+    const { hlsVersion, hlsOptions, dashVersion, flvVersion, live } = this.props.config;
     if (isReady === false) {
       return;
     }
@@ -222,7 +222,12 @@ export default class PlayerCore extends React.Component {
       getSDK(HLS_SDK_URL.replace('VERSION', hlsVersion), HLS_GLOBAL)
         .then((Hls) => {
           if (currentSequence !== this.loadSequence) return; // Stale load
-          this.hls = new Hls(hlsOptions);
+
+          // For live streams, apply buffer management defaults to prevent
+          // SourceBuffer overflow. User-provided hlsOptions take precedence.
+          const liveDefaults = live ? { maxBufferLength: 30, maxMaxBufferLength: 60, backBufferLength: 30 } : {};
+
+          this.hls = new Hls({ ...liveDefaults, ...hlsOptions });
           this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
             this.props.onReady();
           });

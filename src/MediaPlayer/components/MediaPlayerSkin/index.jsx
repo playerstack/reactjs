@@ -208,8 +208,9 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       hlsVersion: props.config.hlsVersion,
       forceSafariHLS: props.config.forceSafariHLS,
       loopOnEnded: props.config.loopOnEnded,
+      live: props.live || props.liveDVR,
     }),
-    [props.config],
+    [props.config, props.live, props.liveDVR],
   );
 
   return (
@@ -265,7 +266,9 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         prevented={preventedMemorized}
         muted={playerState.isMuted}
         paused={playerState.playing === false}
-        live={props.live}
+        live={props.live || props.liveDVR}
+        liveDVR={props.liveDVR}
+        liveAd={props.liveAd}
         buffered={playerState.loaded}
         ended={playerState.isEnded}
         seeking={playerState.seeking}

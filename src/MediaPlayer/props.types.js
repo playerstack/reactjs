@@ -118,6 +118,8 @@ const videoPropTypes = {
   /** Ads overlay configuration */
   ads: adsPropType,
   live: bool,
+  liveDVR: bool,
+  liveAd: object,
   poster: string,
   pip: bool,
   onPlayBackQualityChange: func,
@@ -167,6 +169,8 @@ export const defaultProps = {
   playing: false,
   loop: false,
   live: false,
+  liveDVR: false,
+  liveAd: null,
   volume: null,
   muted: false,
   playbackRate: 1,

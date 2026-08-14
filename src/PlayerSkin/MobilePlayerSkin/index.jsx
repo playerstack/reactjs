@@ -24,6 +24,9 @@ import useCaptions from '../../hooks/useCaptions';
 import useAds from '../../hooks/useAds';
 import useCast from '../../hooks/useCast';
 import CaptionOverlay from '../Commons/CaptionOverlay';
+import LiveAdOverlay from '../Commons/LiveAdOverlay';
+import useLiveDVR from '../../hooks/useLiveDVR';
+import useLiveAd from '../../hooks/useLiveAd';
 import AdsOverlay from '../Commons/AdsOverlay';
 
 const MobilePlayerSkin = React.forwardRef(
@@ -32,6 +35,7 @@ const MobilePlayerSkin = React.forwardRef(
       videoRef,
       playerRef,
       live = false,
+      liveDVR = false,
       hasResource = false,
       hasAudio,
       prevented,
@@ -80,6 +84,7 @@ const MobilePlayerSkin = React.forwardRef(
       showNavButtons,
       ads = null,
       kernelMsg = null,
+      liveAd = null,
     },
     ref,
   ) => {
@@ -132,6 +137,82 @@ const MobilePlayerSkin = React.forwardRef(
       activeCaption,
     });
 
+    const {
+      hasDVR,
+      isAtLiveEdge,
+      offsetDisplay,
+      sliderDuration,
+      sliderPosition,
+      seekToLiveEdge,
+      seekToSliderPosition,
+    } = useLiveDVR({ videoRef, live, currentTime });
+
+    // Live DVR: track visual slider position during drag without seeking on every move
+    const [liveDragPosition, setLiveDragPosition] = React.useState(null);
+    const liveSeeking = React.useRef(false);
+    const liveDragPositionRef = React.useRef(null);
+
+    const handleLiveDVRChange = React.useCallback(
+      (sliderPos) => {
+        if (liveSeeking.current) {
+          setLiveDragPosition(sliderPos);
+          liveDragPositionRef.current = sliderPos;
+        } else {
+          setLiveDragPosition(sliderPos);
+          liveDragPositionRef.current = sliderPos;
+          seekToSliderPosition(sliderPos);
+        }
+      },
+      [seekToSliderPosition],
+    );
+
+    const handleLiveDVRSeeking = React.useCallback(
+      (isSeeking) => {
+        liveSeeking.current = isSeeking;
+        if (!isSeeking && liveDragPositionRef.current !== null) {
+          seekToSliderPosition(liveDragPositionRef.current);
+        }
+        onSeeking(isSeeking);
+      },
+      [seekToSliderPosition, onSeeking],
+    );
+
+    // Clear the pinned visual position once the video catches up
+    React.useEffect(() => {
+      if (liveDragPosition !== null && !liveSeeking.current) {
+        if (Math.abs(sliderPosition - liveDragPosition) < 2) {
+          setLiveDragPosition(null);
+          liveDragPositionRef.current = null;
+        }
+      }
+    }, [sliderPosition, liveDragPosition]);
+
+    const {
+      isAdActive: isLiveAdActive,
+      adUrl,
+      adTitle,
+      adButtonText,
+      adCurrentTime,
+      adDuration,
+      canSkip: liveCanSkip,
+      skipCountdown: liveSkipCountdown,
+      triggerAd,
+      skipAd,
+      clickAd,
+      handleAdTimeUpdate,
+      handleAdEnded,
+      adVideoRef,
+    } = useLiveAd({ videoRef });
+
+    // Trigger ad when liveAd prop changes to a non-null config
+    const prevLiveAdRef = React.useRef(null);
+    React.useEffect(() => {
+      if (liveAd && liveAd !== prevLiveAdRef.current) {
+        triggerAd(liveAd);
+      }
+      prevLiveAdRef.current = liveAd;
+    }, [liveAd, triggerAd]);
+
     const { isSupported: castSupported, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
 
     React.useEffect(() => {
@@ -146,8 +227,9 @@ const MobilePlayerSkin = React.forwardRef(
       () => ({
         showControls,
         hideControls,
+        triggerAd,
       }),
-      [showControls, hideControls],
+      [showControls, hideControls, triggerAd],
     );
 
     const handleChangeSettings = React.useCallback(
@@ -245,6 +327,25 @@ const MobilePlayerSkin = React.forwardRef(
           />
         )}
 
+        {/* Live ad overlay — plays on top of the stream */}
+        {live && (
+          <LiveAdOverlay
+            active={isLiveAdActive}
+            url={adUrl}
+            title={adTitle}
+            buttonText={adButtonText}
+            currentTime={adCurrentTime}
+            duration={adDuration}
+            canSkip={liveCanSkip}
+            skipCountdown={liveSkipCountdown}
+            onSkip={skipAd}
+            onClick={clickAd}
+            onTimeUpdate={handleAdTimeUpdate}
+            onEnded={handleAdEnded}
+            adVideoRef={adVideoRef}
+          />
+        )}
+
         {/* Settings button — top right */}
         <MobileTopBar
           visible={controlsVisible && !settingsPanelVisible}
@@ -254,7 +355,10 @@ const MobilePlayerSkin = React.forwardRef(
           onOpenSettings={handleOpenSettings}
           settingsLabel={i18n.settings}
           captionsLabel={i18n.captions}
-          hideSettings={isAdActive && qualities.length === 0 && (!captions || captions.length === 0)}
+          hideSettings={
+            (live && qualities.length === 0 && (!captions || captions.length === 0)) ||
+            (isAdActive && qualities.length === 0 && (!captions || captions.length === 0))
+          }
           showCast={castSupported && !isAdActive}
           castState={castState}
           onCastClick={promptCast}
@@ -291,6 +395,7 @@ const MobilePlayerSkin = React.forwardRef(
         <MobileBottomBar
           visible={controlsVisible && !settingsPanelVisible}
           live={live}
+          liveDVR={liveDVR}
           currentTime={currentTime}
           duration={duration}
           buffered={buffered}
@@ -303,6 +408,14 @@ const MobilePlayerSkin = React.forwardRef(
           onSeeking={isAdActive ? () => {} : onSeeking}
           onRequestFullscreen={requestFullscreen}
           onExitFullscreen={exitFullscreen}
+          hasDVR={hasDVR}
+          isAtLiveEdge={isAtLiveEdge}
+          offsetDisplay={offsetDisplay}
+          sliderDuration={sliderDuration}
+          sliderPosition={liveDragPosition !== null ? liveDragPosition : sliderPosition}
+          seekToLiveEdge={seekToLiveEdge}
+          seekToSliderPosition={handleLiveDVRChange}
+          onLiveDVRSeeking={handleLiveDVRSeeking}
           adMode={isAdActive}
         />
 

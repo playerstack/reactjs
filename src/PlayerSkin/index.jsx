@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import PlayerSkin from './PlayerSkin';
 import { AppContextProvider } from '../context/AppContextProvider';
-import PlayerProxy from '../core/PlayerProxy';
 import { en, es } from '@playerstack/core';
 import usePlayerSkinWrapper from '../hooks/usePlayerSkinWrapper';
 
@@ -86,7 +85,7 @@ PlayerSkinWrapper.displayName = 'PlayerSkinWrapper';
 PlayerSkinWrapper.propTypes = {
   playerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(HTMLDivElement) })])
     .isRequired,
-  player: PropTypes.instanceOf(PlayerProxy),
+  player: PropTypes.object,
   live: PropTypes.bool,
   prevented: PropTypes.bool,
   waiting: PropTypes.bool,
