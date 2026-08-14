@@ -1,33 +1,140 @@
 import React from 'react';
 
 /**
- * Hook to manage Cast/Presentation functionality.
+ * Hook to manage remote video playback (Cast/AirPlay).
  *
- * Uses the Presentation API (navigator.presentation) to present video
- * to external displays (Chromecast, smart TVs, secondary monitors).
+ * Strategy:
+ * 1. Try the Remote Playback API (video.remote.prompt()) — the standard for
+ *    casting video to Chromecast/AirPlay. Works when the video has a direct
+ *    http(s) src or when the browser can resolve the media source.
+ * 2. Fall back to the Presentation API (PresentationRequest) — presents the
+ *    current page on an external display. Required for MSE/blob-based streams
+ *    (HLS/DASH live) where Remote Playback cannot resolve the source.
  *
- * Browser support: Chrome 47+, Edge 79+, Opera.
- * Not supported in Firefox or Safari.
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Remote_Playback_API
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Presentation_API
+ * @see https://googlechrome.github.io/samples/presentation-api/cast.html
  *
  * @param {object} params
  * @param {React.RefObject} params.videoRef - Ref to the video/audio element
  * @param {boolean} params.disabled - Disable cast (e.g. during ads)
- * @returns {object} { isSupported, castState, promptCast }
+ * @returns {object} { isSupported, castAvailable, castState, promptCast }
  */
 const useCast = ({ videoRef, disabled = false }) => {
   const [castState, setCastState] = React.useState('disconnected');
-  const presentationRef = React.useRef(null);
-  const connectionRef = React.useRef(null);
+  const [available, setAvailable] = React.useState(false);
+  const watchIdRef = React.useRef(null);
+  const presentationConnectionRef = React.useRef(null);
 
-  const isSupported = React.useMemo(() => {
+  const hasRemotePlayback = React.useMemo(() => {
     if (typeof window === 'undefined') return false;
-    return 'PresentationRequest' in window || ('remote' in document.createElement('video'));
+    return 'remote' in document.createElement('video');
   }, []);
 
+  const hasPresentationAPI = React.useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return 'PresentationRequest' in window;
+  }, []);
+
+  const isSupported = hasRemotePlayback || hasPresentationAPI;
+
+  // --- Remote Playback: sync state from events ---
+  React.useEffect(() => {
+    const el = videoRef?.current;
+    if (!el || !el.remote) return;
+
+    const remote = el.remote;
+    const handleConnecting = () => setCastState('connecting');
+    const handleConnect = () => setCastState('connected');
+    const handleDisconnect = () => setCastState('disconnected');
+
+    remote.addEventListener('connecting', handleConnecting);
+    remote.addEventListener('connect', handleConnect);
+    remote.addEventListener('disconnect', handleDisconnect);
+
+    setCastState(remote.state || 'disconnected');
+
+    return () => {
+      remote.removeEventListener('connecting', handleConnecting);
+      remote.removeEventListener('connect', handleConnect);
+      remote.removeEventListener('disconnect', handleDisconnect);
+    };
+  }, [videoRef]);
+
+  // --- Remote Playback: watch device availability ---
+  React.useEffect(() => {
+    const el = videoRef?.current;
+    if (!el || !el.remote || disabled) {
+      // If no Remote Playback but Presentation API exists, assume available
+      if (hasPresentationAPI && !disabled) {
+        setAvailable(true);
+      } else {
+        setAvailable(false);
+      }
+      return;
+    }
+
+    const remote = el.remote;
+
+    remote
+      .watchAvailability((isAvailable) => {
+        setAvailable(isAvailable);
+      })
+      .then((id) => {
+        watchIdRef.current = id;
+      })
+      .catch(() => {
+        // watchAvailability not supported — assume available and let
+        // prompt() show the device picker (standard fallback per MDN)
+        setAvailable(true);
+      });
+
+    return () => {
+      if (watchIdRef.current !== null) {
+        remote.cancelWatchAvailability(watchIdRef.current).catch(() => {});
+        watchIdRef.current = null;
+      }
+    };
+  }, [videoRef, disabled, hasPresentationAPI]);
+
+  // --- Presentation API fallback ---
+  const promptPresentation = React.useCallback(() => {
+    if (!('PresentationRequest' in window)) return;
+
+    // Use the current page URL — the browser will present/cast the tab
+    const url = window.location.href;
+    if (!url || url.length === 0) return;
+
+    try {
+      const request = new window.PresentationRequest([url]);
+      request
+        .start()
+        .then((connection) => {
+          presentationConnectionRef.current = connection;
+          setCastState('connected');
+          connection.addEventListener('close', () => {
+            presentationConnectionRef.current = null;
+            setCastState('disconnected');
+          });
+          connection.addEventListener('terminate', () => {
+            presentationConnectionRef.current = null;
+            setCastState('disconnected');
+          });
+        })
+        .catch(() => {
+          setCastState('disconnected');
+        });
+    } catch {
+      // PresentationRequest constructor can throw for invalid URLs
+      setCastState('disconnected');
+    }
+  }, []);
+
+  // --- Main prompt function ---
   const promptCast = React.useCallback(() => {
     const el = videoRef?.current;
 
-    // Try Remote Playback API first (direct video casting)
+    // Try Remote Playback API first
     if (el && el.remote) {
       el.remote
         .prompt()
@@ -35,53 +142,30 @@ const useCast = ({ videoRef, disabled = false }) => {
           setCastState('connected');
         })
         .catch(() => {
-          // Fallback to Presentation API
-          if ('PresentationRequest' in window) {
-            const src = el.currentSrc || el.src;
-            if (!src) return;
-            const request = new PresentationRequest([src]);
-            presentationRef.current = request;
-            request
-              .start()
-              .then((connection) => {
-                connectionRef.current = connection;
-                setCastState('connected');
-                connection.addEventListener('close', () => setCastState('disconnected'));
-                connection.addEventListener('terminate', () => setCastState('disconnected'));
-              })
-              .catch(() => {
-                setCastState('disconnected');
-              });
-          }
+          // Remote Playback failed (e.g. MSE/blob source) — fall back
+          // to Presentation API which presents the page/tab
+          promptPresentation();
         });
       return;
     }
 
-    // No video element or no remote — use Presentation API directly
-    if ('PresentationRequest' in window) {
-      const src = el?.currentSrc || el?.src || window.location.href;
-      const request = new PresentationRequest([src]);
-      presentationRef.current = request;
-      request
-        .start()
-        .then((connection) => {
-          connectionRef.current = connection;
-          setCastState('connected');
-          connection.addEventListener('close', () => setCastState('disconnected'));
-          connection.addEventListener('terminate', () => setCastState('disconnected'));
-        })
-        .catch(() => {
-          setCastState('disconnected');
-        });
-    }
-  }, [videoRef]);
+    // No Remote Playback support — use Presentation API directly
+    promptPresentation();
+  }, [videoRef, promptPresentation]);
 
-  // Cleanup on unmount
+  // --- Disable remote playback during ads ---
+  React.useEffect(() => {
+    const el = videoRef?.current;
+    if (!el) return;
+    el.disableRemotePlayback = disabled;
+  }, [disabled, videoRef]);
+
+  // --- Cleanup on unmount ---
   React.useEffect(() => {
     return () => {
-      if (connectionRef.current) {
+      if (presentationConnectionRef.current) {
         try {
-          connectionRef.current.terminate();
+          presentationConnectionRef.current.terminate();
         } catch {
           // Already terminated
         }
@@ -89,34 +173,9 @@ const useCast = ({ videoRef, disabled = false }) => {
     };
   }, []);
 
-  // Disconnect when disabled (e.g. ad starts) and block remote playback
-  React.useEffect(() => {
-    if (disabled) {
-      if (connectionRef.current) {
-        try {
-          connectionRef.current.terminate();
-        } catch {
-          // Already terminated
-        }
-        connectionRef.current = null;
-        setCastState('disconnected');
-      }
-      // Disable native remote playback on video element
-      const el = videoRef?.current;
-      if (el) {
-        el.disableRemotePlayback = true;
-      }
-    } else {
-      const el = videoRef?.current;
-      if (el) {
-        el.disableRemotePlayback = false;
-      }
-    }
-  }, [disabled, videoRef]);
-
   return {
     isSupported,
-    castAvailable: isSupported,
+    castAvailable: isSupported && available,
     castState,
     promptCast,
   };

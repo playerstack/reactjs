@@ -17,6 +17,24 @@ function renderHook(props) {
   return { results, rendered };
 }
 
+/**
+ * Helper to create a video element with a mocked Remote Playback API.
+ */
+function createVideoWithRemote(overrides = {}) {
+  const video = document.createElement('video');
+  const remote = {
+    state: 'disconnected',
+    prompt: jest.fn().mockResolvedValue(undefined),
+    watchAvailability: jest.fn().mockResolvedValue(1),
+    cancelWatchAvailability: jest.fn().mockResolvedValue(undefined),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    ...overrides,
+  };
+  Object.defineProperty(video, 'remote', { value: remote, configurable: true });
+  return { video, remote };
+}
+
 describe('useCast', () => {
   let originalPresentationRequest;
 
@@ -33,6 +51,24 @@ describe('useCast', () => {
   });
 
   describe('isSupported', () => {
+    test('returns true when video.remote is available', () => {
+      const original = document.createElement.bind(document);
+      jest.spyOn(document, 'createElement').mockImplementation((tag) => {
+        const el = original(tag);
+        if (tag === 'video') {
+          Object.defineProperty(el, 'remote', { value: {}, configurable: true });
+        }
+        return el;
+      });
+
+      const { video } = createVideoWithRemote();
+      const videoRef = { current: video };
+      const { results } = renderHook({ videoRef, disabled: false });
+      expect(results.current.isSupported).toBe(true);
+
+      document.createElement.mockRestore();
+    });
+
     test('returns true when PresentationRequest is available', () => {
       window.PresentationRequest = jest.fn();
       const videoRef = { current: document.createElement('video') };
@@ -40,39 +76,51 @@ describe('useCast', () => {
       expect(results.current.isSupported).toBe(true);
     });
 
-    test('returns true when video.remote is available', () => {
+    test('returns false when neither API is available', () => {
       delete window.PresentationRequest;
-      // jsdom video doesn't have .remote, so isSupported depends on PresentationRequest
       const videoRef = { current: document.createElement('video') };
       const { results } = renderHook({ videoRef, disabled: false });
-      // Without PresentationRequest or remote, should be false
       expect(results.current.isSupported).toBe(false);
     });
   });
 
   describe('castState', () => {
     test('initial state is disconnected', () => {
-      window.PresentationRequest = jest.fn();
-      const videoRef = { current: document.createElement('video') };
+      const { video } = createVideoWithRemote();
+      const videoRef = { current: video };
       const { results } = renderHook({ videoRef, disabled: false });
+      expect(results.current.castState).toBe('disconnected');
+    });
+
+    test('syncs state from remote events', () => {
+      const { video, remote } = createVideoWithRemote();
+      const videoRef = { current: video };
+      const { results } = renderHook({ videoRef, disabled: false });
+
+      const connectHandler = remote.addEventListener.mock.calls.find(
+        ([event]) => event === 'connect',
+      )?.[1];
+      expect(connectHandler).toBeDefined();
+
+      act(() => {
+        connectHandler();
+      });
+      expect(results.current.castState).toBe('connected');
+
+      const disconnectHandler = remote.addEventListener.mock.calls.find(
+        ([event]) => event === 'disconnect',
+      )?.[1];
+      act(() => {
+        disconnectHandler();
+      });
       expect(results.current.castState).toBe('disconnected');
     });
   });
 
   describe('promptCast', () => {
-    test('calls PresentationRequest.start when available', async () => {
-      const mockConnection = {
-        addEventListener: jest.fn(),
-      };
-      const mockStart = jest.fn().mockResolvedValue(mockConnection);
-      window.PresentationRequest = jest.fn().mockImplementation(() => ({
-        start: mockStart,
-      }));
-
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/video.mp4' });
+    test('calls remote.prompt() when available', async () => {
+      const { video, remote } = createVideoWithRemote();
       const videoRef = { current: video };
-
       const { results } = renderHook({ videoRef, disabled: false });
 
       await act(async () => {
@@ -80,7 +128,7 @@ describe('useCast', () => {
         await new Promise((r) => setTimeout(r, 0));
       });
 
-      expect(mockStart).toHaveBeenCalled();
+      expect(remote.prompt).toHaveBeenCalled();
     });
 
     test('does not throw when videoRef is null', () => {
@@ -92,26 +140,6 @@ describe('useCast', () => {
       expect(() => results.current.promptCast()).not.toThrow();
     });
 
-    test('tries Remote Playback API first when video.remote exists', async () => {
-      const mockPrompt = jest.fn().mockResolvedValue(undefined);
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'remote', {
-        value: { prompt: mockPrompt, watchAvailability: jest.fn(), cancelWatchAvailability: jest.fn(), addEventListener: jest.fn(), removeEventListener: jest.fn() },
-        configurable: true,
-      });
-      const videoRef = { current: video };
-
-      delete window.PresentationRequest;
-
-      const { results } = renderHook({ videoRef, disabled: false });
-      await act(async () => {
-        results.current.promptCast();
-        await new Promise((r) => setTimeout(r, 0));
-      });
-
-      expect(mockPrompt).toHaveBeenCalled();
-    });
-
     test('falls back to PresentationRequest when remote.prompt fails', async () => {
       const mockConnection = { addEventListener: jest.fn() };
       const mockStart = jest.fn().mockResolvedValue(mockConnection);
@@ -119,22 +147,37 @@ describe('useCast', () => {
         start: mockStart,
       }));
 
-      const mockPrompt = jest.fn().mockRejectedValue(new Error('dismissed'));
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'remote', {
-        value: { prompt: mockPrompt, watchAvailability: jest.fn(), cancelWatchAvailability: jest.fn(), addEventListener: jest.fn(), removeEventListener: jest.fn() },
-        configurable: true,
+      const { video } = createVideoWithRemote({
+        prompt: jest.fn().mockRejectedValue(new Error('not supported')),
       });
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/v.mp4' });
       const videoRef = { current: video };
-
       const { results } = renderHook({ videoRef, disabled: false });
+
       await act(async () => {
         results.current.promptCast();
         await new Promise((r) => setTimeout(r, 10));
       });
 
-      expect(mockPrompt).toHaveBeenCalled();
+      expect(window.PresentationRequest).toHaveBeenCalledWith([window.location.href]);
+      expect(mockStart).toHaveBeenCalled();
+    });
+
+    test('uses PresentationRequest directly when no remote', async () => {
+      const mockConnection = { addEventListener: jest.fn() };
+      const mockStart = jest.fn().mockResolvedValue(mockConnection);
+      window.PresentationRequest = jest.fn().mockImplementation(() => ({
+        start: mockStart,
+      }));
+
+      const videoRef = { current: document.createElement('video') };
+      const { results } = renderHook({ videoRef, disabled: false });
+
+      await act(async () => {
+        results.current.promptCast();
+        await new Promise((r) => setTimeout(r, 10));
+      });
+
+      expect(window.PresentationRequest).toHaveBeenCalledWith([window.location.href]);
       expect(mockStart).toHaveBeenCalled();
     });
 
@@ -145,11 +188,12 @@ describe('useCast', () => {
         start: mockStart,
       }));
 
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/v.mp4' });
+      const { video } = createVideoWithRemote({
+        prompt: jest.fn().mockRejectedValue(new Error('not supported')),
+      });
       const videoRef = { current: video };
-
       const { results } = renderHook({ videoRef, disabled: false });
+
       await act(async () => {
         results.current.promptCast();
         await new Promise((r) => setTimeout(r, 10));
@@ -158,16 +202,17 @@ describe('useCast', () => {
       expect(results.current.castState).toBe('connected');
     });
 
-    test('stays disconnected when PresentationRequest.start fails', async () => {
+    test('stays disconnected when both APIs fail', async () => {
       window.PresentationRequest = jest.fn().mockImplementation(() => ({
         start: jest.fn().mockRejectedValue(new Error('user cancelled')),
       }));
 
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/v.mp4' });
+      const { video } = createVideoWithRemote({
+        prompt: jest.fn().mockRejectedValue(new Error('not supported')),
+      });
       const videoRef = { current: video };
-
       const { results } = renderHook({ videoRef, disabled: false });
+
       await act(async () => {
         results.current.promptCast();
         await new Promise((r) => setTimeout(r, 10));
@@ -175,82 +220,106 @@ describe('useCast', () => {
 
       expect(results.current.castState).toBe('disconnected');
     });
+  });
 
-    test('uses window.location.href when no video src', async () => {
-      const mockConnection = { addEventListener: jest.fn() };
-      const mockStart = jest.fn().mockResolvedValue(mockConnection);
-      window.PresentationRequest = jest.fn().mockImplementation(() => ({
-        start: mockStart,
-      }));
-
-      const videoRef = { current: null };
-      const { results } = renderHook({ videoRef, disabled: false });
-      await act(async () => {
-        results.current.promptCast();
-        await new Promise((r) => setTimeout(r, 10));
+  describe('castAvailable', () => {
+    test('becomes true when watchAvailability reports a device', async () => {
+      const original = document.createElement.bind(document);
+      jest.spyOn(document, 'createElement').mockImplementation((tag) => {
+        const el = original(tag);
+        if (tag === 'video') {
+          Object.defineProperty(el, 'remote', { value: {}, configurable: true });
+        }
+        return el;
       });
 
-      expect(window.PresentationRequest).toHaveBeenCalledWith([window.location.href]);
+      let availabilityCallback;
+      const { video } = createVideoWithRemote({
+        watchAvailability: jest.fn().mockImplementation((cb) => {
+          availabilityCallback = cb;
+          return Promise.resolve(1);
+        }),
+      });
+      const videoRef = { current: video };
+      const { results } = renderHook({ videoRef, disabled: false });
+
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 0));
+      });
+
+      act(() => {
+        availabilityCallback(true);
+      });
+
+      expect(results.current.castAvailable).toBe(true);
+
+      document.createElement.mockRestore();
+    });
+
+    test('assumes available when only PresentationRequest exists', () => {
+      window.PresentationRequest = jest.fn();
+      const videoRef = { current: document.createElement('video') };
+      const { results } = renderHook({ videoRef, disabled: false });
+      expect(results.current.castAvailable).toBe(true);
+    });
+
+    test('is false when disabled', () => {
+      window.PresentationRequest = jest.fn();
+      const { video } = createVideoWithRemote();
+      const videoRef = { current: video };
+      const { results } = renderHook({ videoRef, disabled: true });
+      expect(results.current.castAvailable).toBe(false);
     });
   });
 
   describe('disabled prop', () => {
     test('sets disableRemotePlayback on video when disabled', () => {
-      window.PresentationRequest = jest.fn();
-      const video = document.createElement('video');
+      const { video } = createVideoWithRemote();
       const videoRef = { current: video };
       renderHook({ videoRef, disabled: true });
       expect(video.disableRemotePlayback).toBe(true);
     });
 
-    test('removes disableRemotePlayback when not disabled', () => {
-      window.PresentationRequest = jest.fn();
-      const video = document.createElement('video');
+    test('clears disableRemotePlayback when not disabled', () => {
+      const { video } = createVideoWithRemote();
       video.disableRemotePlayback = true;
       const videoRef = { current: video };
       const { rendered } = renderHook({ videoRef, disabled: true });
 
       const results2 = { current: null };
-      rendered.rerender(<TestComponent videoRef={videoRef} disabled={false} onResult={(r) => { results2.current = r; }} />);
+      rendered.rerender(
+        <TestComponent videoRef={videoRef} disabled={false} onResult={(r) => { results2.current = r; }} />,
+      );
       expect(video.disableRemotePlayback).toBe(false);
-    });
-
-    test('terminates active connection when disabled becomes true', async () => {
-      const mockTerminate = jest.fn();
-      const mockConnection = {
-        addEventListener: jest.fn(),
-        terminate: mockTerminate,
-      };
-      const mockStart = jest.fn().mockResolvedValue(mockConnection);
-      window.PresentationRequest = jest.fn().mockImplementation(() => ({
-        start: mockStart,
-      }));
-
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/v.mp4' });
-      const videoRef = { current: video };
-
-      const { results, rendered } = renderHook({ videoRef, disabled: false });
-
-      await act(async () => {
-        results.current.promptCast();
-        await new Promise((r) => setTimeout(r, 10));
-      });
-
-      expect(results.current.castState).toBe('connected');
-
-      const results2 = { current: null };
-      act(() => {
-        rendered.rerender(<TestComponent videoRef={videoRef} disabled={true} onResult={(r) => { results2.current = r; }} />);
-      });
-
-      expect(mockTerminate).toHaveBeenCalled();
-      expect(results2.current.castState).toBe('disconnected');
     });
   });
 
   describe('cleanup', () => {
-    test('terminates connection on unmount', async () => {
+    test('removes event listeners on unmount', () => {
+      const { video, remote } = createVideoWithRemote();
+      const videoRef = { current: video };
+      const { rendered } = renderHook({ videoRef, disabled: false });
+
+      rendered.unmount();
+      expect(remote.removeEventListener).toHaveBeenCalledWith('connecting', expect.any(Function));
+      expect(remote.removeEventListener).toHaveBeenCalledWith('connect', expect.any(Function));
+      expect(remote.removeEventListener).toHaveBeenCalledWith('disconnect', expect.any(Function));
+    });
+
+    test('cancels watchAvailability on unmount', async () => {
+      const { video, remote } = createVideoWithRemote();
+      const videoRef = { current: video };
+      const { rendered } = renderHook({ videoRef, disabled: false });
+
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 0));
+      });
+
+      rendered.unmount();
+      expect(remote.cancelWatchAvailability).toHaveBeenCalledWith(1);
+    });
+
+    test('terminates presentation connection on unmount', async () => {
       const mockTerminate = jest.fn();
       const mockConnection = {
         addEventListener: jest.fn(),
@@ -261,10 +330,7 @@ describe('useCast', () => {
         start: mockStart,
       }));
 
-      const video = document.createElement('video');
-      Object.defineProperty(video, 'currentSrc', { value: 'http://example.com/video.mp4' });
-      const videoRef = { current: video };
-
+      const videoRef = { current: document.createElement('video') };
       const { results, rendered } = renderHook({ videoRef, disabled: false });
 
       await act(async () => {
