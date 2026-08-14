@@ -60,6 +60,9 @@ const SettingsButton = ({
     fullscreen,
   });
 
+  // Hide entirely when there are no settings to show
+  if (settingsOptions.length === 0) return null;
+
   // Close CaptionOptions when settings menu closes (click outside)
   React.useEffect(() => {
     if (!settings.captions && showCaptionOptions) {

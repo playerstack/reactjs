@@ -13,6 +13,7 @@ const MobileTopBar = ({
   onOpenSettings,
   settingsLabel,
   captionsLabel,
+  hideSettings = false,
 }) => {
   const hasCaptions = captions && captions.length > 0;
 
@@ -35,9 +36,11 @@ const MobileTopBar = ({
           <CaptionsIcon width={24} height={24} active={!!activeCaption} />
         </StyledMobileSettingsButton>
       )}
-      <StyledMobileSettingsButton onClick={onOpenSettings} aria-label={settingsLabel}>
-        <SettingsGearIcon />
-      </StyledMobileSettingsButton>
+      {!hideSettings && (
+        <StyledMobileSettingsButton onClick={onOpenSettings} aria-label={settingsLabel}>
+          <SettingsGearIcon />
+        </StyledMobileSettingsButton>
+      )}
     </StyledMobileTopBar>
   );
 };

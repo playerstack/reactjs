@@ -58,3 +58,38 @@ export const StyledMobileFullscreenButton = styled.button`
     opacity: 1;
   }
 `;
+
+export const StyledMobileLiveDot = styled.span`
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: ${(props) => (props.$atEdge ? '#ff0000' : '#888888')};
+  transition: background 0.2s ease;
+`;
+
+export const StyledMobileLiveBadge = styled.button`
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: none;
+  background: none;
+  color: ${(props) => (props.$atEdge ? '#ffffff' : 'rgba(255, 255, 255, 0.6)')};
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  &:hover ${StyledMobileLiveDot} {
+    background: #ff0000;
+  }
+`;

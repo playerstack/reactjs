@@ -30,6 +30,9 @@ const TimeSlider = ({
   onChange,
   onSeeking,
   fullscreen,
+  live = false,
+  isAtLiveEdge = true,
+  disabled = false,
 }) => {
   const { i18n, captionDragging } = useAppSelector();
   const timelensRef = React.useRef(null);
@@ -92,7 +95,7 @@ const TimeSlider = ({
       onFocus={() => {}}
       isSliding={timeSliderSliding}
       isFullscreen={fullscreen}
-      style={captionDragging ? { pointerEvents: 'none' } : undefined}
+      style={captionDragging || disabled ? { pointerEvents: 'none' } : undefined}
     >
       {hasChapters ? (
         <>
@@ -140,6 +143,7 @@ const TimeSlider = ({
         tooltip={timeSliderSliding ? timeSliderState.value : timeSliderState.tooltip}
         chapterTitle={hoveredChapter?.title}
         fullscreen={fullscreen}
+        live={live}
       />
       {hasHeatmap && (
         <HeatmapGraph
@@ -181,7 +185,7 @@ TimeSlider.propTypes = {
   ),
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
-  buffered: PropTypes.number.isRequired || null,
+  buffered: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool.isRequired,
 };

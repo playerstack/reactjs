@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { StyledTip, StyledTooltip, StyledChapterLabel } from './TimeTooltip.styled';
 import { getMouseTranslateX } from '../../utils';
-import { formatTime } from '@playerstack/core';
+import { formatTime, formatLiveOffset } from '@playerstack/core';
 
-const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, fullscreen }) => {
+const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, fullscreen, live = false }) => {
   const tooltipRef = React.useRef(null);
   const [translateX, setTranslateX] = React.useState('0');
 
@@ -20,6 +20,16 @@ const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, 
     setTranslateX(translate);
   }, [duration, tooltip, chapterTitle, sliderRef]);
 
+  // In live DVR mode, show negative offset from live edge (e.g. "-2:30")
+  const displayTime = React.useMemo(() => {
+    if (live && duration > 0) {
+      const offset = tooltip - duration; // negative when behind
+      if (offset >= -1) return formatTime(0); // at edge
+      return formatLiveOffset(offset, false);
+    }
+    return formatTime(tooltip);
+  }, [live, tooltip, duration]);
+
   return (
     <StyledTooltip
       style={{ display: showTooltip ? 'block' : '', transform: `translateX(${translateX}%)` }}
@@ -27,7 +37,7 @@ const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, 
     >
       <StyledTip ref={tooltipRef} isFullscreen={fullscreen}>
         {chapterTitle && <StyledChapterLabel isFullscreen={fullscreen}>{chapterTitle}</StyledChapterLabel>}
-        {formatTime(tooltip)}
+        {displayTime}
       </StyledTip>
     </StyledTooltip>
   );
@@ -40,6 +50,7 @@ TimeTooltip.propTypes = {
   showTooltip: PropTypes.bool.isRequired,
   chapterTitle: PropTypes.string,
   fullscreen: PropTypes.bool.isRequired,
+  live: PropTypes.bool,
 };
 
 export default React.memo(
@@ -50,5 +61,6 @@ export default React.memo(
     p.tooltip === n.tooltip &&
     p.showTooltip === n.showTooltip &&
     p.chapterTitle === n.chapterTitle &&
-    p.fullscreen === n.fullscreen,
+    p.fullscreen === n.fullscreen &&
+    p.live === n.live,
 );

@@ -271,7 +271,9 @@ export const createMediaPlayer = (player) => {
           showNavButtons={this.props.showNavButtons}
           fullHDQualityBreak={sourceProps.fullHDQualityBreak}
           language={this.props.language}
-          live={this.props.live}
+          live={this.props.live || this.props.liveDVR}
+          liveDVR={this.props.liveDVR}
+          liveAd={this.props.liveAd}
           onProgress={this.props.onProgress}
           onReady={this.handleReady}
           onSeek={this.props.onSeek}

@@ -29,8 +29,11 @@ import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
 import ContextMenu from './components/ContextMenu';
 import CaptionOverlay from '../Commons/CaptionOverlay';
+import LiveAdOverlay from '../Commons/LiveAdOverlay';
 import useCaptions from '../../hooks/useCaptions';
 import useChapters from '../../hooks/useChapters';
+import useLiveDVR from '../../hooks/useLiveDVR';
+import useLiveAd from '../../hooks/useLiveAd';
 
 const DesktopPlayerSkin = React.forwardRef(
   (
@@ -38,6 +41,7 @@ const DesktopPlayerSkin = React.forwardRef(
       videoRef,
       playerRef,
       live = false,
+      liveDVR = false,
       hasResource = false,
       hasAudio,
       prevented,
@@ -85,6 +89,7 @@ const DesktopPlayerSkin = React.forwardRef(
       onNext,
       showNavButtons,
       kernelMsg = null,
+      liveAd = null,
     },
     ref,
   ) => {
@@ -124,6 +129,86 @@ const DesktopPlayerSkin = React.forwardRef(
       activeCaption,
     });
 
+    const {
+      hasDVR,
+      isAtLiveEdge,
+      offsetDisplay,
+      sliderDuration,
+      sliderPosition,
+      seekableStart,
+      seekToLiveEdge,
+      seekToSliderPosition,
+    } = useLiveDVR({ videoRef, live, currentTime });
+
+    // Live DVR: track visual slider position during drag without seeking on every move
+    const [liveDragPosition, setLiveDragPosition] = React.useState(null);
+    const liveSeeking = React.useRef(false);
+    const liveDragPositionRef = React.useRef(null);
+
+    const handleLiveDVRChange = React.useCallback(
+      (sliderPos) => {
+        if (liveSeeking.current) {
+          // During drag: only update visual position
+          setLiveDragPosition(sliderPos);
+          liveDragPositionRef.current = sliderPos;
+        } else {
+          // Direct click: keep visual position until video catches up
+          setLiveDragPosition(sliderPos);
+          liveDragPositionRef.current = sliderPos;
+          seekToSliderPosition(sliderPos);
+        }
+      },
+      [seekToSliderPosition],
+    );
+
+    const handleLiveDVRSeeking = React.useCallback(
+      (isSeeking) => {
+        liveSeeking.current = isSeeking;
+        if (!isSeeking && liveDragPositionRef.current !== null) {
+          // Drag ended: do the actual seek, keep visual position pinned
+          seekToSliderPosition(liveDragPositionRef.current);
+        }
+        onSeeking(isSeeking);
+      },
+      [seekToSliderPosition, onSeeking],
+    );
+
+    // Clear the pinned visual position once the video catches up
+    React.useEffect(() => {
+      if (liveDragPosition !== null && !liveSeeking.current) {
+        if (Math.abs(sliderPosition - liveDragPosition) < 2) {
+          setLiveDragPosition(null);
+          liveDragPositionRef.current = null;
+        }
+      }
+    }, [sliderPosition, liveDragPosition]);
+
+    const {
+      isAdActive,
+      adUrl,
+      adTitle,
+      adButtonText,
+      adCurrentTime,
+      adDuration,
+      canSkip,
+      skipCountdown,
+      triggerAd,
+      skipAd,
+      clickAd,
+      handleAdTimeUpdate,
+      handleAdEnded,
+      adVideoRef,
+    } = useLiveAd({ videoRef });
+
+    // Trigger ad when liveAd prop changes to a non-null config
+    const prevLiveAdRef = React.useRef(null);
+    React.useEffect(() => {
+      if (liveAd && liveAd !== prevLiveAdRef.current) {
+        triggerAd(liveAd);
+      }
+      prevLiveAdRef.current = liveAd;
+    }, [liveAd, triggerAd]);
+
     React.useEffect(() => {
       dispatch({
         videoRef,
@@ -136,8 +221,9 @@ const DesktopPlayerSkin = React.forwardRef(
       () => ({
         showControls,
         hideControls,
+        triggerAd,
       }),
-      [showControls, hideControls],
+      [showControls, hideControls, triggerAd],
     );
 
     React.useEffect(() => {
@@ -233,6 +319,23 @@ const DesktopPlayerSkin = React.forwardRef(
             controlsVisible={paused || ended || loading || waiting}
           />
         )}
+        {live && (
+          <LiveAdOverlay
+            active={isAdActive}
+            url={adUrl}
+            title={adTitle}
+            buttonText={adButtonText}
+            currentTime={adCurrentTime}
+            duration={adDuration}
+            canSkip={canSkip}
+            skipCountdown={skipCountdown}
+            onSkip={skipAd}
+            onClick={clickAd}
+            onTimeUpdate={handleAdTimeUpdate}
+            onEnded={handleAdEnded}
+            adVideoRef={adVideoRef}
+          />
+        )}
         <PlayState
           hasResource={hasResource}
           loading={loading}
@@ -255,6 +358,25 @@ const DesktopPlayerSkin = React.forwardRef(
               onChange={changeCurrentTime}
               onSeeking={onSeeking}
               fullscreen={fullscreen}
+              disabled={false}
+              adMode={false}
+            />
+          )}
+          {live && liveDVR && (
+            <TimeSlider
+              spriteVTTFile={spriteVTTFile}
+              chapters={[]}
+              heatmapData={[]}
+              currentTime={liveDragPosition !== null ? liveDragPosition : sliderPosition}
+              duration={sliderDuration || 1}
+              buffered={null}
+              onChange={handleLiveDVRChange}
+              onSeeking={handleLiveDVRSeeking}
+              fullscreen={fullscreen}
+              disabled={!hasDVR}
+              adMode={false}
+              live={true}
+              isAtLiveEdge={isAtLiveEdge}
             />
           )}
           <ControlBar
@@ -306,7 +428,15 @@ const DesktopPlayerSkin = React.forwardRef(
               onMutedClick={onMutedClick}
               changeVolume={changeVolume}
             />
-            <PlayTime live={live} currentTime={currentTime} duration={duration} chapterTitle={activeChapter?.title} />
+            <PlayTime
+              live={live}
+              currentTime={currentTime}
+              duration={duration}
+              chapterTitle={activeChapter?.title}
+              isAtLiveEdge={liveDVR ? isAtLiveEdge : true}
+              offsetDisplay={liveDVR ? offsetDisplay : ''}
+              onLiveClick={liveDVR ? seekToLiveEdge : undefined}
+            />
           </ControlBar>
         </Controls>
         <TopState hasResource={hasResource} loading={loading} kernelMsg={kernelMsg} />
