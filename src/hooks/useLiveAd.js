@@ -49,33 +49,36 @@ const useLiveAd = ({ videoRef }) => {
    * @param {function} [config.onSkip] - Called when user skips the ad
    * @param {function} [config.onClick] - Called when user clicks the ad CTA
    */
-  const triggerAd = React.useCallback((config) => {
-    if (!config || !config.url) return;
+  const triggerAd = React.useCallback(
+    (config) => {
+      if (!config || !config.url) return;
 
-    adConfigRef.current = config;
+      adConfigRef.current = config;
 
-    // Mute the live stream (remember previous state)
-    const el = videoRef?.current;
-    if (el) {
-      wasMutedRef.current = el.muted;
-      el.muted = true;
-    }
+      // Mute the live stream (remember previous state)
+      const el = videoRef?.current;
+      if (el) {
+        wasMutedRef.current = el.muted;
+        el.muted = true;
+      }
 
-    setAdState({
-      active: true,
-      url: config.url,
-      title: config.title || '',
-      clickUrl: config.clickUrl || '',
-      buttonText: config.buttonText || '',
-      skipAfter: config.skipAfter || 0,
-      currentTime: 0,
-      duration: 0,
-      canSkip: config.skipAfter === 0,
-      skipCountdown: config.skipAfter || 0,
-    });
+      setAdState({
+        active: true,
+        url: config.url,
+        title: config.title || '',
+        clickUrl: config.clickUrl || '',
+        buttonText: config.buttonText || '',
+        skipAfter: config.skipAfter || 0,
+        currentTime: 0,
+        duration: 0,
+        canSkip: config.skipAfter === 0,
+        skipCountdown: config.skipAfter || 0,
+      });
 
-    config.onStart?.();
-  }, [videoRef]);
+      config.onStart?.();
+    },
+    [videoRef],
+  );
 
   // Handle ad time update
   const handleAdTimeUpdate = React.useCallback((e) => {
@@ -95,13 +98,6 @@ const useLiveAd = ({ videoRef }) => {
     }));
   }, []);
 
-  // Handle ad ended naturally
-  const handleAdEnded = React.useCallback(() => {
-    const config = adConfigRef.current;
-    config?.onComplete?.();
-    endAd();
-  }, []);
-
   // End the ad break — restore stream audio
   const endAd = React.useCallback(() => {
     const el = videoRef?.current;
@@ -112,6 +108,13 @@ const useLiveAd = ({ videoRef }) => {
     setAdState((prev) => ({ ...prev, active: false }));
     adConfigRef.current = null;
   }, [videoRef]);
+
+  // Handle ad ended naturally
+  const handleAdEnded = React.useCallback(() => {
+    const config = adConfigRef.current;
+    config?.onComplete?.();
+    endAd();
+  }, [endAd]);
 
   // Skip the ad
   const skipAd = React.useCallback(() => {
@@ -131,9 +134,10 @@ const useLiveAd = ({ videoRef }) => {
 
   // Cleanup on unmount
   React.useEffect(() => {
+    const timer = timerRef.current;
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
+      if (timer) {
+        clearInterval(timer);
       }
     };
   }, []);

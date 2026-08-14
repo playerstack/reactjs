@@ -53,9 +53,7 @@ const LiveAdOverlay = ({
       />
       <StyledLiveAdBadge>Ad</StyledLiveAdBadge>
       {title && <StyledLiveAdInfo>{title}</StyledLiveAdInfo>}
-      {buttonText && (
-        <StyledLiveAdCTA onClick={onClick}>{buttonText}</StyledLiveAdCTA>
-      )}
+      {buttonText && <StyledLiveAdCTA onClick={onClick}>{buttonText}</StyledLiveAdCTA>}
       <StyledLiveAdSkip onClick={canSkip ? onSkip : undefined} $canSkip={canSkip}>
         {canSkip ? 'Skip Ad' : `Skip in ${skipCountdown}s`}
       </StyledLiveAdSkip>

@@ -225,9 +225,7 @@ export default class PlayerCore extends React.Component {
 
           // For live streams, apply buffer management defaults to prevent
           // SourceBuffer overflow. User-provided hlsOptions take precedence.
-          const liveDefaults = live
-            ? { maxBufferLength: 30, maxMaxBufferLength: 60, backBufferLength: 30 }
-            : {};
+          const liveDefaults = live ? { maxBufferLength: 30, maxMaxBufferLength: 60, backBufferLength: 30 } : {};
 
           this.hls = new Hls({ ...liveDefaults, ...hlsOptions });
           this.hls.on(Hls.Events.MANIFEST_PARSED, () => {

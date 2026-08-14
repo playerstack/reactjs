@@ -122,7 +122,15 @@ const DesktopPlayerSkin = React.forwardRef(
     });
 
     // VOD ads system
-    const { isAdActive, hasSkipTimer, canSkip: vodCanSkip, skipCountdown: vodSkipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
+    const {
+      isAdActive,
+      hasSkipTimer,
+      canSkip: vodCanSkip,
+      skipCountdown: vodSkipCountdown,
+      adProgress,
+      onSkipClick,
+      onAdClick,
+    } = useAds({
       ads,
       currentTime,
       duration,

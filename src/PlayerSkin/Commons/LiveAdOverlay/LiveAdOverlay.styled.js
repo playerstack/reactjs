@@ -74,7 +74,9 @@ export const StyledLiveAdSkip = styled.button`
   border: ${(props) => (props.$canSkip ? 'none' : '1px solid rgba(255, 255, 255, 0.4)')};
   border-radius: 3px;
   cursor: ${(props) => (props.$canSkip ? 'pointer' : 'default')};
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 
   &:hover {
     ${(props) => props.$canSkip && 'opacity: 0.85;'}

@@ -5,7 +5,15 @@ import { StyledControlText, StyledLiveDot, StyledLiveBadge, StyledChapterIndicat
 import { formatTime } from '../../../../utils';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
-const PlayTime = ({ live, duration, currentTime, chapterTitle, isAtLiveEdge = true, offsetDisplay = '', onLiveClick }) => {
+const PlayTime = ({
+  live,
+  duration,
+  currentTime,
+  chapterTitle,
+  isAtLiveEdge = true,
+  offsetDisplay = '',
+  onLiveClick,
+}) => {
   const { i18n } = useAppSelector();
 
   return (

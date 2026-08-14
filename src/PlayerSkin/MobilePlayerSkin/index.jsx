@@ -213,7 +213,7 @@ const MobilePlayerSkin = React.forwardRef(
       prevLiveAdRef.current = liveAd;
     }, [liveAd, triggerAd]);
 
-    const { isSupported: castSupported, castAvailable, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
+    const { isSupported: castSupported, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
 
     React.useEffect(() => {
       dispatch({
@@ -355,7 +355,10 @@ const MobilePlayerSkin = React.forwardRef(
           onOpenSettings={handleOpenSettings}
           settingsLabel={i18n.settings}
           captionsLabel={i18n.captions}
-          hideSettings={(live && qualities.length === 0 && (!captions || captions.length === 0)) || (isAdActive && qualities.length === 0 && (!captions || captions.length === 0))}
+          hideSettings={
+            (live && qualities.length === 0 && (!captions || captions.length === 0)) ||
+            (isAdActive && qualities.length === 0 && (!captions || captions.length === 0))
+          }
           showCast={castSupported && !isAdActive}
           castState={castState}
           onCastClick={promptCast}
