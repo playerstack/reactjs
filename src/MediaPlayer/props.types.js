@@ -58,6 +58,31 @@ const commonPropTypes = {
 };
 
 /**
+ * Ads overlay configuration shape.
+ */
+const adsPropType = PropTypes.shape({
+  /** Title displayed in the ad banner (left gadget) */
+  title: string.isRequired,
+  /** URL the ad links to when clicked */
+  url: string.isRequired,
+  /** Text for the call-to-action button */
+  buttonText: string.isRequired,
+  /** Optional icon/image URL for the ad banner */
+  icon: string,
+  /**
+   * Seconds before the skip button appears.
+   * If omitted or null, skip button never appears and timeline works normally.
+   */
+  skipAfter: number,
+  /** Callback when user clicks skip */
+  onSkip: func,
+  /** Callback when user clicks the ad banner/button */
+  onAdClick: func,
+  /** Callback when ad video ends (plays through without skip) */
+  onAdComplete: func,
+});
+
+/**
  * Props exclusive to video player type.
  */
 const videoPropTypes = {
@@ -90,6 +115,8 @@ const videoPropTypes = {
       value: PropTypes.number.isRequired,
     }),
   ),
+  /** Ads overlay configuration */
+  ads: adsPropType,
   live: bool,
   liveDVR: bool,
   liveAd: object,
@@ -138,6 +165,7 @@ export const defaultProps = {
   chapters: [],
   captions: [],
   heatmapData: [],
+  ads: null,
   playing: false,
   loop: false,
   live: false,

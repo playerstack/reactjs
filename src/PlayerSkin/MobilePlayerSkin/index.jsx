@@ -21,10 +21,13 @@ import useAppDispatch from '../../hooks/context/useAppDispatch';
 import useAppSelector from '../../hooks/context/useAppSelector';
 import useChapters from '../../hooks/useChapters';
 import useCaptions from '../../hooks/useCaptions';
+import useAds from '../../hooks/useAds';
+import useCast from '../../hooks/useCast';
 import CaptionOverlay from '../Commons/CaptionOverlay';
 import LiveAdOverlay from '../Commons/LiveAdOverlay';
 import useLiveDVR from '../../hooks/useLiveDVR';
 import useLiveAd from '../../hooks/useLiveAd';
+import AdsOverlay from '../Commons/AdsOverlay';
 
 const MobilePlayerSkin = React.forwardRef(
   (
@@ -79,6 +82,7 @@ const MobilePlayerSkin = React.forwardRef(
       onPrevious,
       onNext,
       showNavButtons,
+      ads = null,
       kernelMsg = null,
       liveAd = null,
     },
@@ -105,6 +109,15 @@ const MobilePlayerSkin = React.forwardRef(
       showControls: toggleControls,
     });
 
+    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
+      ads,
+      currentTime,
+      duration,
+      paused,
+      ended,
+      onPauseClick,
+    });
+
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({
       fullscreen,
       contextMenuRef,
@@ -114,6 +127,7 @@ const MobilePlayerSkin = React.forwardRef(
       requestPictureInPicture,
       exitPictureInPicture,
       onLoopClick,
+      adMode: isAdActive,
     });
 
     const { segments, getChapterAtTime } = useChapters({ chapters, duration });
@@ -174,14 +188,14 @@ const MobilePlayerSkin = React.forwardRef(
     }, [sliderPosition, liveDragPosition]);
 
     const {
-      isAdActive,
+      isAdActive: isLiveAdActive,
       adUrl,
       adTitle,
       adButtonText,
       adCurrentTime,
       adDuration,
-      canSkip,
-      skipCountdown,
+      canSkip: liveCanSkip,
+      skipCountdown: liveSkipCountdown,
       triggerAd,
       skipAd,
       clickAd,
@@ -198,6 +212,8 @@ const MobilePlayerSkin = React.forwardRef(
       }
       prevLiveAdRef.current = liveAd;
     }, [liveAd, triggerAd]);
+
+    const { isSupported: castSupported, castAvailable, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
 
     React.useEffect(() => {
       dispatch({
@@ -295,8 +311,10 @@ const MobilePlayerSkin = React.forwardRef(
         {/* Dark overlay when controls visible */}
         <StyledOverlay $visible={controlsVisible && hasResource && !ended && !prevented} />
 
-        {/* Double-tap skip areas */}
-        <SkipOverlay skipState={skipState} onTapLeft={handleTapLeft} onTapRight={handleTapRight} i18n={i18n} />
+        {/* Double-tap skip areas — disabled during ads */}
+        {!isAdActive && (
+          <SkipOverlay skipState={skipState} onTapLeft={handleTapLeft} onTapRight={handleTapRight} i18n={i18n} />
+        )}
 
         {/* Caption overlay — after skip areas so it wins at same z-index */}
         {activeCaption && cues.length > 0 && (
@@ -312,14 +330,14 @@ const MobilePlayerSkin = React.forwardRef(
         {/* Live ad overlay — plays on top of the stream */}
         {live && (
           <LiveAdOverlay
-            active={isAdActive}
+            active={isLiveAdActive}
             url={adUrl}
             title={adTitle}
             buttonText={adButtonText}
             currentTime={adCurrentTime}
             duration={adDuration}
-            canSkip={canSkip}
-            skipCountdown={skipCountdown}
+            canSkip={liveCanSkip}
+            skipCountdown={liveSkipCountdown}
             onSkip={skipAd}
             onClick={clickAd}
             onTimeUpdate={handleAdTimeUpdate}
@@ -337,7 +355,10 @@ const MobilePlayerSkin = React.forwardRef(
           onOpenSettings={handleOpenSettings}
           settingsLabel={i18n.settings}
           captionsLabel={i18n.captions}
-          hideSettings={live && qualities.length === 0 && (!captions || captions.length === 0)}
+          hideSettings={(live && qualities.length === 0 && (!captions || captions.length === 0)) || (isAdActive && qualities.length === 0 && (!captions || captions.length === 0))}
+          showCast={castSupported && !isAdActive}
+          castState={castState}
+          onCastClick={promptCast}
         />
 
         {/* Mobile settings panel (fullscreen overlay) */}
@@ -351,6 +372,7 @@ const MobilePlayerSkin = React.forwardRef(
           onChangeSettings={handleChangeSettings}
           onCaptionChange={onCaptionChange}
           onClose={handleCloseSettings}
+          adMode={isAdActive}
         />
 
         {/* Center controls: Prev | Play/Pause | Next */}
@@ -375,12 +397,12 @@ const MobilePlayerSkin = React.forwardRef(
           duration={duration}
           buffered={buffered}
           fullscreen={fullscreen}
-          chapters={segments}
-          heatmapData={heatmapData}
+          chapters={isAdActive ? [] : segments}
+          heatmapData={isAdActive ? [] : heatmapData}
           getChapterAtTime={getChapterAtTime}
           i18n={i18n}
-          onChangeCurrentTime={changeCurrentTime}
-          onSeeking={onSeeking}
+          onChangeCurrentTime={isAdActive ? () => {} : changeCurrentTime}
+          onSeeking={isAdActive ? () => {} : onSeeking}
           onRequestFullscreen={requestFullscreen}
           onExitFullscreen={exitFullscreen}
           hasDVR={hasDVR}
@@ -391,7 +413,25 @@ const MobilePlayerSkin = React.forwardRef(
           seekToLiveEdge={seekToLiveEdge}
           seekToSliderPosition={handleLiveDVRChange}
           onLiveDVRSeeking={handleLiveDVRSeeking}
+          adMode={isAdActive}
         />
+
+        {/* Ads overlay */}
+        {isAdActive && (
+          <AdsOverlay
+            ads={ads}
+            canSkip={canSkip}
+            skipCountdown={skipCountdown}
+            hasSkipTimer={hasSkipTimer}
+            adProgress={adProgress}
+            onSkipClick={onSkipClick}
+            onAdClick={onAdClick}
+            hiding={!controlsVisible}
+            poster={poster}
+            menuOpen={false}
+            fullscreen={false}
+          />
+        )}
 
         {/* Mobile renders its own loading spinner in the center play button,
             so TopState only handles kernel/error messages here. */}
@@ -517,5 +557,6 @@ export default React.memo(
     p.showNavButtons === n.showNavButtons &&
     p.captions === n.captions &&
     p.activeCaption === n.activeCaption &&
-    p.onCaptionChange === n.onCaptionChange,
+    p.onCaptionChange === n.onCaptionChange &&
+    p.ads === n.ads,
 );

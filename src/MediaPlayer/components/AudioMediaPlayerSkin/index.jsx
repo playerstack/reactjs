@@ -86,6 +86,17 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
     }
   }, [props.url]);
 
+  // Auto-play main content when ads deactivates
+  const prevAdsRef = React.useRef(props.ads);
+  React.useEffect(() => {
+    const wasAdActive = prevAdsRef.current !== null && prevAdsRef.current !== undefined;
+    const isAdActive = props.ads !== null && props.ads !== undefined;
+    prevAdsRef.current = props.ads;
+    if (wasAdActive && !isAdActive) {
+      setPlayerState((prev) => ({ ...prev, playing: true }));
+    }
+  }, [props.ads]);
+
   const { videoUrl, ...playerProxy } = usePlayerProxy({
     onBuffer: props.onBuffer,
     onBufferEnd: props.onBufferEnd,
@@ -233,6 +244,7 @@ const AudioMediaPlayerSkin = React.forwardRef((props, ref) => {
           onPrevious={props.onPrevious}
           onNext={props.onNext}
           showNavButtons={props.showNavButtons}
+          ads={props.ads}
         />
       </AudioPlayerWrapper>
     </AppContextProvider>

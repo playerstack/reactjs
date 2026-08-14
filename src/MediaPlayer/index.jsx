@@ -229,6 +229,7 @@ export const createMediaPlayer = (player) => {
             onPrevious={this.props.onPrevious}
             onNext={this.props.onNext}
             showNavButtons={this.props.showNavButtons}
+            ads={this.props.ads}
           />
         );
       }
@@ -286,6 +287,7 @@ export const createMediaPlayer = (player) => {
           chapters={this.props.chapters}
           captions={this.props.captions}
           heatmapData={this.props.heatmapData}
+          ads={this.props.ads}
           poster={this.props.poster}
           skinMode={this.props.skinMode}
         />

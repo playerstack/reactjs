@@ -35,3 +35,15 @@ export const StyledBezelTextVolume = styled.div`
   border-radius: 3px;
   color: #eee;
 `;
+
+export const StyledControlsBackdrop = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.7) 100%);
+  transition: opacity 0.3s;
+`;

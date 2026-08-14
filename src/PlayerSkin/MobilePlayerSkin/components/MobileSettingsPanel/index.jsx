@@ -40,6 +40,7 @@ const MobileSettingsPanel = ({
   onChangeSettings,
   onCaptionChange,
   onClose,
+  adMode = false,
 }) => {
   const { i18n } = useAppSelector();
   const [subMenu, setSubMenu] = React.useState(null); // null | 'quality' | 'speed' | 'captions'
@@ -173,13 +174,15 @@ const MobileSettingsPanel = ({
               </StyledSwitchValue>
             </StyledSwitchItem>
           )}
-          <StyledSwitchItem onClick={() => setSubMenu('speed')}>
-            <StyledSwitchIcon>
-              <SpeedIcon />
-            </StyledSwitchIcon>
-            <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
-            <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
-          </StyledSwitchItem>
+          {!adMode && (
+            <StyledSwitchItem onClick={() => setSubMenu('speed')}>
+              <StyledSwitchIcon>
+                <SpeedIcon />
+              </StyledSwitchIcon>
+              <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
+              <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
+            </StyledSwitchItem>
+          )}
           {captions && captions.length > 0 && (
             <StyledSwitchItem onClick={() => setSubMenu('captions')}>
               <StyledSwitchIcon>

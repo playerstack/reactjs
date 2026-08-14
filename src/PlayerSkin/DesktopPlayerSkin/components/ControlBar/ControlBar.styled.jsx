@@ -11,7 +11,8 @@ export const StyledControlBar = styled(ControlBar)`
   justify-content: center;
   width: 100%;
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-  z-index: 6;
+  position: relative;
+  z-index: 11;
   ${({ isFullscreen }) =>
     isFullscreen
       ? `

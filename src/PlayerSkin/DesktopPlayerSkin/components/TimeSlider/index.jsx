@@ -33,6 +33,7 @@ const TimeSlider = ({
   live = false,
   isAtLiveEdge = true,
   disabled = false,
+  adMode = false,
 }) => {
   const { i18n, captionDragging } = useAppSelector();
   const timelensRef = React.useRef(null);
@@ -95,6 +96,7 @@ const TimeSlider = ({
       onFocus={() => {}}
       isSliding={timeSliderSliding}
       isFullscreen={fullscreen}
+      adMode={adMode}
       style={captionDragging || disabled ? { pointerEvents: 'none' } : undefined}
     >
       {hasChapters ? (
@@ -123,7 +125,7 @@ const TimeSlider = ({
         <StyledSliderContent>
           <StyledSlideRail isFullscreen={fullscreen}>
             <StyledSliderBuffered style={{ transform: `scaleX(${bufferedScaleX})` }} />
-            <StyledTrack style={{ transform: `translateX(${trackTranslateX.track}%)` }} />
+            <StyledTrack adMode={adMode} style={{ transform: `translateX(${trackTranslateX.track}%)` }} />
           </StyledSlideRail>
           <StyledSliderHandleRail style={{ transform: `translateX(${trackTranslateX.handle}%)` }}>
             <StyledSliderHandle

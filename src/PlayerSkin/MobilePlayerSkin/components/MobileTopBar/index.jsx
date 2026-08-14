@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { StyledMobileTopBar, StyledMobileSettingsButton } from './MobileTopBar.styled';
 import { SettingsGearIcon } from '../../icons';
 import CaptionsIcon from '../../../Commons/Icons/CaptionsIcon';
+import CastIcon from '../../../Commons/Icons/CastIcon';
 
 const MobileTopBar = ({
   visible,
@@ -14,6 +15,9 @@ const MobileTopBar = ({
   settingsLabel,
   captionsLabel,
   hideSettings = false,
+  showCast = false,
+  castState = 'disconnected',
+  onCastClick,
 }) => {
   const hasCaptions = captions && captions.length > 0;
 
@@ -34,6 +38,18 @@ const MobileTopBar = ({
       {hasCaptions && (
         <StyledMobileSettingsButton onClick={handleCaptionToggle} aria-label={captionsLabel || 'Captions'}>
           <CaptionsIcon width={24} height={24} active={!!activeCaption} />
+        </StyledMobileSettingsButton>
+      )}
+      {showCast && (
+        <StyledMobileSettingsButton
+          onClick={(e) => {
+            e.stopPropagation();
+            onCastClick();
+          }}
+          aria-label="Google Cast"
+          style={{ opacity: castState === 'connected' ? 1 : 0.7 }}
+        >
+          <CastIcon width={22} height={22} connected={castState === 'connected'} />
         </StyledMobileSettingsButton>
       )}
       {!hideSettings && (

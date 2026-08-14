@@ -10,6 +10,7 @@ import {
   StyledOverlayPoster,
   StyledPlayerSkin,
   StyledPoster,
+  StyledControlsBackdrop,
 } from './DesktopPlayerSkin.styled';
 import { eventsKeyCodes, keyMappings } from './DesktopPlayerSkin.constants';
 import Controls from './components/Controls';
@@ -27,6 +28,7 @@ import SettingsButton from './components/Controls/components/SettingsButton';
 import CaptionsButton from './components/Controls/components/CaptionsButton';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
 import useAppDispatch from '../../hooks/context/useAppDispatch';
+import useAppSelector from '../../hooks/context/useAppSelector';
 import ContextMenu from './components/ContextMenu';
 import CaptionOverlay from '../Commons/CaptionOverlay';
 import LiveAdOverlay from '../Commons/LiveAdOverlay';
@@ -34,6 +36,13 @@ import useCaptions from '../../hooks/useCaptions';
 import useChapters from '../../hooks/useChapters';
 import useLiveDVR from '../../hooks/useLiveDVR';
 import useLiveAd from '../../hooks/useLiveAd';
+import useAds from '../../hooks/useAds';
+import useCast from '../../hooks/useCast';
+import AdsOverlay from '../Commons/AdsOverlay';
+import { StyledAdTimeSliderWrapper } from '../Commons/AdsOverlay/AdsOverlay.styled';
+import CastIcon from '../Commons/Icons/CastIcon';
+import Tooltip from '../Commons/Tooltip';
+import StyledGeneralButton from '../Commons/Buttons/StyledGeneralButton';
 
 const DesktopPlayerSkin = React.forwardRef(
   (
@@ -88,12 +97,14 @@ const DesktopPlayerSkin = React.forwardRef(
       onPrevious,
       onNext,
       showNavButtons,
+      ads = null,
       kernelMsg = null,
       liveAd = null,
     },
     ref,
   ) => {
     const dispatch = useAppDispatch();
+    const { hiding, menuVisible, subMenuVisible } = useAppSelector();
 
     const [showBezel, setShowBezel] = React.useState(false);
     const timerRef = React.useRef();
@@ -110,6 +121,16 @@ const DesktopPlayerSkin = React.forwardRef(
       kernelMsg,
     });
 
+    // VOD ads system
+    const { isAdActive, hasSkipTimer, canSkip: vodCanSkip, skipCountdown: vodSkipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
+      ads,
+      currentTime,
+      duration,
+      paused,
+      ended,
+      onPauseClick,
+    });
+
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({
       fullscreen,
       contextMenuRef,
@@ -119,7 +140,13 @@ const DesktopPlayerSkin = React.forwardRef(
       requestPictureInPicture,
       exitPictureInPicture,
       onLoopClick,
+      adMode: isAdActive,
     });
+
+    // No-op for handlers disabled during ads
+    const noop = React.useCallback(() => {}, []);
+
+    const { isSupported: castSupported, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
 
     const { getChapterAtTime } = useChapters({ chapters, duration });
     const activeChapter = React.useMemo(() => getChapterAtTime(currentTime), [getChapterAtTime, currentTime]);
@@ -129,13 +156,13 @@ const DesktopPlayerSkin = React.forwardRef(
       activeCaption,
     });
 
+    // Live DVR system
     const {
       hasDVR,
       isAtLiveEdge,
       offsetDisplay,
       sliderDuration,
       sliderPosition,
-      seekableStart,
       seekToLiveEdge,
       seekToSliderPosition,
     } = useLiveDVR({ videoRef, live, currentTime });
@@ -148,11 +175,9 @@ const DesktopPlayerSkin = React.forwardRef(
     const handleLiveDVRChange = React.useCallback(
       (sliderPos) => {
         if (liveSeeking.current) {
-          // During drag: only update visual position
           setLiveDragPosition(sliderPos);
           liveDragPositionRef.current = sliderPos;
         } else {
-          // Direct click: keep visual position until video catches up
           setLiveDragPosition(sliderPos);
           liveDragPositionRef.current = sliderPos;
           seekToSliderPosition(sliderPos);
@@ -165,7 +190,6 @@ const DesktopPlayerSkin = React.forwardRef(
       (isSeeking) => {
         liveSeeking.current = isSeeking;
         if (!isSeeking && liveDragPositionRef.current !== null) {
-          // Drag ended: do the actual seek, keep visual position pinned
           seekToSliderPosition(liveDragPositionRef.current);
         }
         onSeeking(isSeeking);
@@ -183,15 +207,16 @@ const DesktopPlayerSkin = React.forwardRef(
       }
     }, [sliderPosition, liveDragPosition]);
 
+    // Live ad overlay system
     const {
-      isAdActive,
+      isAdActive: isLiveAdActive,
       adUrl,
       adTitle,
       adButtonText,
       adCurrentTime,
       adDuration,
-      canSkip,
-      skipCountdown,
+      canSkip: liveCanSkip,
+      skipCountdown: liveSkipCountdown,
       triggerAd,
       skipAd,
       clickAd,
@@ -200,7 +225,7 @@ const DesktopPlayerSkin = React.forwardRef(
       adVideoRef,
     } = useLiveAd({ videoRef });
 
-    // Trigger ad when liveAd prop changes to a non-null config
+    // Trigger live ad when liveAd prop changes to a non-null config
     const prevLiveAdRef = React.useRef(null);
     React.useEffect(() => {
       if (liveAd && liveAd !== prevLiveAdRef.current) {
@@ -319,16 +344,17 @@ const DesktopPlayerSkin = React.forwardRef(
             controlsVisible={paused || ended || loading || waiting}
           />
         )}
+        {/* Live ad overlay — stream continues muted behind */}
         {live && (
           <LiveAdOverlay
-            active={isAdActive}
+            active={isLiveAdActive}
             url={adUrl}
             title={adTitle}
             buttonText={adButtonText}
             currentTime={adCurrentTime}
             duration={adDuration}
-            canSkip={canSkip}
-            skipCountdown={skipCountdown}
+            canSkip={liveCanSkip}
+            skipCountdown={liveSkipCountdown}
             onSkip={skipAd}
             onClick={clickAd}
             onTimeUpdate={handleAdTimeUpdate}
@@ -336,18 +362,69 @@ const DesktopPlayerSkin = React.forwardRef(
             adVideoRef={adVideoRef}
           />
         )}
-        <PlayState
-          hasResource={hasResource}
-          loading={loading}
-          paused={paused}
-          ended={ended}
-          waiting={waiting}
-          seeking={seeking}
-          kernelMsg={kernelMsg}
-          onClick={onTogglePlay}
-        />
+        {/* VOD ads: PlayState conditional rendering */}
+        {!isAdActive && (
+          <PlayState
+            hasResource={hasResource}
+            loading={loading}
+            paused={paused}
+            ended={ended}
+            waiting={waiting}
+            seeking={seeking}
+            kernelMsg={kernelMsg}
+            onClick={onTogglePlay}
+          />
+        )}
+        {isAdActive && (
+          <PlayState
+            hasResource={hasResource}
+            loading={loading}
+            paused={paused}
+            ended={false}
+            waiting={false}
+            seeking={false}
+            kernelMsg={kernelMsg}
+            onClick={onTogglePlay}
+          />
+        )}
+        <StyledControlsBackdrop style={{ opacity: hiding ? 0 : 1 }} />
+        {/* VOD ad timeline (disabled, shows progress) */}
+        {isAdActive && false === live && (
+          <StyledAdTimeSliderWrapper hiding={hiding} isFullscreen={fullscreen}>
+            <TimeSlider
+              spriteVTTFile=""
+              chapters={[]}
+              heatmapData={[]}
+              currentTime={currentTime}
+              duration={duration}
+              buffered={buffered}
+              onChange={noop}
+              onSeeking={noop}
+              fullscreen={fullscreen}
+              disabled={true}
+              adMode={true}
+            />
+          </StyledAdTimeSliderWrapper>
+        )}
+        {/* VOD ads overlay */}
+        {isAdActive && (
+          <AdsOverlay
+            ads={ads}
+            canSkip={vodCanSkip}
+            skipCountdown={vodSkipCountdown}
+            hasSkipTimer={hasSkipTimer}
+            adProgress={adProgress}
+            onSkipClick={onSkipClick}
+            onAdClick={onAdClick}
+            hiding={hiding}
+            poster={poster}
+            menuOpen={menuVisible || subMenuVisible}
+            fullscreen={fullscreen}
+          />
+        )}
         <Controls>
-          {false === live && (
+          {/* VOD timeline */}
+          {false === live && !isAdActive && (
             <TimeSlider
               spriteVTTFile={spriteVTTFile}
               chapters={chapters}
@@ -362,6 +439,7 @@ const DesktopPlayerSkin = React.forwardRef(
               adMode={false}
             />
           )}
+          {/* Live DVR timeline */}
           {live && liveDVR && (
             <TimeSlider
               spriteVTTFile={spriteVTTFile}
@@ -401,7 +479,24 @@ const DesktopPlayerSkin = React.forwardRef(
                   onCaptionChange={onCaptionChange}
                   captionStyle={captionStyle}
                   onCaptionStyleChange={updateCaptionStyle}
+                  adMode={isAdActive}
                 />
+                {castSupported && !isAdActive && (
+                  <Tooltip label="Google Cast" fullscreen={fullscreen}>
+                    <StyledGeneralButton
+                      onClick={promptCast}
+                      aria-label="Google Cast"
+                      isFullscreen={fullscreen}
+                      style={{ opacity: castState === 'connected' ? 1 : 0.8 }}
+                    >
+                      <CastIcon
+                        width={fullscreen ? 28 : 20}
+                        height={fullscreen ? 28 : 20}
+                        connected={castState === 'connected'}
+                      />
+                    </StyledGeneralButton>
+                  </Tooltip>
+                )}
                 <FullscreenButton
                   fullscreen={fullscreen}
                   requestFullscreen={requestFullscreen}

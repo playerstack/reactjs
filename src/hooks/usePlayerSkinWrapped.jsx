@@ -13,6 +13,7 @@ const usePlayerSkinWrapped = ({
   requestPictureInPicture,
   exitPictureInPicture,
   onLoopClick,
+  adMode = false,
 }) => {
   const dispatch = useAppDispatch();
   const { i18n } = useAppSelector();
@@ -47,16 +48,17 @@ const usePlayerSkinWrapped = ({
   const iconProps = React.useMemo(() => buildIconProps(fullscreen), [fullscreen]);
 
   const menuItemsMemorized = React.useMemo(() => {
-    const menuItems = [
-      {
+    const menuItems = [];
+    if (!adMode) {
+      menuItems.push({
         action: onLoopClick,
         label: i18n.loop,
         iconType: 'loop',
         iconProps,
         isCheckable: true,
         defaultChecked: loop,
-      },
-    ];
+      });
+    }
     if (pictureInPictureEnabled) {
       menuItems.push({
         action: pip ? exitPictureInPicture : requestPictureInPicture,
@@ -69,7 +71,17 @@ const usePlayerSkinWrapped = ({
     }
 
     return menuItems;
-  }, [iconProps, i18n, pictureInPictureEnabled, pip, loop, requestPictureInPicture, exitPictureInPicture, onLoopClick]);
+  }, [
+    iconProps,
+    i18n,
+    pictureInPictureEnabled,
+    pip,
+    loop,
+    adMode,
+    requestPictureInPicture,
+    exitPictureInPicture,
+    onLoopClick,
+  ]);
 
   return {
     handleContextMenu,
