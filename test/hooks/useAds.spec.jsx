@@ -3,8 +3,8 @@ import { render, act } from '@testing-library/react';
 import useAds from '../../src/hooks/useAds';
 
 // Helper to render hook
-function TestComponent({ ads, currentTime, duration, ended, onPauseClick, onResult }) {
-  const result = useAds({ ads, currentTime, duration, ended, onPauseClick });
+function TestComponent({ ads, currentTime, duration, paused = false, ended, onPauseClick, onResult }) {
+  const result = useAds({ ads, currentTime, duration, paused, ended, onPauseClick });
   onResult(result);
   return null;
 }
@@ -256,32 +256,43 @@ describe('useAds', () => {
     test('does not call onAdComplete twice', () => {
       const onAdComplete = jest.fn();
       const ads = { title: 'Ad', url: 'https://example.com', buttonText: 'Visit', onAdComplete };
-      const { rendered } = renderHook({ ads, currentTime: 15, duration: 15, ended: true });
+      // Start playing (ad active)
+      const { rendered } = renderHook({ ads, currentTime: 10, duration: 15, paused: false, ended: false });
 
-      // Re-render again with ended=true
+      // Ad ends
       const results2 = { current: null };
-      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} ended={true} onResult={(r) => { results2.current = r; }} />);
+      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} paused={false} ended={true} onResult={(r) => { results2.current = r; }} />);
+      expect(onAdComplete).toHaveBeenCalledTimes(1);
+
+      // Re-render again with ended=true — should not call again
+      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} paused={false} ended={true} onResult={(r) => { results2.current = r; }} />);
       expect(onAdComplete).toHaveBeenCalledTimes(1);
     });
 
     test('does not call onAdComplete when ads is null', () => {
       const { rendered } = renderHook({ ads: null, currentTime: 15, duration: 15, ended: true });
-      // No error
       expect(rendered.container).toBeTruthy();
     });
 
     test('resets completion flag when ads deactivates', () => {
       const onAdComplete = jest.fn();
       const ads = { title: 'Ad', url: 'https://example.com', buttonText: 'Visit', onAdComplete };
-      const { rendered } = renderHook({ ads, currentTime: 15, duration: 15, ended: true });
+      // Start playing (ad active)
+      const { rendered } = renderHook({ ads, currentTime: 10, duration: 15, paused: false, ended: false });
+
+      // Ad ends
+      const results2 = { current: null };
+      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} paused={false} ended={true} onResult={(r) => { results2.current = r; }} />);
       expect(onAdComplete).toHaveBeenCalledTimes(1);
 
       // Deactivate ads
-      const results2 = { current: null };
-      rendered.rerender(<TestComponent ads={null} currentTime={0} duration={15} ended={false} onResult={(r) => { results2.current = r; }} />);
+      rendered.rerender(<TestComponent ads={null} currentTime={0} duration={15} paused={false} ended={false} onResult={(r) => { results2.current = r; }} />);
 
-      // Reactivate ads + ended — should call again
-      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} ended={true} onResult={(r) => { results2.current = r; }} />);
+      // Reactivate ads while playing
+      rendered.rerender(<TestComponent ads={ads} currentTime={0} duration={15} paused={false} ended={false} onResult={(r) => { results2.current = r; }} />);
+
+      // Ad ends again
+      rendered.rerender(<TestComponent ads={ads} currentTime={15} duration={15} paused={false} ended={true} onResult={(r) => { results2.current = r; }} />);
       expect(onAdComplete).toHaveBeenCalledTimes(2);
     });
   });

@@ -116,6 +116,15 @@ const DesktopPlayerSkin = React.forwardRef(
       kernelMsg,
     });
 
+    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
+      ads,
+      currentTime,
+      duration,
+      paused,
+      ended,
+      onPauseClick,
+    });
+
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({
       fullscreen,
       contextMenuRef,
@@ -125,15 +134,7 @@ const DesktopPlayerSkin = React.forwardRef(
       requestPictureInPicture,
       exitPictureInPicture,
       onLoopClick,
-      adMode: ads !== null && ads !== undefined,
-    });
-
-    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
-      ads,
-      currentTime,
-      duration,
-      ended,
-      onPauseClick,
+      adMode: isAdActive,
     });
 
     // No-op for handlers disabled during ads

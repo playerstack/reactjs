@@ -104,6 +104,15 @@ const MobilePlayerSkin = React.forwardRef(
       showControls: toggleControls,
     });
 
+    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
+      ads,
+      currentTime,
+      duration,
+      paused,
+      ended,
+      onPauseClick,
+    });
+
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({
       fullscreen,
       contextMenuRef,
@@ -113,7 +122,7 @@ const MobilePlayerSkin = React.forwardRef(
       requestPictureInPicture,
       exitPictureInPicture,
       onLoopClick,
-      adMode: ads !== null && ads !== undefined,
+      adMode: isAdActive,
     });
 
     const { segments, getChapterAtTime } = useChapters({ chapters, duration });
@@ -121,14 +130,6 @@ const MobilePlayerSkin = React.forwardRef(
     const { cues, captionStyle } = useCaptions({
       captions,
       activeCaption,
-    });
-
-    const { isAdActive, hasSkipTimer, canSkip, skipCountdown, adProgress, onSkipClick, onAdClick } = useAds({
-      ads,
-      currentTime,
-      duration,
-      ended,
-      onPauseClick,
     });
 
     const { isSupported: castSupported, castAvailable, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });

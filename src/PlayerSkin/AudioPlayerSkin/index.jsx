@@ -98,39 +98,14 @@ const AudioPlayerSkin = React.forwardRef(
 
     const { segments, getChapterAtTime } = useChapters({ chapters, duration });
 
-    // Audio pre-roll: ad only activates after first play
-    const [adStarted, setAdStarted] = React.useState(false);
-    const activeAds = adStarted ? ads : null;
-
     const { isAdActive, hasSkipTimer, canSkip, skipCountdown, onSkipClick } = useAds({
-      ads: activeAds,
+      ads,
       currentTime,
       duration,
+      paused,
       ended,
       onPauseClick,
     });
-
-    // Intercept play to trigger ad on first play
-    const handlePlayClick = React.useCallback(() => {
-      if (ads && !adStarted) {
-        setAdStarted(true);
-      }
-      onPlayClick();
-    }, [ads, adStarted, onPlayClick]);
-
-    // Reset adStarted when ads prop is removed (ad completed/skipped)
-    // Auto-activate if player is already playing when ads prop appears
-    const prevAdsExistRef = React.useRef(!!ads);
-    React.useEffect(() => {
-      const adsExist = !!ads;
-      if (!adsExist) {
-        setAdStarted(false);
-      } else if (adsExist && !prevAdsExistRef.current && !paused && !ended) {
-        // ads prop just appeared while already playing — activate immediately
-        setAdStarted(true);
-      }
-      prevAdsExistRef.current = adsExist;
-    }, [ads, paused, ended]);
 
     // Current chapter for paused view label
     const currentChapterTitle = React.useMemo(() => {
@@ -364,7 +339,7 @@ const AudioPlayerSkin = React.forwardRef(
           ) : (
             <Tooltip label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}>
               <StyledPlayButton
-                onClick={paused || ended ? handlePlayClick : onPauseClick}
+                onClick={paused || ended ? onPlayClick : onPauseClick}
                 aria-label={ended ? i18n.replay : paused ? i18n.play : i18n.pause}
               >
                 {ended ? (
