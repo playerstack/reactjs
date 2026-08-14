@@ -109,6 +109,19 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
     }
   }, [props.url, props.sources, props.width, props.height]);
 
+  // Auto-play main content when ads deactivates (ad ended or skipped)
+  const prevAdsRef = React.useRef(props.ads);
+  React.useEffect(() => {
+    const wasAdActive = prevAdsRef.current !== null && prevAdsRef.current !== undefined;
+    const isAdActive = props.ads !== null && props.ads !== undefined;
+    prevAdsRef.current = props.ads;
+
+    // Transition from ad active to inactive — auto-play main content
+    if (wasAdActive && !isAdActive) {
+      setPlayerState((prev) => ({ ...prev, playing: true }));
+    }
+  }, [props.ads]);
+
   const handleKeyDown = React.useCallback((e) => {
     playerSkinRef.current?.handleKeyDown?.(e);
   }, []);
@@ -245,6 +258,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         chapters={props.chapters}
         captions={props.captions}
         heatmapData={props.heatmapData}
+        ads={props.ads}
         hasResource={typeof videoUrl === 'string' || props.sources.length > 0}
         kernelMsg={playerState.kernelError}
         loading={playerState.isLoading}
@@ -291,6 +305,7 @@ export default React.memo(
     p.spriteVTTFile === n.spriteVTTFile &&
     p.chapters === n.chapters &&
     p.heatmapData === n.heatmapData &&
+    p.ads === n.ads &&
     p.prevented === n.prevented &&
     p.waiting === n.waiting &&
     p.playing === n.playing &&

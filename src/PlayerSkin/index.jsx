@@ -50,6 +50,7 @@ const PlayerSkinWrapper = React.forwardRef(
       prevented,
       muted,
       updateState,
+      ads: props.ads || null,
     });
 
     return (

@@ -17,6 +17,7 @@ const usePlayerSkinWrapper = ({
   prevented,
   muted,
   updateState,
+  ads,
 }) => {
   const { i18n } = useAppSelector();
   const videoRef = React.useRef(null);
@@ -130,6 +131,14 @@ const usePlayerSkinWrapper = ({
         return;
       }
 
+      // Block seeking when ads are active (timeline not draggable)
+      const isAdActive = ads !== null && ads !== undefined;
+      if (isAdActive) {
+        if (keyMapping === 'ARROW_LEFT_KEY' || keyMapping === 'ARROW_RIGHT_KEY') {
+          return;
+        }
+      }
+
       playerSkinRef.current?.showControls();
 
       switch (keyMapping) {
@@ -180,6 +189,7 @@ const usePlayerSkinWrapper = ({
     },
     [
       player,
+      ads,
       updateState,
       requestToggleFullscreen,
       onMutedClick,

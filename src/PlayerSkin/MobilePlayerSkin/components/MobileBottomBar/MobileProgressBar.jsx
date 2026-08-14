@@ -24,6 +24,7 @@ const MobileProgressBar = ({
   getChapterAtTime,
   onChange,
   onSeeking,
+  adMode = false,
 }) => {
   const containerRef = React.useRef(null);
   const isDragging = React.useRef(false);
@@ -144,10 +145,12 @@ const MobileProgressBar = ({
         <>
           <StyledMobileProgressTrack />
           <StyledMobileProgressBuffered style={{ width: `${bufferedProgress * 100}%` }} />
-          <StyledMobileProgressFilled style={{ width: `${progress * 100}%` }} />
+          <StyledMobileProgressFilled
+            style={{ width: `${progress * 100}%`, background: adMode ? '#fc0' : undefined }}
+          />
         </>
       )}
-      <StyledMobileProgressHandle style={{ left: `${progress * 100}%` }} />
+      {!adMode && <StyledMobileProgressHandle style={{ left: `${progress * 100}%` }} />}
       {hasHeatmap && (
         <HeatmapGraph
           strokePath={strokePath}

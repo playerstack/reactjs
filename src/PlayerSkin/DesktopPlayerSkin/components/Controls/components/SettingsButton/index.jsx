@@ -33,6 +33,7 @@ const SettingsButton = ({
   captionStyle,
   onCaptionStyleChange,
   fullscreen,
+  adMode = false,
 }) => {
   const { i18n } = useAppSelector();
   const [showCaptionOptions, setShowCaptionOptions] = React.useState(false);
@@ -58,6 +59,7 @@ const SettingsButton = ({
     changeSettings,
     onCaptionChange,
     fullscreen,
+    adMode,
   });
 
   // Close CaptionOptions when settings menu closes (click outside)
@@ -66,6 +68,11 @@ const SettingsButton = ({
       setShowCaptionOptions(false);
     }
   }, [settings.captions, showCaptionOptions]);
+
+  // Hide settings button entirely if no options available (e.g., ad mode with no quality/captions)
+  if (settingsOptions.length === 0) {
+    return null;
+  }
 
   return (
     <StyledDropdownContainer ref={dropdownRef}>
@@ -175,5 +182,6 @@ export default React.memo(
     p.onCaptionChange === n.onCaptionChange &&
     p.captionStyle === n.captionStyle &&
     p.onCaptionStyleChange === n.onCaptionStyleChange &&
-    p.fullscreen === n.fullscreen,
+    p.fullscreen === n.fullscreen &&
+    p.adMode === n.adMode,
 );
