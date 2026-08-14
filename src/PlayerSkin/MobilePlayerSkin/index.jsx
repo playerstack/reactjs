@@ -132,7 +132,7 @@ const MobilePlayerSkin = React.forwardRef(
       activeCaption,
     });
 
-    const { isSupported: castSupported, castAvailable, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
+    const { isSupported: castSupported, castState, promptCast } = useCast({ videoRef, disabled: isAdActive });
 
     React.useEffect(() => {
       dispatch({

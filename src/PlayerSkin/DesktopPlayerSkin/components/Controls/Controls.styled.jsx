@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { backdropImg } from './Controls.constants';
-
 const Controls = React.forwardRef(({ hiding, menuOpen, ...rest }, ref) => <div ref={ref} {...rest} />);
 
 Controls.displayName = 'Controls';

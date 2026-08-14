@@ -24,7 +24,12 @@ const Controls = ({ children }) => {
   }, [dispatch]);
 
   return (
-    <StyledControls hiding={state.hiding} menuOpen={state.menuVisible || state.subMenuVisible} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <StyledControls
+      hiding={state.hiding}
+      menuOpen={state.menuVisible || state.subMenuVisible}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {children}
     </StyledControls>
   );

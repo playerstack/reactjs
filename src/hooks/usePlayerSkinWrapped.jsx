@@ -71,7 +71,17 @@ const usePlayerSkinWrapped = ({
     }
 
     return menuItems;
-  }, [iconProps, i18n, pictureInPictureEnabled, pip, loop, adMode, requestPictureInPicture, exitPictureInPicture, onLoopClick]);
+  }, [
+    iconProps,
+    i18n,
+    pictureInPictureEnabled,
+    pip,
+    loop,
+    adMode,
+    requestPictureInPicture,
+    exitPictureInPicture,
+    onLoopClick,
+  ]);
 
   return {
     handleContextMenu,
