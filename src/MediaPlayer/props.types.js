@@ -7,7 +7,7 @@ const { string, bool, number, array, oneOfType, shape, object, func } = PropType
 const availableLanguages = Object.keys(i18n);
 
 /**
- * Props shared by both video and audio player types.
+ * Common prop types for the video player.
  */
 const commonPropTypes = {
   url: string,
@@ -127,39 +127,14 @@ const videoPropTypes = {
   onDisablePIP: func,
 };
 
-/**
- * Props exclusive to audio player type.
- */
-const audioPropTypes = {
-  /** Title displayed in the audio player skin */
-  title: string,
-  /** Artist/author name displayed in the audio player skin */
-  artist: string,
-  /** Cover art URL for the audio player */
-  poster: string,
-  captions: PropTypes.arrayOf(
-    PropTypes.shape({
-      src: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      language: PropTypes.string.isRequired,
-      kind: PropTypes.string,
-    }),
-  ),
-};
-
 export const propTypes = {
-  viewType: PropTypes.oneOf(['video', 'audio']),
   ...commonPropTypes,
-  // Include all props (both audio and video) for runtime flexibility.
-  // Discriminated prop validation happens via TypeScript types at compile time.
   ...videoPropTypes,
-  ...audioPropTypes,
 };
 
 const noop = () => {};
 
 export const defaultProps = {
-  viewType: 'video',
   url: '',
   sources: [],
   chapters: [],
@@ -187,8 +162,6 @@ export const defaultProps = {
   skinMode: 'auto',
   language: availableLanguages[0],
   poster: '',
-  title: '',
-  artist: '',
   config: {
     attributes: {},
     tracks: [],
