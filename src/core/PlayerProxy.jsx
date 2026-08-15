@@ -2,7 +2,7 @@ import React from 'react';
 import isEqual from 'react-fast-compare';
 
 import { propTypes, defaultProps } from './props.types';
-import { isMediaStream } from '../utils';
+import { isMediaStream } from '@playerstack/core';
 
 const SEEK_ON_PLAY_EXPIRY = 5000;
 
@@ -363,7 +363,6 @@ export default class PlayerProxy extends React.Component {
         width={this.props.width}
         height={this.props.height}
         playing={this.props.playing}
-        viewType={this.props.viewType}
         config={this.props.config}
         onMount={this.handlePlayerMount}
         onReady={this.handleReady}

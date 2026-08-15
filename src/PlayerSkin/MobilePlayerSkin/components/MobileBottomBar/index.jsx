@@ -11,7 +11,7 @@ import {
 } from './MobileBottomBar.styled';
 import MobileProgressBar from './MobileProgressBar';
 import { FullscreenIcon, ExitFullscreenIcon } from '../../icons';
-import { formatTime } from '../../../../utils';
+import { formatTime } from '@playerstack/core';
 
 const MobileBottomBar = ({
   visible,

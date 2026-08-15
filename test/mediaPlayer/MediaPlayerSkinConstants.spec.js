@@ -1,4 +1,4 @@
-import { playerStateInitial } from '../../src/MediaPlayer/components/MediaPlayerSkin/MediaPlayerSkin.constants';
+import { playerStateInitial } from '@playerstack/core';
 
 describe('playerStateInitial', () => {
   test('has expected default shape', () => {

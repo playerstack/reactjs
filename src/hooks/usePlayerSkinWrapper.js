@@ -2,10 +2,10 @@ import React from 'react';
 
 import useVolume from './useVolume';
 import useFullscreen from './useFullscreen';
-import { buildSettingsLabel } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay.constants';
+import { buildSettingsLabel } from '@playerstack/core';
 import useAppSelector from './context/useAppSelector';
-import { eventsKeyCodes, keyMappings } from '../PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.constants';
-import { reduceSeekState } from './reducers/playerState.reducers';
+import { eventsKeyCodes, keyMappings } from '@playerstack/core';
+import { reduceSeekState } from '@playerstack/core';
 
 const usePlayerSkinWrapper = ({
   ref,

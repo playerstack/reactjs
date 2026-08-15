@@ -17,8 +17,8 @@ jest.mock('../../src/core/PlayerProxy', () => {
   return { __esModule: true, default: PlayerProxyMock };
 });
 
-jest.mock('../../src/MediaPlayer/MediaPlayer.contants', () => ({
-  measureNetworkSpeedGeneratedFile: jest.fn().mockResolvedValue(5),
+jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'),
+  measureNetworkSpeed: jest.fn().mockResolvedValue(5),
   getRecommendedVideoQuality: jest.fn().mockReturnValue(720),
 }));
 

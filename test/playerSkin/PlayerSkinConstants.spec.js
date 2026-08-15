@@ -1,9 +1,9 @@
 import {
   eventsKeyCodes,
   keyMappings,
-  sliderWith,
+  sliderWidth,
   buildIconProps,
-} from '../../src/PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.constants';
+} from '@playerstack/core';
 
 describe('PlayerSkin.constants', () => {
   describe('eventsKeyCodes', () => {
@@ -74,17 +74,17 @@ describe('PlayerSkin.constants', () => {
     });
   });
 
-  describe('sliderWith', () => {
+  describe('sliderWidth', () => {
     test('returns 83 when fullscreen is true', () => {
-      expect(sliderWith(true)).toBe(83);
+      expect(sliderWidth(true)).toBe(83);
     });
 
     test('returns 55 when fullscreen is false', () => {
-      expect(sliderWith(false)).toBe(55);
+      expect(sliderWidth(false)).toBe(55);
     });
 
     test('returns 55 when fullscreen is undefined', () => {
-      expect(sliderWith(undefined)).toBe(55);
+      expect(sliderWidth(undefined)).toBe(55);
     });
   });
 

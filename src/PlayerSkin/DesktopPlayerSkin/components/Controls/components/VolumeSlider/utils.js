@@ -1,4 +1,4 @@
-import { sliderWith } from '../../../../DesktopPlayerSkin.constants';
+import { getVolumePercentage, sliderWidth } from '@playerstack/core';
 
 export const getVolume = ({ clientX, sliderRef, isFullcreen }) => {
   if (!sliderRef.current) {
@@ -7,13 +7,5 @@ export const getVolume = ({ clientX, sliderRef, isFullcreen }) => {
 
   const rect = sliderRef.current.getBoundingClientRect();
   const offsetX = clientX - rect.left;
-  let percentage = (offsetX / sliderWith(isFullcreen)) * 100;
-
-  if (percentage < 0) {
-    percentage = 0;
-  } else if (percentage > 100) {
-    percentage = 100;
-  }
-
-  return percentage;
+  return getVolumePercentage(offsetX, sliderWidth(isFullcreen));
 };

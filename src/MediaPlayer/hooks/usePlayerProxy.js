@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { indexBy } from '../../utils';
+import { indexBy } from '@playerstack/core';
 import useDeepCompareMemoize from '../../hooks/useDeepCompareMemoize';
-import { getRecommendedVideoQuality, measureNetworkSpeedGeneratedFile } from '../MediaPlayer.contants';
+import { getRecommendedVideoQuality, measureNetworkSpeed as measureNetworkSpeedGeneratedFile } from '@playerstack/core';
 
 const usePlayerProxy = ({
   onBuffer,

@@ -6,7 +6,7 @@ import Tooltip from '../../../../../Commons/Tooltip';
 import PauseIcon from '../../../../../Commons/Icons/PauseIcon';
 import PlayIcon from '../../../../../Commons/Icons/PlayIcon';
 import ReplayIcon from '../../../../../Commons/Icons/ReplayIcon';
-import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
+import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 
 const PlayButton = ({ fullscreen, paused, ended, onPlayClick, onPauseClick }) => {

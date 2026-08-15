@@ -17,7 +17,7 @@ import HeatmapGraph from '../../../Commons/HeatmapGraph';
 import useTimeSlider from '../../../../hooks/useTimeSlider';
 import useChapters from '../../../../hooks/useChapters';
 import useHeatmap from '../../../../hooks/useHeatmap';
-import { formatTime } from '../../../../utils';
+import { formatTime } from '@playerstack/core';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
 const TimeSlider = ({

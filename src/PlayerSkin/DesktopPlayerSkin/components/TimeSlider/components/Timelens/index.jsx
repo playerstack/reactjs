@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledTimelensRail, StyledTimelensThumbnail } from './Timelens.styled';
-import { getOffset, parseVTT } from '../../utils';
+import { parseSpriteVTT as parseVTT } from '@playerstack/core';
+import { getOffset } from '../../utils';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 
 const Timelens = React.forwardRef(

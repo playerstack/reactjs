@@ -1,7 +1,8 @@
 import React from 'react';
 
 import useAppDispatch from './context/useAppDispatch';
-import { getTrackTranslateX, getValue } from '../PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
+import { getTrackTranslateX } from '@playerstack/core';
+import { getValue } from '../PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
 
 const useTimeSlider = ({ timelensRef, currentTime, duration, onChange, onSeeking }) => {
   const dispatch = useAppDispatch();

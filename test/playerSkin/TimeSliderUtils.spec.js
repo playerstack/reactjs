@@ -1,12 +1,5 @@
-import {
-  getEventXCoordinate,
-  getValue,
-  getClampedPosition,
-  getTrackTranslateX,
-  getMouseTranslateX,
-  parseVTT,
-  getOffset,
-} from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
+import { getEventXCoordinate, getClampedPosition, getTrackTranslateX, getMouseTranslateX, parseSpriteVTT as parseVTT } from '@playerstack/core';
+import { getValue, getOffset } from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
 
 describe('TimeSlider utils', () => {
   describe('getEventXCoordinate', () => {

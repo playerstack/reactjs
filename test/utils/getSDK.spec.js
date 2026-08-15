@@ -1,4 +1,4 @@
-import { getSDK } from '../../src/utils/player';
+import { getSDK } from '@playerstack/core';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

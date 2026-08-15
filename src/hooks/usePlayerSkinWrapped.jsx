@@ -2,7 +2,7 @@ import React from 'react';
 
 import useAppDispatch from './context/useAppDispatch';
 import useAppSelector from './context/useAppSelector';
-import { buildIconProps } from '../PlayerSkin/Commons/constants';
+import { buildIconProps } from '@playerstack/core';
 
 const usePlayerSkinWrapped = ({
   fullscreen,
@@ -10,6 +10,7 @@ const usePlayerSkinWrapped = ({
   pictureInPictureEnabled,
   pip,
   loop = false,
+  live = false,
   requestPictureInPicture,
   exitPictureInPicture,
   onLoopClick,
@@ -49,7 +50,7 @@ const usePlayerSkinWrapped = ({
 
   const menuItemsMemorized = React.useMemo(() => {
     const menuItems = [];
-    if (!adMode) {
+    if (!adMode && !live) {
       menuItems.push({
         action: onLoopClick,
         label: i18n.loop,
@@ -77,6 +78,7 @@ const usePlayerSkinWrapped = ({
     pictureInPictureEnabled,
     pip,
     loop,
+    live,
     adMode,
     requestPictureInPicture,
     exitPictureInPicture,

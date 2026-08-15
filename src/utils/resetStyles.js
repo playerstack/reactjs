@@ -2,7 +2,7 @@ import { css } from 'styled-components';
 
 /**
  * Scoped CSS resets for player containers.
- * Applied inside both video and audio player wrappers to normalize
+ * Applied inside video player wrappers to normalize
  * user-agent styles without leaking to the host application.
  *
  * Uses :where() to apply with zero specificity — any component-level

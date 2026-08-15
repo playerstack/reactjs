@@ -1,5 +1,5 @@
-import { buildSettingsLabel } from '../../src/PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay.constants';
-import { settingsOverlayFn } from '../../src/PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.constants';
+import { buildSettingsLabel } from '@playerstack/core';
+import { buildSettingsOptions as settingsOverlayFn } from '@playerstack/core';
 import { en } from '@playerstack/core';
 
 describe('buildSettingsLabel', () => {
