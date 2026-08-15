@@ -14,8 +14,8 @@ import {
   DASH_EXTENSIONS,
   FLV_EXTENSIONS,
 } from '@playerstack/core';
-import { isMediaStream } from '../utils';
-import { getSDK, hasAudio, supportsWebKitPresentationMode } from '../utils/player';
+import { isMediaStream } from '@playerstack/core';
+import { getSDK, hasAudio, supportsWebKitPresentationMode } from '@playerstack/core';
 
 export default class PlayerCore extends React.Component {
   static displayName = 'PlayerCore';
@@ -418,22 +418,16 @@ export default class PlayerCore extends React.Component {
   };
 
   render() {
-    const { url, playing, loop, muted, config, width, height, viewType } = this.props;
+    const { url, playing, loop, muted, config, width, height } = this.props;
 
-    const isAudio = viewType === 'audio';
-
-    const style = isAudio
-      ? { display: 'none' }
-      : {
-          width: width === 'auto' ? width : '100%',
-          height: height === 'auto' ? height : '100%',
-        };
-
-    const Element = isAudio ? 'audio' : 'video';
+    const style = {
+      width: width === 'auto' ? width : '100%',
+      height: height === 'auto' ? height : '100%',
+    };
 
     return (
-      <Element
-        data-testid={isAudio ? 'audio-element' : 'video-element'}
+      <video
+        data-testid="video-element"
         ref={this.ref}
         src={this.getSource(url)}
         style={style}
@@ -445,7 +439,7 @@ export default class PlayerCore extends React.Component {
         {...config.attributes}
       >
         {config.tracks?.map(this.renderTrack)}
-      </Element>
+      </video>
     );
   }
 }

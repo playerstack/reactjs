@@ -7,7 +7,7 @@ import Tooltip from '../../../Commons/Tooltip';
 import VolumeSlider from '../Controls/components/VolumeSlider';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 import useVolumeButton from '../../../../hooks/useVolumeButton';
-import { sliderWith } from '../../DesktopPlayerSkin.constants';
+import { sliderWidth as sliderWith } from '@playerstack/core';
 import { StyledVolumePercentTooltip } from './VolumePercentTooltip.styled';
 
 const Volume = ({ fullscreen, isMuted, volume, forceMuted, changeVolume, onMutedClick }) => {

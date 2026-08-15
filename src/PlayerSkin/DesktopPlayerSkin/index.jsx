@@ -12,7 +12,7 @@ import {
   StyledPoster,
   StyledControlsBackdrop,
 } from './DesktopPlayerSkin.styled';
-import { eventsKeyCodes, keyMappings } from './DesktopPlayerSkin.constants';
+import { eventsKeyCodes, keyMappings } from '@playerstack/core';
 import Controls from './components/Controls';
 import ControlBar from './components/ControlBar';
 import TimeSlider from './components/TimeSlider';
@@ -144,6 +144,7 @@ const DesktopPlayerSkin = React.forwardRef(
       contextMenuRef,
       pip,
       loop,
+      live: live || liveDVR,
       pictureInPictureEnabled,
       requestPictureInPicture,
       exitPictureInPicture,

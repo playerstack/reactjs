@@ -16,7 +16,7 @@ import React from 'react';
  * @see https://googlechrome.github.io/samples/presentation-api/cast.html
  *
  * @param {object} params
- * @param {React.RefObject} params.videoRef - Ref to the video/audio element
+ * @param {React.RefObject} params.videoRef - Ref to the video element
  * @param {boolean} params.disabled - Disable cast (e.g. during ads)
  * @returns {object} { isSupported, castAvailable, castState, promptCast }
  */

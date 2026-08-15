@@ -5,7 +5,7 @@ import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralBut
 import Tooltip from '../../../../../Commons/Tooltip';
 import FullscreenIcon from '../../../../../Commons/Icons/FullscreenIcon';
 import UnfullscreenIcon from '../../../../../Commons/Icons/UnfullscreenIcon';
-import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
+import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 
 const FullscreenButton = ({ fullscreen, requestFullscreen, exitFullscreen }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledSpriteOverlay, StyledSpriteFrame } from './SpritePreview.styled';
-import { parseVTT } from '../../DesktopPlayerSkin/components/TimeSlider/utils';
+import { parseSpriteVTT as parseVTT } from '@playerstack/core';
 
 /**
  * Full-player-area sprite preview.

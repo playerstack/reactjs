@@ -5,7 +5,7 @@ import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralBut
 import Tooltip from '../../../../../Commons/Tooltip';
 import CaptionsIcon from '../../../../../Commons/Icons/CaptionsIcon';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
-import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
+import { buildIconProps } from '@playerstack/core';
 
 /**
  * Quick toggle button for captions.

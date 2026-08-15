@@ -5,7 +5,7 @@ import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralBut
 import Tooltip from '../../../../../Commons/Tooltip';
 import PreviousTrackIcon from '../../../../../Commons/Icons/PreviousTrackIcon';
 import NextTrackIcon from '../../../../../Commons/Icons/NextTrackIcon';
-import { buildIconProps } from '../../../../DesktopPlayerSkin.constants';
+import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 
 export const PreviousButton = React.memo(({ fullscreen, onPrevious, showNavButtons = false }) => {

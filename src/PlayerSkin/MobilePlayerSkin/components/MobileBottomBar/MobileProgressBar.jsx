@@ -13,7 +13,7 @@ import MobileChapterSegments from './MobileChapterSegments';
 import HeatmapGraph from '../../../Commons/HeatmapGraph';
 import useHeatmap from '../../../../hooks/useHeatmap';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
-import { formatTime } from '../../../../utils';
+import { formatTime } from '@playerstack/core';
 
 const MobileProgressBar = ({
   currentTime,

@@ -1,8 +1,8 @@
-import { settingsOverlayFn } from '../../src/PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.constants';
+import { buildSettingsOptions as settingsOverlayFn } from '@playerstack/core';
 
 const i18n = { speed: 'Speed', quality: 'Quality', captions: 'Captions', auto: 'Auto', off: 'Off' };
 
-describe('settingsOverlayFn — adMode', () => {
+describe('buildSettingsOptions as settingsOverlayFn — adMode', () => {
   test('includes speed when adMode is false', () => {
     const result = settingsOverlayFn({ qualityOptions: [], captionOptions: [], live: false, adMode: false, i18n });
     expect(result.some((o) => o.value === 'speed')).toBe(true);

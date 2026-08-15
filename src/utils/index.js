@@ -1,11 +1,8 @@
 import { omit as coreOmit } from '@playerstack/core';
 
-// Re-export framework-agnostic utilities from @playerstack/core
-export { isMediaStream, isBlobUrl, formatTime, indexBy } from '@playerstack/core';
-
 /**
  * Omit keys from an object. Accepts multiple arrays of keys (variadic).
- * Maintains backward compatibility with the original signature.
+ * Extends core's omit with variadic signature for local convenience.
  */
 export function omit(object, ...arrays) {
   const keys = [].concat(...arrays);

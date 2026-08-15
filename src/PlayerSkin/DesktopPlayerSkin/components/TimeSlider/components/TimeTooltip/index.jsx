@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledTip, StyledTooltip, StyledChapterLabel } from './TimeTooltip.styled';
-import { getMouseTranslateX } from '../../utils';
+import { getMouseTranslateX } from '@playerstack/core';
 import { formatTime, formatLiveOffset } from '@playerstack/core';
 
 const TimeTooltip = ({ sliderRef, duration, tooltip, showTooltip, chapterTitle, fullscreen, live = false }) => {

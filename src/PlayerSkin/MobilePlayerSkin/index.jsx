@@ -123,6 +123,7 @@ const MobilePlayerSkin = React.forwardRef(
       contextMenuRef,
       pip,
       loop,
+      live: live || liveDVR,
       pictureInPictureEnabled,
       requestPictureInPicture,
       exitPictureInPicture,

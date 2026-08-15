@@ -49,7 +49,7 @@ const StyledTooltipText = styled.div`
 `;
 
 /**
- * Tooltip wrapper shared between audio and video skins.
+ * Tooltip wrapper for the video player skin.
  *
  * Features:
  *  - Horizontal clamping within player container (playerRef from context)

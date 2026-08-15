@@ -3,9 +3,9 @@ import React, { useEffect } from 'react';
 import useAppSelector from './context/useAppSelector';
 import useAppDispatch from './context/useAppDispatch';
 import { initialSettings } from './hooks.constants';
-import { buildSettingsLabel } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay.constants';
-import { settingsOverlayFn } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.constants';
-import { buildIconProps } from '../PlayerSkin/Commons/constants';
+import { buildSettingsLabel } from '@playerstack/core';
+import { buildSettingsOptions as settingsOverlayFn } from '@playerstack/core';
+import { buildIconProps } from '@playerstack/core';
 
 const useSettingsOptions = ({
   live,

@@ -3,7 +3,7 @@ import isEqual from 'react-fast-compare';
 
 import PlayerProxy from '../../../core/PlayerProxy';
 import PlayerSkin from '../../../PlayerSkin';
-import { playerStateInitial } from './MediaPlayerSkin.constants';
+import { playerStateInitial } from '@playerstack/core';
 import MediaPlayerWrapper from '../MediaPlayerWrapper';
 import usePlayerProxy from '../../hooks/usePlayerProxy';
 import { StyledPlayerContainer } from './MediaPlayerSkin.styled';
@@ -241,7 +241,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             height={props.height}
             playing={playerState.playing}
             activeCaption={playerState.activeCaption}
-            viewType="video"
             config={playerConfig}
             disableDeferredLoading={props.disableDeferredLoading}
             progressFrequency={props.progressFrequency}

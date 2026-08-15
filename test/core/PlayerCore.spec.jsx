@@ -8,9 +8,9 @@ import {
   HLS_GLOBAL,
   HLS_SDK_URL,
 } from '@playerstack/core';
-import { getSDK, hasAudio, supportsWebKitPresentationMode } from '../../src/utils/player';
+import { getSDK, hasAudio, supportsWebKitPresentationMode } from '@playerstack/core';
 
-jest.mock('../../src/utils/player');
+jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'), getSDK: jest.fn(), hasAudio: jest.fn(), supportsWebKitPresentationMode: jest.fn() }));
 
 describe('PlayerCore Component', () => {
   let props;

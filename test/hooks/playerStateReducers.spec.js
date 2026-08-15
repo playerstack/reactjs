@@ -1,4 +1,4 @@
-import { reduceSeekState } from '../../src/hooks/reducers/playerState.reducers';
+import { reduceSeekState } from '@playerstack/core';
 
 describe('playerState.reducers', () => {
   describe('reduceSeekState', () => {
