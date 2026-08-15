@@ -43,7 +43,6 @@ export interface IOnProgressProps {
 }
 
 export type TLanguage = 'es' | 'en';
-export type TViewType = 'video' | 'audio';
 export type TSkinMode = 'auto' | 'mobile' | 'desktop';
 
 // ─── Common props shared by both view types ─────────────────────────────────
@@ -86,7 +85,6 @@ export interface IPlayerStackCommonProps {
 // ─── Video-specific props ───────────────────────────────────────────────────
 
 export interface IVideoPlayerProps extends IPlayerStackCommonProps {
-  viewType?: 'video';
   live?: boolean;
   poster?: string;
   pip?: boolean;
@@ -98,32 +96,6 @@ export interface IVideoPlayerProps extends IPlayerStackCommonProps {
   onPlayBackQualityChange?: (quality: number | null) => void;
   onEnablePIP?: () => void;
   onDisablePIP?: () => void;
-  config?: {
-    attributes?: Record<string, string | boolean>;
-    tracks?: Array<Record<string, unknown>>;
-    forceHLS?: boolean;
-    forceSafariHLS?: boolean;
-    forceDisableHls?: boolean;
-    forceDASH?: boolean;
-    forceFLV?: boolean;
-    hlsOptions?: Record<string, unknown>;
-    hlsVersion?: string;
-    dashVersion?: string;
-    flvVersion?: string;
-  };
-}
-
-// ─── Audio-specific props ───────────────────────────────────────────────────
-
-export interface IAudioPlayerProps extends IPlayerStackCommonProps {
-  viewType: 'audio';
-  /** Title displayed in the audio player skin */
-  title?: string;
-  /** Artist/author name displayed in the audio player skin */
-  artist?: string;
-  /** Cover art URL for the audio player */
-  poster?: string;
-  captions?: ICaptionProps[];
   config?: {
     attributes?: Record<string, string | boolean>;
     tracks?: Array<Record<string, unknown>>;
@@ -151,13 +123,12 @@ export interface IWithSources {
   sources: ISourceProps[];
 }
 
-// ─── Discriminated union: viewType determines available props ────────────────
+// ─── Final props type ────────────────────────────────────────────────────────
 
 type TVideoWithUrl = IVideoPlayerProps & IWithUrl;
 type TVideoWithSources = IVideoPlayerProps & IWithSources;
-type TAudioWithUrl = IAudioPlayerProps & IWithUrl;
 
-export type TPlayerStackProps = TVideoWithUrl | TVideoWithSources | TAudioWithUrl;
+export type TPlayerStackProps = TVideoWithUrl | TVideoWithSources;
 
 // ─── Legacy compatibility: IBasePlayerStackCommons ──────────────────────────
 

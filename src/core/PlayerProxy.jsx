@@ -363,7 +363,6 @@ export default class PlayerProxy extends React.Component {
         width={this.props.width}
         height={this.props.height}
         playing={this.props.playing}
-        viewType={this.props.viewType}
         config={this.props.config}
         onMount={this.handlePlayerMount}
         onReady={this.handleReady}

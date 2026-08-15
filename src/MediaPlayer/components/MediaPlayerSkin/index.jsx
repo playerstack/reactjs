@@ -241,7 +241,6 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             height={props.height}
             playing={playerState.playing}
             activeCaption={playerState.activeCaption}
-            viewType="video"
             config={playerConfig}
             disableDeferredLoading={props.disableDeferredLoading}
             progressFrequency={props.progressFrequency}
