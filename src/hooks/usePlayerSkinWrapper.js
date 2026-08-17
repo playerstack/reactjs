@@ -18,6 +18,8 @@ const usePlayerSkinWrapper = ({
   muted,
   updateState,
   ads,
+  live,
+  liveDVR,
 }) => {
   const { i18n } = useAppSelector();
   const videoRef = React.useRef(null);
@@ -96,15 +98,55 @@ const usePlayerSkinWrapper = ({
   onMutedClickRef.current = onMutedClick;
   const changeCurrentTimeRef = React.useRef(changeCurrentTime);
   changeCurrentTimeRef.current = changeCurrentTime;
+
+  // --- Live stream: seek-to-live-edge on play ---
+  //
+  // For `live` (pure): every play action seeks to live edge — the viewer
+  // should never see stale buffered content after a pause.
+  //
+  // For `liveDVR`: only the first play (page load) seeks to live edge.
+  // After that the user owns their position in the DVR window.
+
+  const liveStateRef = React.useRef({ live, liveDVR, player });
+  liveStateRef.current = { live, liveDVR, player };
+
+  const hasPlayedOnceRef = React.useRef(false);
+
+  const seekToLiveEdgeIfNeeded = React.useCallback(() => {
+    const { live: isLive, liveDVR: isDVR, player: currentPlayer } = liveStateRef.current;
+
+    // Only applies to live streams
+    if (!isLive && !isDVR) return;
+
+    // DVR respects user position after first play
+    if (isDVR && hasPlayedOnceRef.current) return;
+
+    const videoEl = currentPlayer?.getPlayer();
+    if (!videoEl) return;
+
+    const { seekable } = videoEl;
+    if (seekable && seekable.length > 0) {
+      videoEl.currentTime = seekable.end(seekable.length - 1);
+    }
+
+    hasPlayedOnceRef.current = true;
+  }, []);
+
   const memorizedProps = React.useMemo(() => {
     return {
-      onPlayClick: () => updateState((prev) => ({ ...prev, playing: true })),
+      onPlayClick: () => {
+        seekToLiveEdgeIfNeeded();
+        updateState((prev) => ({ ...prev, playing: true }));
+      },
       onPauseClick: () => updateState((prev) => ({ ...prev, playing: false })),
       onTogglePlay: () =>
-        updateState((prev) => ({
-          ...prev,
-          playing: !prev.playing,
-        })),
+        updateState((prev) => {
+          const willPlay = !prev.playing;
+          if (willPlay) {
+            seekToLiveEdgeIfNeeded();
+          }
+          return { ...prev, playing: willPlay };
+        }),
       changePlaybackRate: (rate) => updateState((prev) => ({ ...prev, playbackRate: rate })),
       changePlayBackQuality: (quality) => {
         updateState((prev) => ({ ...prev, playbackQuality: quality }));
@@ -120,7 +162,7 @@ const usePlayerSkinWrapper = ({
     };
     // updateState is stable (React setState), refs handle the rest
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateState]);
+  }, [updateState, seekToLiveEdgeIfNeeded]);
 
   const handleKeyDown = React.useCallback(
     (e) => {
@@ -143,7 +185,13 @@ const usePlayerSkinWrapper = ({
 
       switch (keyMapping) {
         case 'SPACE_KEY': {
-          updateState((prev) => ({ ...prev, playing: !prev.playing }));
+          updateState((prev) => {
+            const willPlay = !prev.playing;
+            if (willPlay) {
+              seekToLiveEdgeIfNeeded();
+            }
+            return { ...prev, playing: willPlay };
+          });
           break;
         }
         case 'F_KEY': {
@@ -191,6 +239,7 @@ const usePlayerSkinWrapper = ({
       player,
       ads,
       updateState,
+      seekToLiveEdgeIfNeeded,
       requestToggleFullscreen,
       onMutedClick,
       updateCurrentTimeWithCallback,
