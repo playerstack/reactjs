@@ -12,12 +12,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Checkout @playerstack/core
+      uses: actions/checkout@v4
+      with:
+        repository: playerstack/core
+        path: .core-src
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: npm
-    - run: npm ci
+    - name: Build @playerstack/core
+      run: cd .core-src && npm ci && npm run build
+    - name: Link core locally
+      run: |
+        rm -rf node_modules/@playerstack/core
+        mkdir -p node_modules/@playerstack
+        ln -s $GITHUB_WORKSPACE/.core-src node_modules/@playerstack/core
+    - run: npm ci --ignore-scripts
+    - name: Restore core link
+      run: |
+        rm -rf node_modules/@playerstack/core
+        ln -s $GITHUB_WORKSPACE/.core-src node_modules/@playerstack/core
     - run: npm run lint
 
   test:
@@ -29,12 +45,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Checkout @playerstack/core
+      uses: actions/checkout@v4
+      with:
+        repository: playerstack/core
+        path: .core-src
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: npm
-    - run: npm ci
+    - name: Build @playerstack/core
+      run: cd .core-src && npm ci && npm run build
+    - run: npm ci --ignore-scripts
+    - name: Link core locally
+      run: |
+        rm -rf node_modules/@playerstack/core
+        mkdir -p node_modules/@playerstack
+        ln -s $GITHUB_WORKSPACE/.core-src node_modules/@playerstack/core
     - run: npm run test:cov
     - name: Upload coverage to Codecov
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -55,12 +83,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Checkout @playerstack/core
+      uses: actions/checkout@v4
+      with:
+        repository: playerstack/core
+        path: .core-src
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: npm
-    - run: npm ci
+    - name: Build @playerstack/core
+      run: cd .core-src && npm ci && npm run build
+    - run: npm ci --ignore-scripts
+    - name: Link core locally
+      run: |
+        rm -rf node_modules/@playerstack/core
+        mkdir -p node_modules/@playerstack
+        ln -s $GITHUB_WORKSPACE/.core-src node_modules/@playerstack/core
     - run: npm run build:lib
     - run: npm run build:dist
     - run: npm run build:standalone
