@@ -13,9 +13,8 @@ import {
 } from './SettingsButton.styled';
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import Tooltip from '../../../../../Commons/Tooltip';
-import SettingsIcon from '../../../../../Commons/Icons/SetttingsIcon';
+import { SettingsIcon, ArrowRightIcon } from '@playerstack/core/icons';
 import CaptionOptions from '../../../../../Commons/CaptionOptions';
-import ArrowRightIcon from '../../../../../Commons/Icons/ArrowRightIcon';
 import { StyledDropdownOverlayScrolled } from './DropdownOverlay/DropdownOverlay.styled';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 import useSettingsOptions from '../../../../../../hooks/useSettingsOptions';

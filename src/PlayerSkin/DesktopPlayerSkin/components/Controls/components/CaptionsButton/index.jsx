@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import Tooltip from '../../../../../Commons/Tooltip';
-import CaptionsIcon from '../../../../../Commons/Icons/CaptionsIcon';
+import { CaptionsIcon } from '@playerstack/core/icons';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 import { buildIconProps } from '@playerstack/core';
 

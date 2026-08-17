@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import Tooltip from '../../../../../Commons/Tooltip';
-import PauseIcon from '../../../../../Commons/Icons/PauseIcon';
-import PlayIcon from '../../../../../Commons/Icons/PlayIcon';
-import ReplayIcon from '../../../../../Commons/Icons/ReplayIcon';
+import { PauseIcon, PlayIcon, ReplayIcon } from '@playerstack/core/icons';
 import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 

@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
 import Tooltip from '../../../../../Commons/Tooltip';
-import FullscreenIcon from '../../../../../Commons/Icons/FullscreenIcon';
-import UnfullscreenIcon from '../../../../../Commons/Icons/UnfullscreenIcon';
+import { FullscreenIcon, UnfullscreenIcon } from '@playerstack/core/icons';
 import { buildIconProps } from '@playerstack/core';
 import useAppSelector from '../../../../../../hooks/context/useAppSelector';
 

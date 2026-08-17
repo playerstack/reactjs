@@ -10,7 +10,7 @@ import {
   StyledMobileLiveDot,
 } from './MobileBottomBar.styled';
 import MobileProgressBar from './MobileProgressBar';
-import { FullscreenIcon, ExitFullscreenIcon } from '../../icons';
+import { MobileFullscreenIcon, MobileExitFullscreenIcon } from '@playerstack/core/icons/mobile';
 import { formatTime } from '@playerstack/core';
 
 const MobileBottomBar = ({
@@ -93,7 +93,7 @@ const MobileBottomBar = ({
       aria-label={fullscreen ? i18n.exitFullscreen : i18n.fullscreen}
       onClick={fullscreen ? onExitFullscreen : onRequestFullscreen}
     >
-      {fullscreen ? <ExitFullscreenIcon /> : <FullscreenIcon />}
+      {fullscreen ? <MobileExitFullscreenIcon /> : <MobileFullscreenIcon />}
     </StyledMobileFullscreenButton>
   </StyledMobileBottomBar>
 );

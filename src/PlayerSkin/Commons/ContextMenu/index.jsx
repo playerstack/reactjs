@@ -7,9 +7,7 @@ import {
   StyledContextMenuLabel,
 } from './ContextMenu.styled';
 import { mergeRefs } from '../../../utils';
-import CheckedIcon from '../Icons/CheckedIcon';
-import InLoopIcon from '../Icons/InLoopIcon';
-import PipIcon from '../Icons/PipIcon';
+import { CheckedIcon, InLoopIcon, PipIcon } from '@playerstack/core/icons';
 import useAppDispatch from '../../../hooks/context/useAppDispatch';
 import useAppSelector from '../../../hooks/context/useAppSelector';
 
