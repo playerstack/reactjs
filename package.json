@@ -6,8 +6,7 @@
   "typings": "types/lib/index.d.ts",
   "scripts": {
     "postinstall": "node scripts/link-local-deps.js",
-    "clean": "rimraf lib lazy demo coverage *.d.ts",
-    "start": "cp -r examples/react/public/ demo && builder examples/react/src/index.tsx --format=iife --bundle --outdir=demo --watch --servedir=demo --log-level=debug --livereload",
+    "clean": "rimraf lib lazy coverage *.d.ts",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "lint:ts": "eslint \"types/**/*.d.ts\"",
@@ -17,7 +16,6 @@
     "test": "jest --forceExit",
     "test:cov": "jest --coverage --forceExit",
     "build": "npm run build:lib && npm run build:lazy && npm run build:dist && npm run build:es6",
-    "build:demo": "cp -r examples/react/public demo && npm run build:lib && builder examples/react/src/index.tsx --format=iife --bundle --outdir=demo --minify --sourcemap",
     "build:lib": "builder \"./src/**/*.{js,jsx}\" --outdir=lib --format=cjs",
     "build:lazy": "builder \"./src/**/*.{js,jsx}\" --outdir=lazy --format=cjs",
     "build:dist": "builder ./src/index.js --outfile=dist/PlayerStack.js --format=iife --bundle --minify --sourcemap --global-name=PlayerStack --external:react --external:react-dom --plugin:global-externals={\"react\":\"globalThis.React\",\"react-dom\":\"globalThis.ReactDOM\"} --footer:js=PlayerStack=PlayerStack.default;",
@@ -37,7 +35,7 @@
   "bugs": {
     "url": "https://github.com/playerstack/reactjs/issues"
   },
-  "homepage": "https://playerstack.github.io/reactjs",
+  "homepage": "https://github.com/playerstack/reactjs#readme",
   "peerDependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
