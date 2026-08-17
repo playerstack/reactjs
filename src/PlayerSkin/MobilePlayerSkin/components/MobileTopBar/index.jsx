@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledMobileTopBar, StyledMobileSettingsButton } from './MobileTopBar.styled';
-import { SettingsGearIcon } from '../../icons';
-import CaptionsIcon from '../../../Commons/Icons/CaptionsIcon';
-import CastIcon from '../../../Commons/Icons/CastIcon';
+import { MobileSettingsGearIcon } from '@playerstack/core/icons/mobile';
+import { CaptionsIcon, CastIcon } from '@playerstack/core/icons';
 
 const MobileTopBar = ({
   visible,
@@ -54,7 +53,7 @@ const MobileTopBar = ({
       )}
       {!hideSettings && (
         <StyledMobileSettingsButton onClick={onOpenSettings} aria-label={settingsLabel}>
-          <SettingsGearIcon />
+          <MobileSettingsGearIcon />
         </StyledMobileSettingsButton>
       )}
     </StyledMobileTopBar>

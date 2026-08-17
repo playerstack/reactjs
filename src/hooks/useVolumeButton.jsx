@@ -1,7 +1,6 @@
 import React from 'react';
 
-import MutedIcon from '../PlayerSkin/Commons/Icons/MutedIcon';
-import UnmutedIcon from '../PlayerSkin/Commons/Icons/UnmutedIcon';
+import { MutedIcon, UnmutedIcon } from '@playerstack/core/icons';
 import useAppSelector from './context/useAppSelector';
 import { buildIconProps } from '@playerstack/core';
 

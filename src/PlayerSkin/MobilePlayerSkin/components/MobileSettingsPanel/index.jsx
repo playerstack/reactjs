@@ -17,7 +17,13 @@ import {
   StyledOptionList,
   StyledMainPage,
 } from './MobileSettingsPanel.styled';
-import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon, CaptionsIcon } from '../../icons';
+import {
+  MobileSettingsGearIcon,
+  MobileSpeedIcon,
+  MobileCloseIcon,
+  MobileBackIcon,
+  MobileCaptionsIcon,
+} from '@playerstack/core/icons/mobile';
 import useAppSelector from '../../../../hooks/context/useAppSelector';
 
 const SPEED_OPTIONS = [
@@ -135,11 +141,11 @@ const MobileSettingsPanel = ({
       <StyledSettingsHeader>
         {!isSubMenuOpen ? (
           <StyledIconButton $position="left" aria-label={i18n.settings}>
-            <SettingsGearIcon />
+            <MobileSettingsGearIcon />
           </StyledIconButton>
         ) : (
           <StyledIconButton $position="left" onClick={handleBack} aria-label={i18n.back}>
-            <BackIcon />
+            <MobileBackIcon />
           </StyledIconButton>
         )}
         <StyledHeaderTitle>
@@ -152,7 +158,7 @@ const MobileSettingsPanel = ({
                 : i18n.speed}
         </StyledHeaderTitle>
         <StyledIconButton $position="right" onClick={handleClose} aria-label={i18n.close}>
-          <CloseIcon />
+          <MobileCloseIcon />
         </StyledIconButton>
       </StyledSettingsHeader>
 
@@ -162,7 +168,7 @@ const MobileSettingsPanel = ({
           {qualities.length > 0 && (
             <StyledSwitchItem onClick={() => setSubMenu('quality')}>
               <StyledSwitchIcon>
-                <SettingsGearIcon />
+                <MobileSettingsGearIcon />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.quality}</StyledSwitchLabel>
               <StyledSwitchValue>
@@ -177,7 +183,7 @@ const MobileSettingsPanel = ({
           {!adMode && (
             <StyledSwitchItem onClick={() => setSubMenu('speed')}>
               <StyledSwitchIcon>
-                <SpeedIcon />
+                <MobileSpeedIcon />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
               <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
@@ -186,7 +192,7 @@ const MobileSettingsPanel = ({
           {captions && captions.length > 0 && (
             <StyledSwitchItem onClick={() => setSubMenu('captions')}>
               <StyledSwitchIcon>
-                <CaptionsIcon />
+                <MobileCaptionsIcon />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.captions}</StyledSwitchLabel>
               <StyledSwitchValue>{currentCaptionLabel}</StyledSwitchValue>

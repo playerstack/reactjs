@@ -80,7 +80,6 @@ jobs:
       - name: Build for production
         run: |
           npm run build:lib
-          npm run build:demo
           npm run build:dist
           npm run build:standalone
       

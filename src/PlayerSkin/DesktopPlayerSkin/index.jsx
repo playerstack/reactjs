@@ -40,7 +40,7 @@ import useAds from '../../hooks/useAds';
 import useCast from '../../hooks/useCast';
 import AdsOverlay from '../Commons/AdsOverlay';
 import { StyledAdTimeSliderWrapper } from '../Commons/AdsOverlay/AdsOverlay.styled';
-import CastIcon from '../Commons/Icons/CastIcon';
+import { CastIcon } from '@playerstack/core/icons';
 import Tooltip from '../Commons/Tooltip';
 import StyledGeneralButton from '../Commons/Buttons/StyledGeneralButton';
 

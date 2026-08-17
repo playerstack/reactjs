@@ -7,7 +7,7 @@ import {
   StyledDropdownItemValueSub,
   StyledDropdownList,
 } from './DropdownOverlay.styled';
-import ArrowLeftIcon from '../../../../../../Commons/Icons/ArrowLeftIcon';
+import { ArrowLeftIcon } from '@playerstack/core/icons';
 import StyledGeneralButton from '../../../../../../Commons/Buttons/StyledGeneralButton';
 import useAppSelector from '../../../../../../../hooks/context/useAppSelector';
 
