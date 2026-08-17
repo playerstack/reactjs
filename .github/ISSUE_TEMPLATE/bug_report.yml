@@ -1,0 +1,83 @@
+name: 🐛 Bug Report
+description: Report a bug in @playerstack/reactjs video player.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please fill out the sections below so we can reproduce and fix the issue.
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: A concise description of what is happening.
+      placeholder: "The video player shows a blank screen when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what should happen instead.
+      placeholder: "The player should render and start playback..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: Minimal steps to reproduce the behavior.
+      placeholder: |
+        1. Render `<Player url="..." />`
+        2. Click play
+        3. Observe...
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction-link
+    attributes:
+      label: Reproduction Link
+      description: Link to a minimal reproduction (CodeSandbox, StackBlitz, GitHub repo).
+      placeholder: "https://codesandbox.io/s/..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: player-skin
+    attributes:
+      label: Player Skin
+      description: Which skin is affected?
+      options:
+        - Desktop
+        - Mobile
+        - Both
+        - N/A
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Relevant environment details.
+      value: |
+        - @playerstack/reactjs version:
+        - @playerstack/core version:
+        - React version:
+        - Browser:
+        - OS:
+        - Device (if mobile):
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Anything else (console logs, screenshots, video format used).
+    validations:
+      required: false
