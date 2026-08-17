@@ -117,6 +117,8 @@ const videoPropTypes = {
   ),
   /** Ads overlay configuration */
   ads: adsPropType,
+  /** Media title (metadata only, not rendered as DOM attribute) */
+  title: string,
   live: bool,
   liveDVR: bool,
   liveAd: object,
@@ -141,6 +143,7 @@ export const defaultProps = {
   captions: [],
   heatmapData: [],
   ads: null,
+  title: '',
   playing: false,
   loop: false,
   live: false,

@@ -216,9 +216,10 @@ const DesktopPlayerSkin = React.forwardRef(
       }
     }, [sliderPosition, liveDragPosition]);
 
-    // Live ad overlay system
+    // Live ad overlay system (Twitch-style: stream muted, not paused)
     const {
-      isAdActive: isLiveAdActive,
+      isActive: isLiveAdActive,
+      isExiting: isLiveAdExiting,
       adUrl,
       adTitle,
       adButtonText,
@@ -353,10 +354,11 @@ const DesktopPlayerSkin = React.forwardRef(
             controlsVisible={paused || ended || loading || waiting}
           />
         )}
-        {/* Live ad overlay — stream continues muted behind */}
+        {/* Live ad overlay — stream continues muted behind (Twitch-style) */}
         {live && (
           <LiveAdOverlay
-            active={isLiveAdActive}
+            isActive={isLiveAdActive}
+            isExiting={isLiveAdExiting}
             url={adUrl}
             title={adTitle}
             buttonText={adButtonText}

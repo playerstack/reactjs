@@ -50,6 +50,8 @@ const PlayerSkinWrapper = React.forwardRef(
       muted,
       updateState,
       ads: props.ads || null,
+      live,
+      liveDVR: props.liveDVR || false,
     });
 
     return (
