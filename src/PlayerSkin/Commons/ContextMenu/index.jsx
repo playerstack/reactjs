@@ -7,9 +7,7 @@ import {
   StyledContextMenuLabel,
 } from '@PlayerSkin/Commons/ContextMenu/ContextMenu.styled';
 import { mergeRefs } from '@playerstack/core/hooks';
-import CheckedIcon from '@PlayerSkin/Commons/Icons/CheckedIcon';
-import InLoopIcon from '@PlayerSkin/Commons/Icons/InLoopIcon';
-import PipIcon from '@PlayerSkin/Commons/Icons/PipIcon';
+import { CheckedIcon, InLoopIcon, PipIcon } from '@playerstack/core/icons';
 import { useAppDispatch, useAppSelector } from '@context/index';
 
 const ICON_MAP = {

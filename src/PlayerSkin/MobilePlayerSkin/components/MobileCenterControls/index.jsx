@@ -7,7 +7,13 @@ import {
   StyledMobileNavButton,
   StyledMobileSpinner,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/MobileCenterControls.styled';
-import { PlayIcon, PauseIcon, ReplayIcon, PrevIcon, NextIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
+import {
+  MobilePlayIcon as PlayIcon,
+  MobilePauseIcon as PauseIcon,
+  MobilePrevIcon as PrevIcon,
+  MobileNextIcon as NextIcon,
+} from '@playerstack/core/icons/mobile';
+import { ReplayIcon } from '@playerstack/core/icons';
 
 const MobileCenterControls = ({
   visible,
@@ -67,7 +73,7 @@ const MobileCenterControls = ({
         </StyledMobileSpinner>
       ) : (
         <StyledMobilePlayButton aria-label={paused ? i18n.play : i18n.pause} onClick={handlePlayPause}>
-          {ended ? <ReplayIcon /> : paused ? <PlayIcon /> : <PauseIcon />}
+          {ended ? <ReplayIcon width="100%" height="100%" /> : paused ? <PlayIcon /> : <PauseIcon />}
         </StyledMobilePlayButton>
       )}
 

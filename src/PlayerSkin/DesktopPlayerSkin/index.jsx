@@ -41,7 +41,7 @@ import { webAdsPlatform } from '@utils/adsPlatform';
 import useCast from '@hooks/useCast';
 import AdsOverlay from '@PlayerSkin/Commons/AdsOverlay';
 import { StyledAdTimeSliderWrapper } from '@PlayerSkin/Commons/AdsOverlay/AdsOverlay.styled';
-import CastIcon from '@PlayerSkin/Commons/Icons/CastIcon';
+import { CastIcon } from '@playerstack/core/icons';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 

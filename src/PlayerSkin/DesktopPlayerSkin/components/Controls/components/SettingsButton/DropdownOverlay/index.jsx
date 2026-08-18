@@ -7,7 +7,7 @@ import {
   StyledDropdownItemValueSub,
   StyledDropdownList,
 } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay/DropdownOverlay.styled';
-import ArrowLeftIcon from '@PlayerSkin/Commons/Icons/ArrowLeftIcon';
+import { ArrowLeftIcon } from '@playerstack/core/icons';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import { useAppSelector } from '@context/index';
 

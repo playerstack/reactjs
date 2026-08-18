@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
-import FullscreenIcon from '@PlayerSkin/Commons/Icons/FullscreenIcon';
-import UnfullscreenIcon from '@PlayerSkin/Commons/Icons/UnfullscreenIcon';
+import { FullscreenIcon, UnfullscreenIcon } from '@playerstack/core/icons';
 import { buildIconProps } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 

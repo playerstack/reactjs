@@ -7,7 +7,7 @@ import {
   StyledSkipText,
   StyledSkipTapArea,
 } from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled';
-import { SkipChevronIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
+import { MobileSkipChevronIcon as SkipChevronIcon } from '@playerstack/core/icons/mobile';
 
 const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
   const secondsLabel = i18n?.seconds || 'seconds';
