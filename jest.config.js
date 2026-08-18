@@ -1,3 +1,18 @@
+const path = require('path');
+const fs = require('fs');
+
+// In dev workspace, core source lives at ../core/src (symlinked via postinstall).
+// In CI, core is installed from npm and lives at node_modules/@playerstack/core/dist/cjs.
+const localCoreSrc = path.resolve(__dirname, '../core/src');
+const hasLocalCore = fs.existsSync(localCoreSrc);
+
+function corePath(subpath) {
+  if (hasLocalCore) {
+    return path.join(localCoreSrc, subpath + '.ts');
+  }
+  return path.join(__dirname, 'node_modules/@playerstack/core/dist/cjs', subpath + '.js');
+}
+
 module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   transform: {
@@ -17,31 +32,31 @@ module.exports = {
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
     '^react-dom(.*)$': '<rootDir>/node_modules/react-dom$1',
-    '^@playerstack/core$': '<rootDir>/../core/src/index.ts',
-    '^@playerstack/core/hooks$': '<rootDir>/../core/src/hooks/index.ts',
-    '^@playerstack/core/patterns$': '<rootDir>/../core/src/patterns.ts',
-    '^@playerstack/core/chapters$': '<rootDir>/../core/src/chapters.ts',
-    '^@playerstack/core/heatmap$': '<rootDir>/../core/src/heatmap.ts',
-    '^@playerstack/core/i18n$': '<rootDir>/../core/src/i18n/index.ts',
-    '^@playerstack/core/keyboard$': '<rootDir>/../core/src/keyboard.ts',
-    '^@playerstack/core/live-dvr$': '<rootDir>/../core/src/live-dvr.ts',
-    '^@playerstack/core/slider$': '<rootDir>/../core/src/slider.ts',
-    '^@playerstack/core/player-state$': '<rootDir>/../core/src/player-state.ts',
-    '^@playerstack/core/quality$': '<rootDir>/../core/src/quality.ts',
-    '^@playerstack/core/reducer$': '<rootDir>/../core/src/reducer.ts',
-    '^@playerstack/core/ui$': '<rootDir>/../core/src/ui.ts',
-    '^@playerstack/core/engine$': '<rootDir>/../core/src/media-engine.ts',
-    '^@playerstack/core/adapters$': '<rootDir>/../core/src/types/adapters.types.ts',
-    '^@playerstack/core/utils/format$': '<rootDir>/../core/src/utils/format.ts',
-    '^@playerstack/core/utils/cookie$': '<rootDir>/../core/src/utils/cookie.ts',
-    '^@playerstack/core/utils/device$': '<rootDir>/../core/src/utils/device.ts',
-    '^@playerstack/core/utils/sdk$': '<rootDir>/../core/src/utils/sdk.ts',
-    '^@playerstack/core/utils/media$': '<rootDir>/../core/src/utils/media.ts',
-    '^@playerstack/core/utils/env$': '<rootDir>/../core/src/utils/env.ts',
-    '^@playerstack/core/utils/captions$': '<rootDir>/../core/src/utils/captions.ts',
-    '^@playerstack/core/utils/vtt-sprite$': '<rootDir>/../core/src/utils/vtt-sprite.ts',
-    '^@playerstack/core/constants$': '<rootDir>/../core/src/constants.ts',
-    '^@playerstack/core/icons/mobile$': '<rootDir>/../core/src/icons/mobile/index.ts',
-    '^@playerstack/core/icons$': '<rootDir>/../core/src/icons/index.ts',
+    '^@playerstack/core$': corePath('index'),
+    '^@playerstack/core/hooks$': corePath('hooks/index'),
+    '^@playerstack/core/patterns$': corePath('patterns'),
+    '^@playerstack/core/chapters$': corePath('chapters'),
+    '^@playerstack/core/heatmap$': corePath('heatmap'),
+    '^@playerstack/core/i18n$': corePath('i18n/index'),
+    '^@playerstack/core/keyboard$': corePath('keyboard'),
+    '^@playerstack/core/live-dvr$': corePath('live-dvr'),
+    '^@playerstack/core/slider$': corePath('slider'),
+    '^@playerstack/core/player-state$': corePath('player-state'),
+    '^@playerstack/core/quality$': corePath('quality'),
+    '^@playerstack/core/reducer$': corePath('reducer'),
+    '^@playerstack/core/ui$': corePath('ui'),
+    '^@playerstack/core/engine$': corePath('media-engine'),
+    '^@playerstack/core/adapters$': corePath('types/adapters.types'),
+    '^@playerstack/core/utils/format$': corePath('utils/format'),
+    '^@playerstack/core/utils/cookie$': corePath('utils/cookie'),
+    '^@playerstack/core/utils/device$': corePath('utils/device'),
+    '^@playerstack/core/utils/sdk$': corePath('utils/sdk'),
+    '^@playerstack/core/utils/media$': corePath('utils/media'),
+    '^@playerstack/core/utils/env$': corePath('utils/env'),
+    '^@playerstack/core/utils/captions$': corePath('utils/captions'),
+    '^@playerstack/core/utils/vtt-sprite$': corePath('utils/vtt-sprite'),
+    '^@playerstack/core/constants$': corePath('constants'),
+    '^@playerstack/core/icons/mobile$': corePath('icons/mobile/index'),
+    '^@playerstack/core/icons$': corePath('icons/index'),
   },
 };
