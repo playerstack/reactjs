@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
+import { Provider } from '@context/index';
 
 // Components under test
-import PlayTime from '../../src/PlayerSkin/DesktopPlayerSkin/components/PlayTime';
-import PlayState from '../../src/PlayerSkin/DesktopPlayerSkin/components/PlayState';
-import TopState from '../../src/PlayerSkin/Commons/TopState';
-import PreventedTip from '../../src/PlayerSkin/Commons/PreventedTip';
-import ContextMenu from '../../src/PlayerSkin/Commons/ContextMenu';
+import PlayTime from '@PlayerSkin/DesktopPlayerSkin/components/PlayTime';
+import PlayState from '@PlayerSkin/DesktopPlayerSkin/components/PlayState';
+import TopState from '@PlayerSkin/Commons/TopState';
+import PreventedTip from '@PlayerSkin/Commons/PreventedTip';
+import ContextMenu from '@PlayerSkin/Commons/ContextMenu';
 
 const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 

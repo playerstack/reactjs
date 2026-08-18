@@ -1,2 +1,2 @@
 // Re-export shared SpritePreview component for backward compatibility
-export { default } from '../../../Commons/SpritePreview';
+export { default } from '@PlayerSkin/Commons/SpritePreview';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledHeatmapContainer, StyledHeatmapSvg } from './HeatmapGraph.styled';
+import { StyledHeatmapContainer, StyledHeatmapSvg } from '@PlayerSkin/Commons/HeatmapGraph/HeatmapGraph.styled';
 
 /**
  * Renders a "most replayed" heatmap graph (mountain-line SVG shape)

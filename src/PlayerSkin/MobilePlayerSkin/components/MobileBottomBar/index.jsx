@@ -8,9 +8,9 @@ import {
   StyledMobileFullscreenButton,
   StyledMobileLiveBadge,
   StyledMobileLiveDot,
-} from './MobileBottomBar.styled';
-import MobileProgressBar from './MobileProgressBar';
-import { FullscreenIcon, ExitFullscreenIcon } from '../../icons';
+} from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileBottomBar.styled';
+import MobileProgressBar from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
+import { FullscreenIcon, ExitFullscreenIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
 import { formatTime } from '@playerstack/core';
 
 const MobileBottomBar = ({

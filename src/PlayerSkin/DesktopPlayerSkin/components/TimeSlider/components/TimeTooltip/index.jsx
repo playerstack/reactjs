@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledTip, StyledTooltip, StyledChapterLabel } from './TimeTooltip.styled';
+import {
+  StyledTip,
+  StyledTooltip,
+  StyledChapterLabel,
+} from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/TimeTooltip/TimeTooltip.styled';
 import { getMouseTranslateX } from '@playerstack/core';
 import { formatTime, formatLiveOffset } from '@playerstack/core';
 

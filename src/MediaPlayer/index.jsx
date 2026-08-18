@@ -3,8 +3,8 @@ import merge from 'deepmerge';
 import memoize from 'memoize-one';
 import isEqual from 'react-fast-compare';
 
-import { propTypes, defaultProps } from './props.types';
-import MediaPlayerSkin from './components/MediaPlayerSkin';
+import { propTypes, defaultProps } from '@MediaPlayer/props.types';
+import MediaPlayerSkin from '@MediaPlayer/components/MediaPlayerSkin';
 import { omit } from '@playerstack/core';
 
 const IS_BROWSER = typeof window !== 'undefined' && window.document && typeof document !== 'undefined';

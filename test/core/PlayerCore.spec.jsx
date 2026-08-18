@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import PlayerCore from '../../src/core/PlayerCore';
+import PlayerCore from '@core/PlayerCore';
 import {
   DASH_GLOBAL,
   DASH_SDK_URL,

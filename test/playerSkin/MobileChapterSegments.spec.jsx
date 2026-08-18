@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import MobileChapterSegments from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileChapterSegments';
+import MobileChapterSegments from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileChapterSegments';
 
 describe('MobileChapterSegments', () => {
   const baseSegments = [

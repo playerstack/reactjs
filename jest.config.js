@@ -59,4 +59,5 @@ module.exports = {
     '^@playerstack/core/icons/mobile$': corePath('icons/mobile/index'),
     '^@playerstack/core/icons$': corePath('icons/index'),
   },
+  resolver: '<rootDir>/jest.resolver.js',
 };

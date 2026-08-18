@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useAutoHide from '../../src/hooks/useAutoHide';
-import { Provider } from '../../src/context/index';
+import useAutoHide from '@hooks/useAutoHide';
+import { Provider } from '@context/index';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

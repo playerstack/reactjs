@@ -11,7 +11,7 @@ jest.mock('@playerstack/core', () => ({
   getSDK: jest.fn(),
 }));
 
-import SpritePreview from '../../src/PlayerSkin/Commons/SpritePreview';
+import SpritePreview from '@PlayerSkin/Commons/SpritePreview';
 
 // Mock fetch for VTT file loading
 global.fetch = jest.fn(() =>

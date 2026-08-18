@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import PlayerStack from '../src';
+import PlayerStack from '@';
 
 describe('PlayerStack - props', () => {
   const renderComponent = (props) => {

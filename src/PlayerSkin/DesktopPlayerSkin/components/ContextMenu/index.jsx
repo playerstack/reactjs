@@ -1,1 +1,1 @@
-export { default } from '../../../Commons/ContextMenu';
+export { default } from '@PlayerSkin/Commons/ContextMenu';

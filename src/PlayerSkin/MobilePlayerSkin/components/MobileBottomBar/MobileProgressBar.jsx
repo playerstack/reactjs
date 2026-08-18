@@ -8,11 +8,11 @@ import {
   StyledMobileProgressFilled,
   StyledMobileProgressHandle,
   StyledMobileSeekTooltip,
-} from './MobileProgressBar.styled';
-import MobileChapterSegments from './MobileChapterSegments';
-import HeatmapGraph from '../../../Commons/HeatmapGraph';
+} from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar.styled';
+import MobileChapterSegments from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileChapterSegments';
+import HeatmapGraph from '@PlayerSkin/Commons/HeatmapGraph';
 import { useHeatmap } from '@playerstack/core/hooks';
-import { useAppSelector } from '../../../../context/index';
+import { useAppSelector } from '@context/index';
 import { formatTime } from '@playerstack/core';
 
 const MobileProgressBar = ({

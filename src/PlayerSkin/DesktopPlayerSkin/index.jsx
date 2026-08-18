@@ -1,8 +1,8 @@
 import React from 'react';
 
-import PreventedTip from './components/PreventedTip';
-import PlayState from './components/PlayState';
-import TopState from './components/TopState';
+import PreventedTip from '@PlayerSkin/DesktopPlayerSkin/components/PreventedTip';
+import PlayState from '@PlayerSkin/DesktopPlayerSkin/components/PlayState';
+import TopState from '@PlayerSkin/DesktopPlayerSkin/components/TopState';
 
 import {
   StyledBezelTextVolume,
@@ -11,39 +11,39 @@ import {
   StyledPlayerSkin,
   StyledPoster,
   StyledControlsBackdrop,
-} from './DesktopPlayerSkin.styled';
+} from '@PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.styled';
 import { eventsKeyCodes, keyMappings } from '@playerstack/core';
-import Controls from './components/Controls';
-import ControlBar from './components/ControlBar';
-import TimeSlider from './components/TimeSlider';
-import Volume from './components/Volume';
-import PlayTime from './components/PlayTime';
-import PlayButton from './components/Controls/components/PlayButton';
-import { PreviousButton, NextButton } from './components/Controls/components/NavButtons';
-import FullscreenButton from './components/Controls/components/FullscreenButton';
+import Controls from '@PlayerSkin/DesktopPlayerSkin/components/Controls';
+import ControlBar from '@PlayerSkin/DesktopPlayerSkin/components/ControlBar';
+import TimeSlider from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider';
+import Volume from '@PlayerSkin/DesktopPlayerSkin/components/Volume';
+import PlayTime from '@PlayerSkin/DesktopPlayerSkin/components/PlayTime';
+import PlayButton from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/PlayButton';
+import { PreviousButton, NextButton } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/NavButtons';
+import FullscreenButton from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/FullscreenButton';
 
-import useAutoHide from '../../hooks/useAutoHide';
-import SpritePreview from '../Commons/SpritePreview';
-import SettingsButton from './components/Controls/components/SettingsButton';
-import CaptionsButton from './components/Controls/components/CaptionsButton';
-import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
-import { useAppDispatch, useAppSelector } from '../../context/index';
-import ContextMenu from './components/ContextMenu';
-import CaptionOverlay from '../Commons/CaptionOverlay';
-import LiveAdOverlay from '../Commons/LiveAdOverlay';
-import useCaptions from '../../hooks/useCaptions';
+import useAutoHide from '@hooks/useAutoHide';
+import SpritePreview from '@PlayerSkin/Commons/SpritePreview';
+import SettingsButton from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton';
+import CaptionsButton from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/CaptionsButton';
+import usePlayerSkinWrapped from '@hooks/usePlayerSkinWrapped';
+import { useAppDispatch, useAppSelector } from '@context/index';
+import ContextMenu from '@PlayerSkin/DesktopPlayerSkin/components/ContextMenu';
+import CaptionOverlay from '@PlayerSkin/Commons/CaptionOverlay';
+import LiveAdOverlay from '@PlayerSkin/Commons/LiveAdOverlay';
+import useCaptions from '@hooks/useCaptions';
 import { useChapters } from '@playerstack/core/hooks';
 import { useLiveDVR } from '@playerstack/core/hooks';
-import { createWebDVRAdapter } from '../../utils/dvrAdapter';
-import useLiveAd from '../../hooks/useLiveAd';
+import { createWebDVRAdapter } from '@utils/dvrAdapter';
+import useLiveAd from '@hooks/useLiveAd';
 import { useAds } from '@playerstack/core/hooks';
-import { webAdsPlatform } from '../../utils/adsPlatform';
-import useCast from '../../hooks/useCast';
-import AdsOverlay from '../Commons/AdsOverlay';
-import { StyledAdTimeSliderWrapper } from '../Commons/AdsOverlay/AdsOverlay.styled';
-import CastIcon from '../Commons/Icons/CastIcon';
-import Tooltip from '../Commons/Tooltip';
-import StyledGeneralButton from '../Commons/Buttons/StyledGeneralButton';
+import { webAdsPlatform } from '@utils/adsPlatform';
+import useCast from '@hooks/useCast';
+import AdsOverlay from '@PlayerSkin/Commons/AdsOverlay';
+import { StyledAdTimeSliderWrapper } from '@PlayerSkin/Commons/AdsOverlay/AdsOverlay.styled';
+import CastIcon from '@PlayerSkin/Commons/Icons/CastIcon';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
 const DesktopPlayerSkin = React.forwardRef(
   (

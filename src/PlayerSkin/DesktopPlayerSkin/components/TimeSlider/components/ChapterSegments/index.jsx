@@ -6,7 +6,7 @@ import {
   StyledChapterSegment,
   StyledChapterSegmentFilled,
   StyledChapterSegmentBuffered,
-} from './ChapterSegments.styled';
+} from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/ChapterSegments/ChapterSegments.styled';
 
 /**
  * Renders the timeline as segmented chapters instead of a continuous bar.

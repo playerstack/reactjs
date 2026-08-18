@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import PlayerProxy from '../../src/core/PlayerProxy';
-import PlayerCore from '../../src/core/PlayerCore';
+import PlayerProxy from '@core/PlayerProxy';
+import PlayerCore from '@core/PlayerCore';
 
 const mockPlayerCore = jest.fn();
 const mockPlayerCoreInstance = {

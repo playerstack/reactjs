@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import ChapterSegments from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/ChapterSegments';
+import ChapterSegments from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/ChapterSegments';
 
 describe('ChapterSegments', () => {
   const baseSegments = [

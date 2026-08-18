@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import DropdownOverlay from '.';
-import StyledGeneralButton from '../../../../../../Commons/Buttons/StyledGeneralButton';
-import { StyledMediaPlayerWrapper } from '../../../../../../../MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
-import { StyledPlayerSkin } from '../../../../../DesktopPlayerSkin.styled';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
+import { StyledPlayerSkin } from '@PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.styled';
 
 export const StyledDropdownOverlayScrolled = styled(DropdownOverlay)`
   width: 250px;

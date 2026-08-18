@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { useVolume } from '@playerstack/core/hooks';
-import { createWebVolumeAdapter } from '../utils/volumeAdapter';
-import useFullscreen from './useFullscreen';
+import { createWebVolumeAdapter } from '@utils/volumeAdapter';
+import useFullscreen from '@hooks/useFullscreen';
 import { buildSettingsLabel } from '@playerstack/core';
-import { useAppSelector } from '../context/index';
+import { useAppSelector } from '@context/index';
 import { eventsKeyCodes, keyMappings } from '@playerstack/core';
 import { reduceSeekState } from '@playerstack/core';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useAppDispatch, useAppSelector } from '../context/index';
+import { useAppDispatch, useAppSelector } from '@context/index';
 import { buildIconProps } from '@playerstack/core';
 
 const usePlayerSkinWrapped = ({

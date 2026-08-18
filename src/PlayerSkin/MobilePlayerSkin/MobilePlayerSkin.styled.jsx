@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { scopedReset } from '../Commons/scopedReset';
+import { scopedReset } from '@PlayerSkin/Commons/scopedReset';
 
 export const StyledMobilePlayerSkin = styled.div`
   ${scopedReset}

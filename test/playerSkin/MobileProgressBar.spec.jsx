@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import MobileProgressBar from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
+import { Provider } from '@context/index';
+import MobileProgressBar from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
 
 const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 

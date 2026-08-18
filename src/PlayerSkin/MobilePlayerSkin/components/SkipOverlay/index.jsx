@@ -1,8 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledSkipOverlay, StyledSkipIconContainer, StyledSkipText, StyledSkipTapArea } from './SkipOverlay.styled';
-import { SkipChevronIcon } from '../../icons';
+import {
+  StyledSkipOverlay,
+  StyledSkipIconContainer,
+  StyledSkipText,
+  StyledSkipTapArea,
+} from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled';
+import { SkipChevronIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
 
 const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
   const secondsLabel = i18n?.seconds || 'seconds';

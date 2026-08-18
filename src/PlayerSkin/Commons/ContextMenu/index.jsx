@@ -5,12 +5,12 @@ import {
   StyledContextMenuContainer,
   StyledContextMenuItem,
   StyledContextMenuLabel,
-} from './ContextMenu.styled';
+} from '@PlayerSkin/Commons/ContextMenu/ContextMenu.styled';
 import { mergeRefs } from '@playerstack/core/hooks';
-import CheckedIcon from '../Icons/CheckedIcon';
-import InLoopIcon from '../Icons/InLoopIcon';
-import PipIcon from '../Icons/PipIcon';
-import { useAppDispatch, useAppSelector } from '../../../context/index';
+import CheckedIcon from '@PlayerSkin/Commons/Icons/CheckedIcon';
+import InLoopIcon from '@PlayerSkin/Commons/Icons/InLoopIcon';
+import PipIcon from '@PlayerSkin/Commons/Icons/PipIcon';
+import { useAppDispatch, useAppSelector } from '@context/index';
 
 const ICON_MAP = {
   loop: InLoopIcon,

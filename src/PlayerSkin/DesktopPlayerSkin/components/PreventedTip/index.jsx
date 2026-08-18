@@ -1,1 +1,1 @@
-export { default } from '../../../Commons/PreventedTip';
+export { default } from '@PlayerSkin/Commons/PreventedTip';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useSettingsOptions from '../../src/hooks/useSettingsOptions';
-import { Provider } from '../../src/context/index';
+import useSettingsOptions from '@hooks/useSettingsOptions';
+import { Provider } from '@context/index';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

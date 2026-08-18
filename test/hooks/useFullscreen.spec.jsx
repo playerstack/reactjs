@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useFullscreen from '../../src/hooks/useFullscreen';
+import useFullscreen from '@hooks/useFullscreen';
 
 describe('useFullscreen', () => {
   let playerRef;

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import PlayerSkin from './PlayerSkin';
-import { Provider } from '../context/index';
+import PlayerSkin from '@PlayerSkin/PlayerSkin';
+import { Provider } from '@context/index';
 import { en, es } from '@playerstack/core';
-import usePlayerSkinWrapper from '../hooks/usePlayerSkinWrapper';
+import usePlayerSkinWrapper from '@hooks/usePlayerSkinWrapper';
 
 const i18n = { en, es };
 

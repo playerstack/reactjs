@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
-import PlayerProxy from '../../src/core/PlayerProxy';
-import PlayerCore from '../../src/core/PlayerCore';
+import PlayerProxy from '@core/PlayerProxy';
+import PlayerCore from '@core/PlayerCore';
 
 // ─── Shared mock setup ────────────────────────────────────────────────────────
 const mockPlayerCoreInstance = {

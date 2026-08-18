@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
-import { StyledMediaPlayerWrapper } from '../../../MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
-import { StyledPlayerSkin } from '../../DesktopPlayerSkin/DesktopPlayerSkin.styled';
+import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
+import { StyledPlayerSkin } from '@PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.styled';
 
 const baseButtonStyles = css`
   display: flex;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Re-export common icons with mobile-friendly wrapper
-import ReplayIconBase from '../../Commons/Icons/ReplayIcon';
+import ReplayIconBase from '@PlayerSkin/Commons/Icons/ReplayIcon';
 
 export const ReplayIcon = () => <ReplayIconBase width="100%" height="100%" />;
 

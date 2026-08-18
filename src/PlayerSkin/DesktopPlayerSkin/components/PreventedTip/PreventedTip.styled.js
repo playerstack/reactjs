@@ -3,4 +3,4 @@ export {
   StyledPlayCircle,
   StyledMutedIcon,
   StyledPeventedTipClicked,
-} from '../../../Commons/PreventedTip/PreventedTip.styled';
+} from '@PlayerSkin/Commons/PreventedTip/PreventedTip.styled';

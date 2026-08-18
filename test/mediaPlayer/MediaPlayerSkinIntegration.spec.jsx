@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act, fireEvent } from '@testing-library/react';
-import MediaPlayerSkin from '../../src/MediaPlayer/components/MediaPlayerSkin/index';
+import MediaPlayerSkin from '@MediaPlayer/components/MediaPlayerSkin/index';
 
 jest.mock('../../src/core/PlayerProxy', () => {
   const ReactMock = require('react');

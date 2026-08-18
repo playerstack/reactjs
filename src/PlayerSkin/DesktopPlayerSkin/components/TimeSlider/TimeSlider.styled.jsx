@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { StyledTooltip } from './components/TimeTooltip/TimeTooltip.styled';
-import { StyledMediaPlayerWrapper } from '../../../../MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
-import { StyledPlayerSkin } from '../../DesktopPlayerSkin.styled';
+import { StyledTooltip } from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/TimeTooltip/TimeTooltip.styled';
+import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
+import { StyledPlayerSkin } from '@PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.styled';
 
 export const StyledSliderContent = styled.div`
   position: absolute;

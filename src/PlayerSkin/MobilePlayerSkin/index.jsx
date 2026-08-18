@@ -1,34 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledMobilePlayerSkin, StyledOverlay } from './MobilePlayerSkin.styled';
-import { StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
+import { StyledMobilePlayerSkin, StyledOverlay } from '@PlayerSkin/MobilePlayerSkin/MobilePlayerSkin.styled';
+import { StyledOverlayPoster, StyledPoster } from '@PlayerSkin/Commons/SharedStyles';
 
-import MobileTopBar from './components/MobileTopBar';
-import MobileCenterControls from './components/MobileCenterControls';
-import MobileBottomBar from './components/MobileBottomBar';
-import SkipOverlay from './components/SkipOverlay';
-import MobileSettingsPanel from './components/MobileSettingsPanel';
-import MobileSpritePreview from './components/MobileSpritePreview';
-import ContextMenu from '../Commons/ContextMenu';
-import TopState from '../Commons/TopState';
-import PreventedTip from '../Commons/PreventedTip';
+import MobileTopBar from '@PlayerSkin/MobilePlayerSkin/components/MobileTopBar';
+import MobileCenterControls from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls';
+import MobileBottomBar from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar';
+import SkipOverlay from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay';
+import MobileSettingsPanel from '@PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel';
+import MobileSpritePreview from '@PlayerSkin/MobilePlayerSkin/components/MobileSpritePreview';
+import ContextMenu from '@PlayerSkin/Commons/ContextMenu';
+import TopState from '@PlayerSkin/Commons/TopState';
+import PreventedTip from '@PlayerSkin/Commons/PreventedTip';
 
-import useMobileAutoHide from '../../hooks/useMobileAutoHide';
+import useMobileAutoHide from '@hooks/useMobileAutoHide';
 import { useDoubleTapSkip } from '@playerstack/core/hooks';
-import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
-import { useAppDispatch, useAppSelector } from '../../context/index';
+import usePlayerSkinWrapped from '@hooks/usePlayerSkinWrapped';
+import { useAppDispatch, useAppSelector } from '@context/index';
 import { useChapters } from '@playerstack/core/hooks';
-import useCaptions from '../../hooks/useCaptions';
+import useCaptions from '@hooks/useCaptions';
 import { useAds } from '@playerstack/core/hooks';
-import { webAdsPlatform } from '../../utils/adsPlatform';
-import useCast from '../../hooks/useCast';
-import CaptionOverlay from '../Commons/CaptionOverlay';
-import LiveAdOverlay from '../Commons/LiveAdOverlay';
+import { webAdsPlatform } from '@utils/adsPlatform';
+import useCast from '@hooks/useCast';
+import CaptionOverlay from '@PlayerSkin/Commons/CaptionOverlay';
+import LiveAdOverlay from '@PlayerSkin/Commons/LiveAdOverlay';
 import { useLiveDVR } from '@playerstack/core/hooks';
-import { createWebDVRAdapter } from '../../utils/dvrAdapter';
-import useLiveAd from '../../hooks/useLiveAd';
-import AdsOverlay from '../Commons/AdsOverlay';
+import { createWebDVRAdapter } from '@utils/dvrAdapter';
+import useLiveAd from '@hooks/useLiveAd';
+import AdsOverlay from '@PlayerSkin/Commons/AdsOverlay';
 
 const MobilePlayerSkin = React.forwardRef(
   (

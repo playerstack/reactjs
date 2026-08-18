@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import MobilePlayerSkin from '../../src/PlayerSkin/MobilePlayerSkin/index';
+import { Provider } from '@context/index';
+import MobilePlayerSkin from '@PlayerSkin/MobilePlayerSkin/index';
 
 // Mock hooks that have complex dependencies
 jest.mock('../../src/hooks/useMobileAutoHide', () => () => ({

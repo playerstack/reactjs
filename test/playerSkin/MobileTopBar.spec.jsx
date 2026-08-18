@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import MobileTopBar from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileTopBar/index';
-import { Provider } from '../../src/context/index';
+import MobileTopBar from '@PlayerSkin/MobilePlayerSkin/components/MobileTopBar/index';
+import { Provider } from '@context/index';
 
 const Wrapper = ({ children }) => (
   <Provider language="en">{children}</Provider>

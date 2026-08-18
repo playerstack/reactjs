@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import usePlayerProxy from '../../src/MediaPlayer/hooks/usePlayerProxy';
-import { Provider } from '../../src/context/index';
+import usePlayerProxy from '@MediaPlayer/hooks/usePlayerProxy';
+import { Provider } from '@context/index';
 
 // Mock the network speed measurement to avoid real network calls
 jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'),

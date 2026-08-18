@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DesktopPlayerSkin from './DesktopPlayerSkin';
-import MobilePlayerSkin from './MobilePlayerSkin';
+import DesktopPlayerSkin from '@PlayerSkin/DesktopPlayerSkin';
+import MobilePlayerSkin from '@PlayerSkin/MobilePlayerSkin';
 import { isMobile } from '@playerstack/core';
 
 const PlayerSkin = React.forwardRef((props, ref) => {

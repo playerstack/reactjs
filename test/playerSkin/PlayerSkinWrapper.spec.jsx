@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import PlayerSkinWrapper from '../../src/PlayerSkin/index';
+import PlayerSkinWrapper from '@PlayerSkin/index';
 
 const baseProps = {
   playerRef: { current: document.createElement('div') },

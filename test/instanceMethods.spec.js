@@ -1,4 +1,4 @@
-import PlayerStack from '../src';
+import PlayerStack from '@';
 
 const COMMON_METHODS = ['getDuration', 'getCurrentTime', 'getSecondsLoaded', 'getInternalPlayer'];
 

@@ -1,8 +1,8 @@
 jest.setTimeout(30000);
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import Timelens from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens';
+import { Provider } from '@context/index';
+import Timelens from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens';
 
 // Mock fetch for VTT loading
 const mockVTT = `WEBVTT

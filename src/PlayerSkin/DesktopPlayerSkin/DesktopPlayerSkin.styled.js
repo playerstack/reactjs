@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { scopedReset } from '../Commons/scopedReset';
+import { scopedReset } from '@PlayerSkin/Commons/scopedReset';
 
-export { StyledOverlayPoster, StyledPoster } from '../Commons/SharedStyles';
+export { StyledOverlayPoster, StyledPoster } from '@PlayerSkin/Commons/SharedStyles';
 
 export const StyledPlayerSkin = styled.div`
   ${scopedReset}

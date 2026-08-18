@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledSpriteOverlay, StyledSpriteFrame } from './SpritePreview.styled';
+import { StyledSpriteOverlay, StyledSpriteFrame } from '@PlayerSkin/Commons/SpritePreview/SpritePreview.styled';
 import { parseSpriteVTT as parseVTT, computeSpriteFrame } from '@playerstack/core';
 
 /**

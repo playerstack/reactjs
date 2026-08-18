@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import useCast from '../../src/hooks/useCast';
+import useCast from '@hooks/useCast';
 
 function TestComponent({ videoRef, disabled, onResult }) {
   const result = useCast({ videoRef, disabled });

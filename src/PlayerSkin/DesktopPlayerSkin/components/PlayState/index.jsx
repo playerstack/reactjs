@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledPlayButton } from './PlayState.styled';
-import PlayIcon from '../../../Commons/Icons/PlayIcon';
-import ReplayIcon from '../../../Commons/Icons/ReplayIcon';
-import SpinnerLoading from '../../../Commons/Icons/SpinnerLoading';
+import { StyledPlayButton } from '@PlayerSkin/DesktopPlayerSkin/components/PlayState/PlayState.styled';
+import PlayIcon from '@PlayerSkin/Commons/Icons/PlayIcon';
+import ReplayIcon from '@PlayerSkin/Commons/Icons/ReplayIcon';
+import SpinnerLoading from '@PlayerSkin/Commons/Icons/SpinnerLoading';
 
 const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kernelMsg, onClick }) => {
   if (hasResource === false || loading || kernelMsg) {

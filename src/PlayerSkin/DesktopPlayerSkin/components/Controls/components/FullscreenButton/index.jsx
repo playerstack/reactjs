@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
-import Tooltip from '../../../../../Commons/Tooltip';
-import FullscreenIcon from '../../../../../Commons/Icons/FullscreenIcon';
-import UnfullscreenIcon from '../../../../../Commons/Icons/UnfullscreenIcon';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import FullscreenIcon from '@PlayerSkin/Commons/Icons/FullscreenIcon';
+import UnfullscreenIcon from '@PlayerSkin/Commons/Icons/UnfullscreenIcon';
 import { buildIconProps } from '@playerstack/core';
-import { useAppSelector } from '../../../../../../context/index';
+import { useAppSelector } from '@context/index';
 
 const FullscreenButton = ({ fullscreen, requestFullscreen, exitFullscreen }) => {
   const { i18n } = useAppSelector();

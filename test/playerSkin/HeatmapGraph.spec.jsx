@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import HeatmapGraph from '../../src/PlayerSkin/Commons/HeatmapGraph';
+import HeatmapGraph from '@PlayerSkin/Commons/HeatmapGraph';
 
 // Mock React.useId to return stable id in tests
 let idCounter = 0;

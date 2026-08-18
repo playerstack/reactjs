@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import PlayerProxy from '../../src/core/PlayerProxy';
+import PlayerProxy from '@core/PlayerProxy';
 
 // Shared video element with text tracks — same reference across calls
 const mockVideoElement = document.createElement('video');

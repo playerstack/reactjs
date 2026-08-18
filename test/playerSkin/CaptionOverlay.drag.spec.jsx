@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import CaptionOverlay from '../../src/PlayerSkin/Commons/CaptionOverlay';
+import { Provider } from '@context/index';
+import CaptionOverlay from '@PlayerSkin/Commons/CaptionOverlay';
 import { DEFAULT_CAPTION_STYLE } from '@playerstack/core';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;

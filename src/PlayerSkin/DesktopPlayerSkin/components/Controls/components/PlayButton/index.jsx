@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
-import Tooltip from '../../../../../Commons/Tooltip';
-import PauseIcon from '../../../../../Commons/Icons/PauseIcon';
-import PlayIcon from '../../../../../Commons/Icons/PlayIcon';
-import ReplayIcon from '../../../../../Commons/Icons/ReplayIcon';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import PauseIcon from '@PlayerSkin/Commons/Icons/PauseIcon';
+import PlayIcon from '@PlayerSkin/Commons/Icons/PlayIcon';
+import ReplayIcon from '@PlayerSkin/Commons/Icons/ReplayIcon';
 import { buildIconProps } from '@playerstack/core';
-import { useAppSelector } from '../../../../../../context/index';
+import { useAppSelector } from '@context/index';
 
 const PlayButton = ({ fullscreen, paused, ended, onPlayClick, onPauseClick }) => {
   const { i18n } = useAppSelector();

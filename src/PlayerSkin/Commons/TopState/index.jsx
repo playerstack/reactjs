@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledKernel } from './TopState.styled';
-import SpinnerLoading from '../Icons/SpinnerLoading';
+import { StyledKernel } from '@PlayerSkin/Commons/TopState/TopState.styled';
+import SpinnerLoading from '@PlayerSkin/Commons/Icons/SpinnerLoading';
 
 /**
  * TopState renders top-level player state: kernel/error messages and,

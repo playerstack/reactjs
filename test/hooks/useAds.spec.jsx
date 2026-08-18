@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import { useAds } from '@playerstack/core/hooks';
-import { webAdsPlatform } from '../../src/utils/adsPlatform';
+import { webAdsPlatform } from '@utils/adsPlatform';
 
 // Helper to render hook
 function TestComponent({ ads, currentTime, duration, paused = false, ended, onPauseClick, onResult }) {

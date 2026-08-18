@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Provider, Context } from '../../src/context/index';
+import { Provider, Context } from '@context/index';
 import { en, es } from '@playerstack/core';
 
 const TestConsumer = () => {
