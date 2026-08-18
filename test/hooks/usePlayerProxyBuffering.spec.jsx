@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import usePlayerProxy from '../../src/MediaPlayer/hooks/usePlayerProxy';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 // Mock network speed measurement to resolve immediately
 jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'),
@@ -10,7 +10,7 @@ jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core
 }));
 
 const Wrapper = ({ children }) => (
-  <AppContextProvider language="en">{children}</AppContextProvider>
+  <Provider language="en">{children}</Provider>
 );
 
 describe('usePlayerProxy — buffering state', () => {

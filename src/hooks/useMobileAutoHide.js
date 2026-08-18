@@ -1,84 +1,60 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import useAppDispatch from './context/useAppDispatch';
-
-const HIDE_DELAY = 3000;
+import { useCallback, useEffect, useRef } from 'react';
+import { useMobileAutoHide as useMobileAutoHideCore } from '@playerstack/core/hooks';
+import { useAppDispatch, useAppSelector } from '../context/index';
 
 /**
- * Hook for mobile controls visibility with tap-to-toggle behavior.
- * Controls auto-hide after HIDE_DELAY when playing.
- * Tapping toggles visibility.
- * Controls stay visible when paused, ended, loading or waiting.
+ * Thin wrapper over core's useMobileAutoHide.
+ * Reads context values (timeSliding, volumeSliding, menuVisible) and receives
+ * player props to compute `shouldStayVisible`. Dispatches hiding state changes
+ * to AppContext so CaptionOverlay and other consumers can react.
+ *
+ * Guards `hideControls` so it's a no-op when shouldStayVisible is true,
+ * preserving the original behavior expected by MobilePlayerSkin consumers.
  */
 export default function useMobileAutoHide({ hasResource, loading, prevented, paused, ended, waiting, seeking }) {
-  const [controlsVisible, setControlsVisible] = useState(true);
-  const timerRef = useRef(null);
   const dispatch = useAppDispatch();
+  const { timeSliding, volumeSliding, menuVisible } = useAppSelector();
 
-  const shouldStayVisible = !hasResource || loading || prevented || paused || ended || waiting || seeking;
+  const shouldStayVisible =
+    !hasResource ||
+    loading ||
+    prevented ||
+    paused ||
+    ended ||
+    waiting ||
+    seeking ||
+    timeSliding ||
+    volumeSliding ||
+    menuVisible;
 
-  // Sync hiding state to AppContext so CaptionOverlay can react
+  const shouldStayVisibleRef = useRef(shouldStayVisible);
+  shouldStayVisibleRef.current = shouldStayVisible;
+
+  const onHidingChange = (hiding) => {
+    dispatch({ type: 'hiding', payload: hiding });
+  };
+
+  const {
+    controlsVisible,
+    toggleControls,
+    showControls,
+    hideControls: coreHideControls,
+  } = useMobileAutoHideCore({
+    shouldStayVisible,
+    onHidingChange,
+  });
+
+  // Guard hideControls: no-op when shouldStayVisible (matches original behavior)
+  const hideControls = useCallback(() => {
+    if (!shouldStayVisibleRef.current) {
+      coreHideControls();
+    }
+  }, [coreHideControls]);
+
+  // Sync hiding state on controlsVisible changes (covers initial state)
   useEffect(() => {
     dispatch({ type: 'hiding', payload: !controlsVisible });
   }, [controlsVisible, dispatch]);
-
-  const startHideTimer = useCallback(() => {
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      setControlsVisible(false);
-    }, HIDE_DELAY);
-  }, []);
-
-  const stopHideTimer = useCallback(() => {
-    clearTimeout(timerRef.current);
-  }, []);
-
-  const toggleControls = useCallback(() => {
-    setControlsVisible((prev) => {
-      const next = !prev;
-      if (next && !shouldStayVisible) {
-        startHideTimer();
-      }
-      return next;
-    });
-  }, [shouldStayVisible, startHideTimer]);
-
-  const showControls = useCallback(() => {
-    setControlsVisible(true);
-    if (!shouldStayVisible) {
-      startHideTimer();
-    }
-  }, [shouldStayVisible, startHideTimer]);
-
-  const hideControls = useCallback(() => {
-    if (!shouldStayVisible) {
-      setControlsVisible(false);
-      stopHideTimer();
-    }
-  }, [shouldStayVisible, stopHideTimer]);
-
-  // Keep controls visible when paused/ended/loading
-  useEffect(() => {
-    if (shouldStayVisible) {
-      setControlsVisible(true);
-      stopHideTimer();
-    } else if (controlsVisible) {
-      startHideTimer();
-    }
-  }, [shouldStayVisible, controlsVisible, startHideTimer, stopHideTimer]);
-
-  // Auto-hide on seeking end when playing
-  useEffect(() => {
-    if (!seeking && !paused && !ended && controlsVisible) {
-      startHideTimer();
-    }
-  }, [seeking, paused, ended, controlsVisible, startHideTimer]);
-
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      clearTimeout(timerRef.current);
-    };
-  }, []);
 
   return { controlsVisible, toggleControls, showControls, hideControls };
 }

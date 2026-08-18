@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CAPTION_STYLE_OPTIONS, DEFAULT_CAPTION_STYLE } from '@playerstack/core';
-import useAppSelector from '../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../context/index';
 import {
   StyledOptionsContainer,
   StyledOptionsHeader,

@@ -1,8 +1,22 @@
 import React from 'react';
 
 import { indexBy } from '@playerstack/core';
-import useDeepCompareMemoize from '../../hooks/useDeepCompareMemoize';
+import { useDeepCompareMemoize } from '@playerstack/core/hooks';
 import { getRecommendedVideoQuality, measureNetworkSpeed as measureNetworkSpeedGeneratedFile } from '@playerstack/core';
+
+/**
+ * Video-specific player proxy hook that layers quality-switch logic on top of
+ * the same stable-proxy-via-refs pattern used by `usePlayerCallbackProxy` from
+ * `@playerstack/core/hooks`.
+ *
+ * This hook is intentionally kept separate because it adds:
+ * - Multi-source quality switching (network speed measurement, auto-resolution)
+ * - PIP enable/disable callbacks
+ * - PlaybackQualityChange callback
+ * - fullHDQualityBreak validation
+ *
+ * The core hook handles the base proxy pattern for simpler cases (audio-only).
+ */
 
 const usePlayerProxy = ({
   onBuffer,

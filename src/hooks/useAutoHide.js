@@ -1,17 +1,12 @@
 import React from 'react';
+import { useAutoHide as useAutoHideCore } from '@playerstack/core/hooks';
 
-import useAppDispatch from './context/useAppDispatch';
-import useAppSelector from './context/useAppSelector';
-
-const timeToHide = 3 * 1000;
+import { useAppDispatch, useAppSelector } from '../context/index';
 
 const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, seeking, kernelMsg }) => {
-  const { controlsHovering, timeSliding, menuVisible, subMenuVisible } = useAppSelector();
+  const { controlsHovering, timeSliding, volumeSliding, menuVisible, subMenuVisible } = useAppSelector();
   const dispatch = useAppDispatch();
 
-  const timerControls = React.useRef(undefined);
-
-  // Consolidate all "should stay visible" conditions into a single derived value
   const shouldStayVisible =
     hasResource === false ||
     loading ||
@@ -21,84 +16,25 @@ const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, 
     waiting ||
     seeking ||
     timeSliding ||
+    volumeSliding ||
     menuVisible ||
     subMenuVisible ||
     controlsHovering ||
     kernelMsg;
 
-  // Keep in ref so callbacks don't depend on the value identity
-  const shouldStayVisibleRef = React.useRef(shouldStayVisible);
-  shouldStayVisibleRef.current = shouldStayVisible;
+  const onHidingChange = React.useCallback(
+    (hiding) => {
+      dispatch({ type: 'hiding', payload: hiding });
+    },
+    [dispatch],
+  );
 
-  // shouldStayVisible WITHOUT controlsHovering — for use in hideControls
-  const shouldStayVisibleWithoutHover =
-    hasResource === false ||
-    loading ||
-    prevented ||
-    paused ||
-    ended ||
-    waiting ||
-    seeking ||
-    timeSliding ||
-    menuVisible ||
-    subMenuVisible ||
-    kernelMsg;
+  const { showControls, hideControls } = useAutoHideCore({
+    shouldStayVisible: !!shouldStayVisible,
+    onHidingChange,
+  });
 
-  const shouldStayVisibleWithoutHoverRef = React.useRef(shouldStayVisibleWithoutHover);
-  shouldStayVisibleWithoutHoverRef.current = shouldStayVisibleWithoutHover;
-
-  const showControls = React.useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.clearTimeout(timerControls.current);
-    }
-    dispatch({ type: 'hiding', payload: false });
-
-    if (shouldStayVisibleRef.current) {
-      return;
-    }
-
-    timerControls.current = window.setTimeout(() => {
-      dispatch({ type: 'hiding', payload: true });
-    }, timeToHide);
-  }, [dispatch]);
-
-  const hideControls = React.useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.clearTimeout(timerControls.current);
-    }
-    // Reset controlsHovering — mouse left player container entirely
-    dispatch({ type: 'controlsHovering', payload: false });
-
-    // Respect all stay-visible conditions EXCEPT controlsHovering
-    if (shouldStayVisibleWithoutHoverRef.current) {
-      dispatch({ type: 'hiding', payload: false });
-      return;
-    }
-    dispatch({ type: 'hiding', payload: true });
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined' && (paused || ended)) {
-      window.clearTimeout(timerControls.current);
-      dispatch({ type: 'hiding', payload: false });
-    } else if (!paused && !ended) {
-      showControls();
-    }
-  }, [paused, ended, showControls, dispatch]);
-
-  // Cleanup timer on unmount to prevent firing after component is gone
-  React.useEffect(() => {
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.clearTimeout(timerControls.current);
-      }
-    };
-  }, []);
-
-  return {
-    showControls,
-    hideControls,
-  };
+  return { showControls, hideControls };
 };
 
 export default useAutoHide;

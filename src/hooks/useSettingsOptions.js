@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 
-import useAppSelector from './context/useAppSelector';
-import useAppDispatch from './context/useAppDispatch';
-import { initialSettings } from './hooks.constants';
+import { useAppSelector, useAppDispatch } from '../context/index';
+import { settingsInitialState as initialSettings } from '@playerstack/core';
 import { buildSettingsLabel } from '@playerstack/core';
 import { buildSettingsOptions as settingsOverlayFn } from '@playerstack/core';
 import { buildIconProps } from '@playerstack/core';

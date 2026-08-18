@@ -6,7 +6,7 @@ import Tooltip from '../../../../../Commons/Tooltip';
 import FullscreenIcon from '../../../../../Commons/Icons/FullscreenIcon';
 import UnfullscreenIcon from '../../../../../Commons/Icons/UnfullscreenIcon';
 import { buildIconProps } from '@playerstack/core';
-import useAppSelector from '../../../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../../../context/index';
 
 const FullscreenButton = ({ fullscreen, requestFullscreen, exitFullscreen }) => {
   const { i18n } = useAppSelector();

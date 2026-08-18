@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import PlayerSkin from './PlayerSkin';
-import { AppContextProvider } from '../context/AppContextProvider';
+import { Provider } from '../context/index';
 import { en, es } from '@playerstack/core';
 import usePlayerSkinWrapper from '../hooks/usePlayerSkinWrapper';
 
@@ -55,7 +55,7 @@ const PlayerSkinWrapper = React.forwardRef(
     });
 
     return (
-      <AppContextProvider language={language}>
+      <Provider language={language}>
         <PlayerSkin
           ref={playerSkinRef}
           videoRef={videoRef}
@@ -77,7 +77,7 @@ const PlayerSkinWrapper = React.forwardRef(
           {...props}
           {...memorizedProps}
         />
-      </AppContextProvider>
+      </Provider>
     );
   },
 );

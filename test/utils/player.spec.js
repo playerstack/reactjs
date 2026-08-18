@@ -1,5 +1,5 @@
 import { hasAudio, supportsWebKitPresentationMode } from '@playerstack/core';
-import { lazy } from '../../src/utils/player';
+import { lazy } from '@playerstack/core/hooks';
 import { getGlobal, enableStubOn } from '@playerstack/core';
 
 describe('player utils', () => {

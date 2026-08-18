@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { defaultMediaConfig, DEFAULT_PROGRESS_INTERVAL } from '@playerstack/core';
 
 const { string, bool, number, array, oneOfType, shape, object, func } = PropTypes;
 
@@ -58,7 +59,7 @@ export const defaultProps = {
   playbackRate: 1,
   width: '640px',
   height: '360px',
-  progressInterval: 1000,
+  progressInterval: DEFAULT_PROGRESS_INTERVAL,
   playsinline: false,
   pip: false,
   stopOnUnmount: true,
@@ -66,14 +67,7 @@ export const defaultProps = {
     attributes: {},
     tracks: [],
     forceVideo: false,
-    forceHLS: false,
-    forceDASH: false,
-    forceFLV: false,
-    hlsOptions: {},
-    hlsVersion: '1.5.7',
-    dashVersion: '4.7.4',
-    flvVersion: '1.6.2',
-    forceDisableHls: false,
+    ...defaultMediaConfig,
   },
   onReady: noop,
   onStart: noop,

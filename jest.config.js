@@ -1,17 +1,62 @@
+const path = require('path');
+const fs = require('fs');
+
+// In dev workspace, core source lives at ../core/src (symlinked via postinstall).
+// In CI, core is installed from npm and lives at node_modules/@playerstack/core/dist/cjs.
+const localCoreSrc = path.resolve(__dirname, '../core/src');
+const hasLocalCore = fs.existsSync(localCoreSrc);
+
+function corePath(subpath) {
+  if (hasLocalCore) {
+    return path.join(localCoreSrc, subpath + '.ts');
+  }
+  return path.join(__dirname, 'node_modules/@playerstack/core/dist/cjs', subpath + '.js');
+}
+
 module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   transform: {
-    '^.+\\.(js|jsx)$': 'esbuild-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': 'esbuild-jest',
   },
   clearMocks: true,
   collectCoverage: false,
   coverageDirectory: 'coverage',
-  moduleFileExtensions: ['js', 'jsx'],
+  moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   testEnvironment: 'jest-environment-jsdom',
-  setupFiles: ['<rootDir>/jest.setup.js'], // Agrega este archivo
+  setupFiles: ['<rootDir>/jest.setup.js'],
   setupFilesAfterEnv: ['@testing-library/jest-dom', '<rootDir>/test/setupTests.js'],
   coverageReporters: ['lcov', 'json', 'clover', 'text'],
   coveragePathIgnorePatterns: ['node_modules', 'demo', 'examples', 'lib', 'scripts', 'types', 'dist', 'coverage'],
   reporters: ['default', ['jest-junit', { outputDirectory: 'coverage', outputName: 'report.xml' }]],
-  testMatch: ['<rootDir>/test/**/*.spec.(js|jsx)', '<rootDir>/test/**/*.spec.(js|jsx)'],
+  testMatch: ['<rootDir>/test/**/*.spec.(js|jsx)'],
+  moduleNameMapper: {
+    '^react$': '<rootDir>/node_modules/react',
+    '^react-dom(.*)$': '<rootDir>/node_modules/react-dom$1',
+    '^@playerstack/core$': corePath('index'),
+    '^@playerstack/core/hooks$': corePath('hooks/index'),
+    '^@playerstack/core/patterns$': corePath('patterns'),
+    '^@playerstack/core/chapters$': corePath('chapters'),
+    '^@playerstack/core/heatmap$': corePath('heatmap'),
+    '^@playerstack/core/i18n$': corePath('i18n/index'),
+    '^@playerstack/core/keyboard$': corePath('keyboard'),
+    '^@playerstack/core/live-dvr$': corePath('live-dvr'),
+    '^@playerstack/core/slider$': corePath('slider'),
+    '^@playerstack/core/player-state$': corePath('player-state'),
+    '^@playerstack/core/quality$': corePath('quality'),
+    '^@playerstack/core/reducer$': corePath('reducer'),
+    '^@playerstack/core/ui$': corePath('ui'),
+    '^@playerstack/core/engine$': corePath('media-engine'),
+    '^@playerstack/core/adapters$': corePath('types/adapters.types'),
+    '^@playerstack/core/utils/format$': corePath('utils/format'),
+    '^@playerstack/core/utils/cookie$': corePath('utils/cookie'),
+    '^@playerstack/core/utils/device$': corePath('utils/device'),
+    '^@playerstack/core/utils/sdk$': corePath('utils/sdk'),
+    '^@playerstack/core/utils/media$': corePath('utils/media'),
+    '^@playerstack/core/utils/env$': corePath('utils/env'),
+    '^@playerstack/core/utils/captions$': corePath('utils/captions'),
+    '^@playerstack/core/utils/vtt-sprite$': corePath('utils/vtt-sprite'),
+    '^@playerstack/core/constants$': corePath('constants'),
+    '^@playerstack/core/icons/mobile$': corePath('icons/mobile/index'),
+    '^@playerstack/core/icons$': corePath('icons/index'),
+  },
 };

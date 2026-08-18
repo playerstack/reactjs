@@ -1,9 +1,9 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import useVolumeButton from '../../src/hooks/useVolumeButton';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('useVolumeButton', () => {
   const defaults = {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import usePlayerSkinWrapped from '../../src/hooks/usePlayerSkinWrapped';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('usePlayerSkinWrapped', () => {
   const contextMenuRef = { current: { offsetWidth: 100, offsetHeight: 50 } };

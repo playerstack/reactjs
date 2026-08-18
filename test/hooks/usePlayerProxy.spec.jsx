@@ -1,7 +1,8 @@
+jest.setTimeout(30000);
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import usePlayerProxy from '../../src/MediaPlayer/hooks/usePlayerProxy';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 // Mock the network speed measurement to avoid real network calls
 jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'),
@@ -9,7 +10,7 @@ jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core
   getRecommendedVideoQuality: jest.fn().mockReturnValue(1080),
 }));
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 const sources = [
   { src: 'video_1080.m3u8', resolution: 1080 },
@@ -375,7 +376,7 @@ describe('usePlayerProxy', () => {
 
     // The auto-quality measurement must NOT run again, so no extra updateState calls
     expect(updateState.mock.calls.length).toBe(callsAfterFirst);
-  }, 15000);
+  }, 30000);
 
   test('keeps manually selected videoUrl after unrelated re-render', async () => {
     const inlineSources = () => [

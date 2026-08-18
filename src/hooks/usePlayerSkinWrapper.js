@@ -1,9 +1,10 @@
 import React from 'react';
 
-import useVolume from './useVolume';
+import { useVolume } from '@playerstack/core/hooks';
+import { createWebVolumeAdapter } from '../utils/volumeAdapter';
 import useFullscreen from './useFullscreen';
 import { buildSettingsLabel } from '@playerstack/core';
-import useAppSelector from './context/useAppSelector';
+import { useAppSelector } from '../context/index';
 import { eventsKeyCodes, keyMappings } from '@playerstack/core';
 import { reduceSeekState } from '@playerstack/core';
 
@@ -56,10 +57,8 @@ const usePlayerSkinWrapper = ({
   }, [sources, fullHDQualityBreak, i18n]);
 
   const { onMutedClick, changeVolume, updateVolumeWithCallback } = useVolume({
-    prevented,
+    adapter: React.useMemo(() => createWebVolumeAdapter(videoRef), []),
     muted,
-    videoRef,
-    src: url,
     updateState: ({ muted, volume }) =>
       updateState((prev) => ({
         ...prev,

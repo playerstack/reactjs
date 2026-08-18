@@ -5,7 +5,7 @@ import { StyledSliderContainer } from './Volume.styled';
 import StyledGeneralButton from '../../../Commons/Buttons/StyledGeneralButton';
 import Tooltip from '../../../Commons/Tooltip';
 import VolumeSlider from '../Controls/components/VolumeSlider';
-import useAppSelector from '../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../context/index';
 import useVolumeButton from '../../../../hooks/useVolumeButton';
 import { sliderWidth as sliderWith } from '@playerstack/core';
 import { StyledVolumePercentTooltip } from './VolumePercentTooltip.styled';

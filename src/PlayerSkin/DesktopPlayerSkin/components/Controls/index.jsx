@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledControls } from './Controls.styled';
-import useAppDispatch from '../../../../hooks/context/useAppDispatch';
-import useAppSelector from '../../../../hooks/context/useAppSelector';
+import { useAppDispatch, useAppSelector } from '../../../../context/index';
 
 const Controls = ({ children }) => {
   const state = useAppSelector();

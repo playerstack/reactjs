@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import useDeepCompareMemoize from '../../src/hooks/useDeepCompareMemoize';
+import { useDeepCompareMemoize } from '@playerstack/core/hooks';
 
 describe('useDeepCompareMemoize', () => {
   test('returns the same reference on first render', () => {

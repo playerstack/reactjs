@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('StyledGeneralButton', () => {
   test('renders a button element', () => {

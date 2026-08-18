@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useAppDispatch from './context/useAppDispatch';
+import { useAppDispatch } from '../context/index';
 import { getTrackTranslateX } from '@playerstack/core';
 import { getValue } from '../PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
 

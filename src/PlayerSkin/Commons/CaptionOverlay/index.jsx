@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getActiveCues, hexToRgba, getEdgeStyleCSS } from '@playerstack/core';
 import { StyledCaptionContainer, StyledCaptionText, StyledCaptionWindow } from './CaptionOverlay.styled';
-import useAppSelector from '../../../hooks/context/useAppSelector';
-import useAppDispatch from '../../../hooks/context/useAppDispatch';
+import { useAppSelector, useAppDispatch } from '../../../context/index';
 
 // Max Y when controls visible (% from top). Give same padding as hidden state above timeline.
 const MAX_Y_CONTROLS_VISIBLE = 74;

@@ -15,10 +15,9 @@ import TimeTooltip from './components/TimeTooltip';
 import ChapterSegments from './components/ChapterSegments';
 import HeatmapGraph from '../../../Commons/HeatmapGraph';
 import useTimeSlider from '../../../../hooks/useTimeSlider';
-import useChapters from '../../../../hooks/useChapters';
-import useHeatmap from '../../../../hooks/useHeatmap';
+import { useChapters, useHeatmap } from '@playerstack/core/hooks';
 import { formatTime } from '@playerstack/core';
-import useAppSelector from '../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../context/index';
 
 const TimeSlider = ({
   spriteVTTFile,

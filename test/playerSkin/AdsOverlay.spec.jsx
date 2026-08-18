@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import AdsOverlay from '../../src/PlayerSkin/Commons/AdsOverlay';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
-const Wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 const baseProps = {
   ads: {

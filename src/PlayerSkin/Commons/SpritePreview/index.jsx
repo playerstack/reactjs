@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledSpriteOverlay, StyledSpriteFrame } from './SpritePreview.styled';
-import { parseSpriteVTT as parseVTT } from '@playerstack/core';
+import { parseSpriteVTT as parseVTT, computeSpriteFrame } from '@playerstack/core';
 
 /**
  * Full-player-area sprite preview.
@@ -68,38 +68,26 @@ const SpritePreview = ({ spriteVTTFile, duration, seekTime, visible }) => {
     const containerH = container.offsetHeight;
     if (!containerW || !containerH) return null;
 
-    for (const item of vttArray) {
-      if (seekTime >= item.from && seekTime <= item.to) {
-        const frameW = Number(item.w);
-        const frameH = Number(item.h);
-        const frameX = Number(item.x);
-        const frameY = Number(item.y);
-        const sheet = sheetSizes[item.file];
+    // Convert VTT parsed cues (string coords) to numeric SpriteCue format
+    const numericCues = vttArray.map((item) => ({
+      from: item.from,
+      to: item.to,
+      x: Number(item.x),
+      y: Number(item.y),
+      w: Number(item.w),
+      h: Number(item.h),
+      file: item.file,
+    }));
 
-        if (!frameW || !frameH || !sheet) return null;
+    const frame = computeSpriteFrame(numericCues, seekTime, { width: containerW, height: containerH }, sheetSizes);
 
-        const scaleX = containerW / frameW;
-        const scaleY = containerH / frameH;
-        const scale = Math.max(scaleX, scaleY);
+    if (!frame) return null;
 
-        const bgW = sheet.w * scale;
-        const bgH = sheet.h * scale;
-        const bgPosX = -(frameX * scale);
-        const bgPosY = -(frameY * scale);
-
-        const scaledFrameW = frameW * scale;
-        const scaledFrameH = frameH * scale;
-        const offsetX = (containerW - scaledFrameW) / 2;
-        const offsetY = (containerH - scaledFrameH) / 2;
-
-        return {
-          backgroundImage: `url(${item.file})`,
-          backgroundSize: `${bgW}px ${bgH}px`,
-          backgroundPosition: `${bgPosX + offsetX}px ${bgPosY + offsetY}px`,
-        };
-      }
-    }
-    return null;
+    return {
+      backgroundImage: `url(${frame.file})`,
+      backgroundSize: `${frame.bgW}px ${frame.bgH}px`,
+      backgroundPosition: `${frame.bgPosX + frame.offsetX}px ${frame.bgPosY + frame.offsetY}px`,
+    };
   }, [visible, vttArray, duration, seekTime, sheetSizes]);
 
   if (!spriteVTTFile) return null;

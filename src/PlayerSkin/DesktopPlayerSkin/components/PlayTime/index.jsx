@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { StyledControlText, StyledLiveDot, StyledLiveBadge, StyledChapterIndicator } from './PlayTime.styled';
 import { formatTime } from '@playerstack/core';
-import useAppSelector from '../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../context/index';
 
 const PlayTime = ({
   live,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 /**
  * Comprehensive coverage test file targeting uncovered functions
@@ -10,24 +10,28 @@ import { AppContextProvider } from '../../src/context/AppContextProvider';
 
 // ─── 1. StyledGeneralButton – CSS interpolation functions ─────────────────────
 
-jest.mock('../../src/hooks/context/useAppSelector', () => {
-  return jest.fn(() => ({
-    playerRef: { current: null },
-    i18n: {},
-    hiding: false,
-    contextMenuVisible: false,
-    controlsHovering: false,
-    timeSliding: false,
-    volumeSliding: false,
-    menuVisible: false,
-    subMenuVisible: false,
-  }));
+jest.mock('../../src/context/index', () => {
+  const actual = jest.requireActual('../../src/context/index');
+  return {
+    ...actual,
+    useAppSelector: jest.fn(() => ({
+      playerRef: { current: null },
+      i18n: {},
+      hiding: false,
+      contextMenuVisible: false,
+      controlsHovering: false,
+      timeSliding: false,
+      volumeSliding: false,
+      menuVisible: false,
+      subMenuVisible: false,
+    })),
+  };
 });
 
 import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
 describe('StyledGeneralButton – CSS interpolation coverage', () => {
-  const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+  const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
   test('renders with isFullscreen=true and isText=false (triggers fullscreenButton css)', () => {
     const { container } = render(
@@ -377,7 +381,7 @@ describe('core/index – lazyPlayer', () => {
 
   test('lazy utility resolves import correctly', async () => {
     // Directly test the lazy utility function from utils/player
-    const { lazy } = require('../../src/utils/player');
+    const { lazy } = require('@playerstack/core/hooks');
     const LazyComp = lazy(() => Promise.resolve({ default: () => <div>Loaded</div> }));
     expect(LazyComp).toBeDefined();
     expect(LazyComp.$$typeof).toBeDefined();
@@ -387,7 +391,7 @@ describe('core/index – lazyPlayer', () => {
 // ─── 6. usePlayerSkinWrapper – uncovered memorizedProps callbacks & key handlers
 
 describe('usePlayerSkinWrapper – additional callback coverage', () => {
-  const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+  const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
   const makePlayer = () => ({
     seekTo: jest.fn(),
@@ -532,101 +536,6 @@ describe('usePlayerSkinWrapper – additional callback coverage', () => {
       };
       expect(() => act(() => result.current.handleKeyDown(event))).not.toThrow();
     });
-  });
-});
-
-// ─── 7. useVolume – setTimeout callback in onMutedClick ──────────────────────
-
-describe('useVolume – setTimeout callback coverage', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  test('setTimeout callback resets ignoreVolumeChangeRef after onMutedClick (muting)', () => {
-    const useVolume = require('../../src/hooks/useVolume').default;
-    const videoElement = document.createElement('video');
-    videoElement.volume = 0.8;
-    videoElement.muted = false;
-    const videoRef = { current: videoElement };
-    const updateState = jest.fn();
-
-    const { result } = renderHook(() =>
-      useVolume({
-        prevented: false,
-        muted: false,
-        videoRef,
-        src: 'test.mp4',
-        updateState,
-      }),
-    );
-
-    // Call onMutedClick to trigger the setTimeout
-    act(() => result.current.onMutedClick());
-
-    // At this point, ignoreVolumeChangeRef should be true
-    // The volumechange event should be ignored
-    const volumeEvent = new Event('volumechange');
-    Object.defineProperty(volumeEvent, 'target', { value: videoElement });
-
-    // Clear the updateState calls from onMutedClick
-    updateState.mockClear();
-
-    // Dispatch volumechange - should be ignored because ignoreVolumeChangeRef is true
-    act(() => {
-      videoElement.dispatchEvent(volumeEvent);
-    });
-    expect(updateState).not.toHaveBeenCalled();
-
-    // Advance timers to trigger the setTimeout callback
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    // Now dispatch volumechange again - should be processed
-    act(() => {
-      videoElement.dispatchEvent(new Event('volumechange'));
-    });
-    // After the timer fires, ignoreVolumeChangeRef is false, so the listener processes the event
-    expect(updateState).toHaveBeenCalled();
-  });
-
-  test('setTimeout callback resets ignoreVolumeChangeRef after onMutedClick (unmuting)', () => {
-    const useVolume = require('../../src/hooks/useVolume').default;
-    const videoElement = document.createElement('video');
-    videoElement.volume = 0.8;
-    videoElement.muted = true;
-    const videoRef = { current: videoElement };
-    const updateState = jest.fn();
-
-    const { result } = renderHook(() =>
-      useVolume({
-        prevented: false,
-        muted: true,
-        videoRef,
-        src: 'test.mp4',
-        updateState,
-      }),
-    );
-
-    // Call onMutedClick to unmute (triggers setTimeout)
-    act(() => result.current.onMutedClick());
-
-    updateState.mockClear();
-
-    // Advance timers to execute the setTimeout callback
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    // After timer fires, volumechange events should be processed again
-    act(() => {
-      videoElement.dispatchEvent(new Event('volumechange'));
-    });
-    expect(updateState).toHaveBeenCalled();
   });
 });
 

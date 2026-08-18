@@ -1,4 +1,4 @@
-import { omit } from '../../src/utils';
+import { omit } from '@playerstack/core';
 
 const object = {
   a: 1,
