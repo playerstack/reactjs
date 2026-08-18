@@ -11,8 +11,7 @@ import {
   StyledOptionsContent,
 } from '@PlayerSkin/Commons/CaptionOptions/CaptionOptions.styled';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
-import ArrowLeftIcon from '@PlayerSkin/Commons/Icons/ArrowLeftIcon';
-import ArrowRightIcon from '@PlayerSkin/Commons/Icons/ArrowRightIcon';
+import { ArrowLeftIcon, ArrowRightIcon } from '@playerstack/core/icons';
 
 /**
  * Caption style options panel (YouTube-style).

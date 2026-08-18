@@ -5,9 +5,8 @@ import {
   StyledMobileTopBar,
   StyledMobileSettingsButton,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileTopBar/MobileTopBar.styled';
-import { SettingsGearIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
-import CaptionsIcon from '@PlayerSkin/Commons/Icons/CaptionsIcon';
-import CastIcon from '@PlayerSkin/Commons/Icons/CastIcon';
+import { MobileSettingsGearIcon as SettingsGearIcon } from '@playerstack/core/icons/mobile';
+import { CaptionsIcon, CastIcon } from '@playerstack/core/icons';
 
 const MobileTopBar = ({
   visible,

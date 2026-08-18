@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import SkipAdIcon from '@PlayerSkin/Commons/Icons/SkipAdIcon';
-import CastIcon from '@PlayerSkin/Commons/Icons/CastIcon';
+import { SkipAdIcon, CastIcon } from '@playerstack/core/icons';
 
 describe('SkipAdIcon', () => {
   test('renders SVG with default dimensions', () => {

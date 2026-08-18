@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
-import PreviousTrackIcon from '@PlayerSkin/Commons/Icons/PreviousTrackIcon';
-import NextTrackIcon from '@PlayerSkin/Commons/Icons/NextTrackIcon';
+import { PreviousTrackIcon, NextTrackIcon } from '@playerstack/core/icons';
 import { buildIconProps } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 

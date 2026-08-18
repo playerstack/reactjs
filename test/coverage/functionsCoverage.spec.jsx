@@ -318,7 +318,7 @@ describe('SkipOverlay.styled – CSS interpolation coverage', () => {
 
 // ─── 4. UnfullscreenIcon – render with props ─────────────────────────────────
 
-import UnfullscreenIcon from '@PlayerSkin/Commons/Icons/UnfullscreenIcon';
+import { UnfullscreenIcon } from '@playerstack/core/icons';
 
 describe('UnfullscreenIcon – function coverage', () => {
   test('renders with default width/height', () => {
@@ -341,16 +341,6 @@ describe('UnfullscreenIcon – function coverage', () => {
     const svg = container.querySelector('svg');
     expect(svg.getAttribute('width')).toBe('100%');
     expect(svg.getAttribute('height')).toBe('100%');
-  });
-
-  test('memo compareProps returns true for same props', () => {
-    const { compareProps } = require('../../src/PlayerSkin/Commons/Icons/Icons.constants');
-    expect(compareProps({ width: 36, height: 36 }, { width: 36, height: 36 })).toBe(true);
-  });
-
-  test('memo compareProps returns false for different props', () => {
-    const { compareProps } = require('../../src/PlayerSkin/Commons/Icons/Icons.constants');
-    expect(compareProps({ width: 36, height: 36 }, { width: 48, height: 48 })).toBe(false);
   });
 });
 

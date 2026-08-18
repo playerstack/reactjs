@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import MutedIcon from '@PlayerSkin/Commons/Icons/MutedIcon';
-import PlayIcon from '@PlayerSkin/Commons/Icons/PlayIcon';
+import { MutedIcon, PlayIcon } from '@playerstack/core/icons';
 
 export const StyledPeventedTip = styled.div`
   position: absolute;

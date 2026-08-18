@@ -12,8 +12,8 @@ jest.mock('../../src/PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOver
   ),
 }));
 
-jest.mock('../../src/PlayerSkin/MobilePlayerSkin/icons', () => ({
-  SkipChevronIcon: () => <svg data-testid="chevron" />,
+jest.mock('@playerstack/core/icons/mobile', () => ({
+  MobileSkipChevronIcon: () => <svg data-testid="chevron" />,
 }));
 
 describe('SkipOverlay', () => {

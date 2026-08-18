@@ -10,7 +10,10 @@ import {
   StyledMobileLiveDot,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileBottomBar.styled';
 import MobileProgressBar from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
-import { FullscreenIcon, ExitFullscreenIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
+import {
+  MobileFullscreenIcon as FullscreenIcon,
+  MobileExitFullscreenIcon as ExitFullscreenIcon,
+} from '@playerstack/core/icons/mobile';
 import { formatTime } from '@playerstack/core';
 
 const MobileBottomBar = ({
