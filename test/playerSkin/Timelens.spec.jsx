@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import Timelens from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens';
 
 // Mock fetch for VTT loading
@@ -19,7 +19,7 @@ global.fetch = jest.fn(() =>
   }),
 );
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('Timelens', () => {
   const sliderRef = { current: document.createElement('div') };

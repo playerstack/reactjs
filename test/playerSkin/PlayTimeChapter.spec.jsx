@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import PlayTime from '../../src/PlayerSkin/DesktopPlayerSkin/components/PlayTime';
 
-const wrap = (ui) => render(<AppContextProvider language="en">{ui}</AppContextProvider>);
+const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 
 describe('PlayTime — chapter title indicator', () => {
   const defaultProps = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import PlayerSkin from '../../src/PlayerSkin/PlayerSkin';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 // Mock isMobile from core
 jest.mock('@playerstack/core', () => {
@@ -13,7 +13,7 @@ jest.mock('@playerstack/core', () => {
 });
 
 const Wrapper = ({ children }) => (
-  <AppContextProvider language="en">{children}</AppContextProvider>
+  <Provider language="en">{children}</Provider>
 );
 
 const baseProps = {

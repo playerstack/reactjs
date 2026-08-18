@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import MobileProgressBar from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
 
-const wrap = (ui) => render(<AppContextProvider language="en">{ui}</AppContextProvider>);
+const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 
 describe('MobileProgressBar — chapters integration', () => {
   const chapters = [

@@ -1,9 +1,9 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import useSettingsOptions from '../../src/hooks/useSettingsOptions';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 const qualityOptions = [
   { label: '1080p', value: '1080', isFullHD: true },
@@ -133,7 +133,7 @@ describe('useSettingsOptions — auto quality', () => {
     fullscreen: false,
   };
 
-  const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+  const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
   beforeEach(() => jest.clearAllMocks());
 

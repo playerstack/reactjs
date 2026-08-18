@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import CaptionOptions from '../../src/PlayerSkin/Commons/CaptionOptions';
 import { DEFAULT_CAPTION_STYLE, CAPTION_STYLE_OPTIONS } from '@playerstack/core';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('CaptionOptions', () => {
   const baseProps = {

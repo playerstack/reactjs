@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
-import useHeatmap from '../../src/hooks/useHeatmap';
+import { useHeatmap } from '@playerstack/core/hooks';
 
 describe('useHeatmap', () => {
   const getHook = (props) => renderHook(() => useHeatmap(props));

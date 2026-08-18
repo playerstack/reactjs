@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import MobilePlayerSkin from '../../src/PlayerSkin/MobilePlayerSkin/index';
 
 // Mock hooks that have complex dependencies
@@ -11,10 +11,13 @@ jest.mock('../../src/hooks/useMobileAutoHide', () => () => ({
   hideControls: jest.fn(),
 }));
 
-jest.mock('../../src/hooks/useDoubleTapSkip', () => () => ({
-  skipState: { left: false, right: false, visible: false, seconds: 0 },
-  handleTapLeft: jest.fn(),
-  handleTapRight: jest.fn(),
+jest.mock('@playerstack/core/hooks', () => ({
+  ...jest.requireActual('@playerstack/core/hooks'),
+  useDoubleTapSkip: () => ({
+    skipState: { left: false, right: false, visible: false, seconds: 0 },
+    handleTapLeft: jest.fn(),
+    handleTapRight: jest.fn(),
+  }),
 }));
 
 jest.mock('../../src/hooks/usePlayerSkinWrapped', () => () => ({
@@ -70,7 +73,7 @@ const baseProps = {
   kernelMsg: null,
 };
 
-const wrap = (ui) => render(<AppContextProvider language="en">{ui}</AppContextProvider>);
+const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 
 // Helper to get the MobileTopBar settings button (first one rendered in the DOM)
 const getTopBarSettingsBtn = (container) => {

@@ -6,12 +6,11 @@ import {
   StyledContextMenuItem,
   StyledContextMenuLabel,
 } from './ContextMenu.styled';
-import { mergeRefs } from '../../../utils';
+import { mergeRefs } from '@playerstack/core/hooks';
 import CheckedIcon from '../Icons/CheckedIcon';
 import InLoopIcon from '../Icons/InLoopIcon';
 import PipIcon from '../Icons/PipIcon';
-import useAppDispatch from '../../../hooks/context/useAppDispatch';
-import useAppSelector from '../../../hooks/context/useAppSelector';
+import { useAppDispatch, useAppSelector } from '../../../context/index';
 
 const ICON_MAP = {
   loop: InLoopIcon,

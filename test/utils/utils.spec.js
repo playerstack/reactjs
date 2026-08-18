@@ -1,4 +1,5 @@
-import { omit, mergeRefs } from '../../src/utils';
+import { omit } from '@playerstack/core';
+import { mergeRefs } from '@playerstack/core/hooks';
 import { isMediaStream, isBlobUrl, formatTime, indexBy } from '@playerstack/core';
 
 describe('utils/index', () => {

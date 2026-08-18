@@ -1,11 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
-import { AppContext } from '../../src/context/AppContext';
+import { Provider, Context } from '../../src/context/index';
 import { en, es } from '@playerstack/core';
 
 const TestConsumer = () => {
-  const { state } = React.useContext(AppContext);
+  const { state } = React.useContext(Context);
   return (
     <div>
       <span data-testid="play-label">{state.i18n?.play}</span>
@@ -14,39 +13,39 @@ const TestConsumer = () => {
   );
 };
 
-describe('AppContextProvider', () => {
+describe('Provider', () => {
   test('provides English i18n by default', () => {
     render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <TestConsumer />
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(screen.getByTestId('play-label').textContent).toBe(en.play);
   });
 
   test('provides Spanish i18n when language is es', () => {
     render(
-      <AppContextProvider language="es">
+      <Provider language="es">
         <TestConsumer />
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(screen.getByTestId('play-label').textContent).toBe(es.play);
   });
 
-  test('provides initial hiding state as false', () => {
+  test('provides initial hiding state as true', () => {
     render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <TestConsumer />
-      </AppContextProvider>,
+      </Provider>,
     );
-    expect(screen.getByTestId('hiding').textContent).toBe('false');
+    expect(screen.getByTestId('hiding').textContent).toBe('true');
   });
 
   test('renders children', () => {
     render(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <div data-testid="child">child content</div>
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(screen.getByTestId('child')).toBeInTheDocument();
   });

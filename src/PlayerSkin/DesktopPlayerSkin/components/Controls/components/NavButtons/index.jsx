@@ -6,7 +6,7 @@ import Tooltip from '../../../../../Commons/Tooltip';
 import PreviousTrackIcon from '../../../../../Commons/Icons/PreviousTrackIcon';
 import NextTrackIcon from '../../../../../Commons/Icons/NextTrackIcon';
 import { buildIconProps } from '@playerstack/core';
-import useAppSelector from '../../../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../../../context/index';
 
 export const PreviousButton = React.memo(({ fullscreen, onPrevious, showNavButtons = false }) => {
   const { i18n } = useAppSelector();

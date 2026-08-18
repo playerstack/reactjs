@@ -27,16 +27,17 @@ import SpritePreview from '../Commons/SpritePreview';
 import SettingsButton from './components/Controls/components/SettingsButton';
 import CaptionsButton from './components/Controls/components/CaptionsButton';
 import usePlayerSkinWrapped from '../../hooks/usePlayerSkinWrapped';
-import useAppDispatch from '../../hooks/context/useAppDispatch';
-import useAppSelector from '../../hooks/context/useAppSelector';
+import { useAppDispatch, useAppSelector } from '../../context/index';
 import ContextMenu from './components/ContextMenu';
 import CaptionOverlay from '../Commons/CaptionOverlay';
 import LiveAdOverlay from '../Commons/LiveAdOverlay';
 import useCaptions from '../../hooks/useCaptions';
-import useChapters from '../../hooks/useChapters';
-import useLiveDVR from '../../hooks/useLiveDVR';
+import { useChapters } from '@playerstack/core/hooks';
+import { useLiveDVR } from '@playerstack/core/hooks';
+import { createWebDVRAdapter } from '../../utils/dvrAdapter';
 import useLiveAd from '../../hooks/useLiveAd';
-import useAds from '../../hooks/useAds';
+import { useAds } from '@playerstack/core/hooks';
+import { webAdsPlatform } from '../../utils/adsPlatform';
 import useCast from '../../hooks/useCast';
 import AdsOverlay from '../Commons/AdsOverlay';
 import { StyledAdTimeSliderWrapper } from '../Commons/AdsOverlay/AdsOverlay.styled';
@@ -137,6 +138,7 @@ const DesktopPlayerSkin = React.forwardRef(
       paused,
       ended,
       onPauseClick,
+      platform: webAdsPlatform,
     });
 
     const { contextMenuItems, contextMenuPosition, handleContextMenu } = usePlayerSkinWrapped({
@@ -166,15 +168,19 @@ const DesktopPlayerSkin = React.forwardRef(
     });
 
     // Live DVR system
+    const dvrAdapter = React.useMemo(() => (videoRef ? createWebDVRAdapter(videoRef) : null), [videoRef]);
+
     const {
-      hasDVR,
+      dvrState,
       isAtLiveEdge,
-      offsetDisplay,
-      sliderDuration,
-      sliderPosition,
-      seekToLiveEdge,
-      seekToSliderPosition,
-    } = useLiveDVR({ videoRef, live, currentTime });
+      liveOffset: offsetDisplay,
+      seekToLive: seekToLiveEdge,
+      seekToDVRPosition: seekToSliderPosition,
+    } = useLiveDVR({ adapter: dvrAdapter, liveDVR: live, playing: !paused });
+
+    const hasDVR = dvrState?.hasDVR ?? false;
+    const sliderDuration = dvrState?.sliderDuration ?? 0;
+    const sliderPosition = dvrState?.sliderPosition ?? 0;
 
     // Live DVR: track visual slider position during drag without seeking on every move
     const [liveDragPosition, setLiveDragPosition] = React.useState(null);

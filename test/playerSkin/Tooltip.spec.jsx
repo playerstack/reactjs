@@ -6,9 +6,9 @@ jest.mock('@playerstack/core', () => ({
 }));
 
 import Tooltip from '../../src/PlayerSkin/Commons/Tooltip';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
-const Wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 describe('Tooltip', () => {
   test('renders children', () => {

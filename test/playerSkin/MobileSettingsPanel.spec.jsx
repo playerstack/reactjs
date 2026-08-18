@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import MobileSettingsPanel from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel/index';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 const Wrapper = ({ children }) => (
-  <AppContextProvider language="en">{children}</AppContextProvider>
+  <Provider language="en">{children}</Provider>
 );
 
 const renderPanel = (props = {}) => {

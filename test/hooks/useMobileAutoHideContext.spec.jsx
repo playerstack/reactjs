@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import useMobileAutoHide from '../../src/hooks/useMobileAutoHide';
-import useAppSelector from '../../src/hooks/context/useAppSelector';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { useAppSelector } from '../../src/context/index';
+import { Provider } from '../../src/context/index';
 
 const Wrapper = ({ children }) => (
-  <AppContextProvider language="en">{children}</AppContextProvider>
+  <Provider language="en">{children}</Provider>
 );
 
 describe('useMobileAutoHide — context dispatch', () => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { StyledTimelensRail, StyledTimelensThumbnail } from './Timelens.styled';
 import { parseSpriteVTT as parseVTT } from '@playerstack/core';
 import { getOffset } from '../../utils';
-import useAppSelector from '../../../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../../../context/index';
 
 const Timelens = React.forwardRef(
   ({ spriteVTTFile, sliderRef, duration = 0, fullscreen, hasChapters = false }, ref) => {

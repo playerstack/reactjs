@@ -17,7 +17,7 @@ import SettingsIcon from '../../../../../Commons/Icons/SetttingsIcon';
 import CaptionOptions from '../../../../../Commons/CaptionOptions';
 import ArrowRightIcon from '../../../../../Commons/Icons/ArrowRightIcon';
 import { StyledDropdownOverlayScrolled } from './DropdownOverlay/DropdownOverlay.styled';
-import useAppSelector from '../../../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../../../context/index';
 import useSettingsOptions from '../../../../../../hooks/useSettingsOptions';
 
 const SettingsButton = ({

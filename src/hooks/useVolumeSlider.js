@@ -1,7 +1,6 @@
 import React from 'react';
 
-import useAppSelector from './context/useAppSelector';
-import useAppDispatch from './context/useAppDispatch';
+import { useAppSelector, useAppDispatch } from '../context/index';
 import { sliderWidth as sliderWith } from '@playerstack/core';
 import { getVolume } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider/utils';
 

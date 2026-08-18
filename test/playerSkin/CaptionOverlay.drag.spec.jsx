@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 import CaptionOverlay from '../../src/PlayerSkin/Commons/CaptionOverlay';
 import { DEFAULT_CAPTION_STYLE } from '@playerstack/core';
 
-const wrapper = ({ children }) => <AppContextProvider language="en">{children}</AppContextProvider>;
+const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 
 const cues = [
   { startTime: 0, endTime: 10, text: 'Test caption' },
@@ -122,9 +122,9 @@ describe('CaptionOverlay — drag behavior', () => {
     expect(getByText('Test caption')).toBeTruthy();
 
     rerender(
-      <AppContextProvider language="en">
+      <Provider language="en">
         <CaptionOverlay {...baseProps} controlsVisible={false} />
-      </AppContextProvider>,
+      </Provider>,
     );
     expect(getByText('Test caption')).toBeTruthy();
   });

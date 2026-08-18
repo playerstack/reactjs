@@ -18,7 +18,7 @@ import {
   StyledMainPage,
 } from './MobileSettingsPanel.styled';
 import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon, CaptionsIcon } from '../../icons';
-import useAppSelector from '../../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../../context/index';
 
 const SPEED_OPTIONS = [
   { label: '2', value: 2 },

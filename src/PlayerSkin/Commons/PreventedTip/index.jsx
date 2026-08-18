@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledMutedIcon, StyledPeventedTip, StyledPeventedTipClicked, StyledPlayCircle } from './PreventedTip.styled';
-import useAppSelector from '../../../hooks/context/useAppSelector';
+import { useAppSelector } from '../../../context/index';
 
 const PreventedTip = ({ hasResource = false, prevented, paused, muted, currentTime, onClick }) => {
   const { i18n } = useAppSelector();

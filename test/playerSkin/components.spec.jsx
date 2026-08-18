@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AppContextProvider } from '../../src/context/AppContextProvider';
+import { Provider } from '../../src/context/index';
 
 // Components under test
 import PlayTime from '../../src/PlayerSkin/DesktopPlayerSkin/components/PlayTime';
@@ -9,7 +9,7 @@ import TopState from '../../src/PlayerSkin/Commons/TopState';
 import PreventedTip from '../../src/PlayerSkin/Commons/PreventedTip';
 import ContextMenu from '../../src/PlayerSkin/Commons/ContextMenu';
 
-const wrap = (ui) => render(<AppContextProvider language="en">{ui}</AppContextProvider>);
+const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 
 // ─── PlayTime ─────────────────────────────────────────────────────────────────
 describe('PlayTime', () => {
