@@ -1,8 +1,8 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useMobileAutoHide from '../../src/hooks/useMobileAutoHide';
-import { useAppSelector } from '../../src/context/index';
-import { Provider } from '../../src/context/index';
+import useMobileAutoHide from '@hooks/useMobileAutoHide';
+import { useAppSelector } from '@context/index';
+import { Provider } from '@context/index';
 
 const Wrapper = ({ children }) => (
   <Provider language="en">{children}</Provider>

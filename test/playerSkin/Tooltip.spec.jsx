@@ -5,8 +5,8 @@ jest.mock('@playerstack/core', () => ({
   ...jest.requireActual('@playerstack/core'),
 }));
 
-import Tooltip from '../../src/PlayerSkin/Commons/Tooltip';
-import { Provider } from '../../src/context/index';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import { Provider } from '@context/index';
 
 const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

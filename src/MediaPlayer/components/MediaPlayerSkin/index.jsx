@@ -1,12 +1,12 @@
 import React from 'react';
 import isEqual from 'react-fast-compare';
 
-import PlayerProxy from '../../../core/PlayerProxy';
-import PlayerSkin from '../../../PlayerSkin';
+import PlayerProxy from '@core/PlayerProxy';
+import PlayerSkin from '@PlayerSkin';
 import { playerStateInitial } from '@playerstack/core';
-import MediaPlayerWrapper from '../MediaPlayerWrapper';
-import usePlayerProxy from '../../hooks/usePlayerProxy';
-import { StyledPlayerContainer } from './MediaPlayerSkin.styled';
+import MediaPlayerWrapper from '@MediaPlayer/components/MediaPlayerWrapper';
+import usePlayerProxy from '@MediaPlayer/hooks/usePlayerProxy';
+import { StyledPlayerContainer } from '@MediaPlayer/components/MediaPlayerSkin/MediaPlayerSkin.styled';
 
 const MediaPlayerSkin = React.forwardRef((props, ref) => {
   const [playerStyles, setPlayerStyles] = React.useState({

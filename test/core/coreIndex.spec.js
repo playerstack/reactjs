@@ -1,4 +1,4 @@
-import corePlayer from '../../src/core/index';
+import corePlayer from '@core/index';
 
 describe('core/index - canEnablePIP', () => {
   const originalPiPEnabled = Object.getOwnPropertyDescriptor(document, 'pictureInPictureEnabled');

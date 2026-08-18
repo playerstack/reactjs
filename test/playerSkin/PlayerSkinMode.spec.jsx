@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import PlayerSkin from '../../src/PlayerSkin/PlayerSkin';
-import { Provider } from '../../src/context/index';
+import PlayerSkin from '@PlayerSkin/PlayerSkin';
+import { Provider } from '@context/index';
 
 // Mock isMobile from core
 jest.mock('@playerstack/core', () => {

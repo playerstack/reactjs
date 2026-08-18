@@ -3,4 +3,4 @@ export {
   StyledContextMenuItem,
   StyledContextMenuLabel,
   StyledContextMenuChecked,
-} from '../../../Commons/ContextMenu/ContextMenu.styled';
+} from '@PlayerSkin/Commons/ContextMenu/ContextMenu.styled';

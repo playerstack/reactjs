@@ -1,5 +1,5 @@
 import React from 'react';
-import { propTypes } from './Icons.constants';
+import { propTypes } from '@PlayerSkin/Commons/Icons/Icons.constants';
 
 const CaptionsIcon = ({ width = 36, height = 36, active = false }) => {
   if (active) {

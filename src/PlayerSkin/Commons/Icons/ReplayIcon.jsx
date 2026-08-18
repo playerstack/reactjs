@@ -1,5 +1,5 @@
 import React from 'react';
-import { compareProps, propTypes } from './Icons.constants';
+import { compareProps, propTypes } from '@PlayerSkin/Commons/Icons/Icons.constants';
 
 const ReplayIcon = ({ width = 36, height = 36 }) => {
   return (

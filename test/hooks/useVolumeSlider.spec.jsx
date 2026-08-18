@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useVolumeSlider from '../../src/hooks/useVolumeSlider';
-import { Provider } from '../../src/context/index';
+import useVolumeSlider from '@hooks/useVolumeSlider';
+import { Provider } from '@context/index';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

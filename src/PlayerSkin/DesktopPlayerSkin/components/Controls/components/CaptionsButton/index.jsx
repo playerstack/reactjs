@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
-import Tooltip from '../../../../../Commons/Tooltip';
-import CaptionsIcon from '../../../../../Commons/Icons/CaptionsIcon';
-import { useAppSelector } from '../../../../../../context/index';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import CaptionsIcon from '@PlayerSkin/Commons/Icons/CaptionsIcon';
+import { useAppSelector } from '@context/index';
 import { buildIconProps } from '@playerstack/core';
 
 /**

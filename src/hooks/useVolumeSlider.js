@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { useAppSelector, useAppDispatch } from '../context/index';
+import { useAppSelector, useAppDispatch } from '@context/index';
 import { sliderWidth as sliderWith } from '@playerstack/core';
-import { getVolume } from '../PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider/utils';
+import { getVolume } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider/utils';
 
 const useVolumeSlider = ({ fullscreen, value, onChange }) => {
   const state = useAppSelector();

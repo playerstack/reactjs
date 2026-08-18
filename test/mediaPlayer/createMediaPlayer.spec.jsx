@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { createMediaPlayer } from '../../src/MediaPlayer';
+import { createMediaPlayer } from '@MediaPlayer';
 
 // Mock MediaPlayerSkin to isolate createMediaPlayer logic
 jest.mock('../../src/MediaPlayer/components/MediaPlayerSkin', () => {

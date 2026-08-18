@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledMediaPlayerWrapper } from './MediaPlayerWrapper.styled';
+import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
 
 /**
  * MediaPlayerWrapper provides a styled container for the video player.

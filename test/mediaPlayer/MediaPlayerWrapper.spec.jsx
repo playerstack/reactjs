@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import MediaPlayerWrapper from '../../src/MediaPlayer/components/MediaPlayerWrapper';
+import MediaPlayerWrapper from '@MediaPlayer/components/MediaPlayerWrapper';
 
 describe('MediaPlayerWrapper', () => {
   it('renders children', () => {

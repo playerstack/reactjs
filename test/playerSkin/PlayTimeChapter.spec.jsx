@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
-import PlayTime from '../../src/PlayerSkin/DesktopPlayerSkin/components/PlayTime';
+import { Provider } from '@context/index';
+import PlayTime from '@PlayerSkin/DesktopPlayerSkin/components/PlayTime';
 
 const wrap = (ui) => render(<Provider language="en">{ui}</Provider>);
 

@@ -1,1 +1,1 @@
-export { StyledKernel } from '../../../Commons/TopState/TopState.styled';
+export { StyledKernel } from '@PlayerSkin/Commons/TopState/TopState.styled';

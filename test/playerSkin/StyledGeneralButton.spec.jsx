@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
+import { Provider } from '@context/index';
 
-import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

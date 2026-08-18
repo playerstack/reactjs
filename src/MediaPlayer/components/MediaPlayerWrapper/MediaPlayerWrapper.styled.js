@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { scopedResetStyles } from '../../../utils/resetStyles';
+import { scopedResetStyles } from '@utils/resetStyles';
 
 export const StyledMediaPlayerWrapper = styled.div`
   display: flex;

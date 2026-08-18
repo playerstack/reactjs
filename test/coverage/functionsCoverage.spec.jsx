@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react';
-import { Provider } from '../../src/context/index';
+import { Provider } from '@context/index';
 
 /**
  * Comprehensive coverage test file targeting uncovered functions
@@ -28,7 +28,7 @@ jest.mock('../../src/context/index', () => {
   };
 });
 
-import StyledGeneralButton from '../../src/PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
 describe('StyledGeneralButton – CSS interpolation coverage', () => {
   const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
@@ -156,7 +156,7 @@ describe('StyledGeneralButton – CSS interpolation coverage', () => {
 
 // ─── 2. MobileCenterControls – onClick handlers ──────────────────────────────
 
-import MobileCenterControls from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/index';
+import MobileCenterControls from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/index';
 
 describe('MobileCenterControls – onClick handlers (stopPropagation)', () => {
   const defaultProps = {
@@ -267,7 +267,7 @@ import {
   StyledSkipIconContainer,
   StyledSkipTapArea,
   StyledSkipText,
-} from '../../src/PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled';
+} from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled';
 
 describe('SkipOverlay.styled – CSS interpolation coverage', () => {
   test('StyledSkipOverlay with direction=forward and visible=true', () => {
@@ -318,7 +318,7 @@ describe('SkipOverlay.styled – CSS interpolation coverage', () => {
 
 // ─── 4. UnfullscreenIcon – render with props ─────────────────────────────────
 
-import UnfullscreenIcon from '../../src/PlayerSkin/Commons/Icons/UnfullscreenIcon';
+import UnfullscreenIcon from '@PlayerSkin/Commons/Icons/UnfullscreenIcon';
 
 describe('UnfullscreenIcon – function coverage', () => {
   test('renders with default width/height', () => {
@@ -541,7 +541,7 @@ describe('usePlayerSkinWrapper – additional callback coverage', () => {
 
 // ─── 8. MobileCenterControls.styled – CSS interpolation ──────────────────────
 
-import { StyledMobileCenterControls } from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/MobileCenterControls.styled';
+import { StyledMobileCenterControls } from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/MobileCenterControls.styled';
 
 describe('MobileCenterControls.styled – CSS interpolation coverage', () => {
   test('renders with visible=true (opacity 1, pointer-events auto)', () => {

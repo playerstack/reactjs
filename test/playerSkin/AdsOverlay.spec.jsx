@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import AdsOverlay from '../../src/PlayerSkin/Commons/AdsOverlay';
-import { Provider } from '../../src/context/index';
+import AdsOverlay from '@PlayerSkin/Commons/AdsOverlay';
+import { Provider } from '@context/index';
 
 const Wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

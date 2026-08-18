@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledMobileTopBar, StyledMobileSettingsButton } from './MobileTopBar.styled';
-import { SettingsGearIcon } from '../../icons';
-import CaptionsIcon from '../../../Commons/Icons/CaptionsIcon';
-import CastIcon from '../../../Commons/Icons/CastIcon';
+import { StyledMobileTopBar, StyledMobileSettingsButton } from '@PlayerSkin/MobilePlayerSkin/components/MobileTopBar/MobileTopBar.styled';
+import { SettingsGearIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
+import CaptionsIcon from '@PlayerSkin/Commons/Icons/CaptionsIcon';
+import CastIcon from '@PlayerSkin/Commons/Icons/CastIcon';
 
 const MobileTopBar = ({
   visible,

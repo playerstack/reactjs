@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useMobileAutoHide as useMobileAutoHideCore } from '@playerstack/core/hooks';
-import { useAppDispatch, useAppSelector } from '../context/index';
+import { useAppDispatch, useAppSelector } from '@context/index';
 
 /**
  * Thin wrapper over core's useMobileAutoHide.

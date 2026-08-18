@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import TimeTooltip from '../../src/PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/TimeTooltip';
+import TimeTooltip from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/TimeTooltip';
 
 describe('TimeTooltip — chapter title integration', () => {
   const makeSliderRef = (width = 400) => ({

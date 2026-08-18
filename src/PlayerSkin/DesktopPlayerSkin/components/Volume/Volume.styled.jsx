@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { StyledTooltipWrapper } from '../../../Commons/Tooltip';
+import { StyledTooltipWrapper } from '@PlayerSkin/Commons/Tooltip';
 import { sliderWidth as sliderWith } from '@playerstack/core';
 
 export const SliderWrapper = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);

@@ -16,8 +16,8 @@ import {
   StyledSkipPreviewImage,
   StyledSkipIcon,
   StyledSponsoredLabel,
-} from './AdsOverlay.styled';
-import { useAppSelector } from '../../../context/index';
+} from '@PlayerSkin/Commons/AdsOverlay/AdsOverlay.styled';
+import { useAppSelector } from '@context/index';
 
 /**
  * Skip forward icon — exact SVG from TubeakPlayer

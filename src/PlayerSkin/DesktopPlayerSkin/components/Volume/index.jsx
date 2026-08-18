@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledSliderContainer } from './Volume.styled';
-import StyledGeneralButton from '../../../Commons/Buttons/StyledGeneralButton';
-import Tooltip from '../../../Commons/Tooltip';
-import VolumeSlider from '../Controls/components/VolumeSlider';
-import { useAppSelector } from '../../../../context/index';
-import useVolumeButton from '../../../../hooks/useVolumeButton';
+import { StyledSliderContainer } from '@PlayerSkin/DesktopPlayerSkin/components/Volume/Volume.styled';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import VolumeSlider from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider';
+import { useAppSelector } from '@context/index';
+import useVolumeButton from '@hooks/useVolumeButton';
 import { sliderWidth as sliderWith } from '@playerstack/core';
-import { StyledVolumePercentTooltip } from './VolumePercentTooltip.styled';
+import { StyledVolumePercentTooltip } from '@PlayerSkin/DesktopPlayerSkin/components/Volume/VolumePercentTooltip.styled';
 
 const Volume = ({ fullscreen, isMuted, volume, forceMuted, changeVolume, onMutedClick }) => {
   const state = useAppSelector();

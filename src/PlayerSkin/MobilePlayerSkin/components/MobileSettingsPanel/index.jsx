@@ -16,9 +16,9 @@ import {
   StyledOptionItem,
   StyledOptionList,
   StyledMainPage,
-} from './MobileSettingsPanel.styled';
-import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon, CaptionsIcon } from '../../icons';
-import { useAppSelector } from '../../../../context/index';
+} from '@PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel/MobileSettingsPanel.styled';
+import { SettingsGearIcon, SpeedIcon, CloseIcon, BackIcon, CaptionsIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
+import { useAppSelector } from '@context/index';
 
 const SPEED_OPTIONS = [
   { label: '2', value: 2 },

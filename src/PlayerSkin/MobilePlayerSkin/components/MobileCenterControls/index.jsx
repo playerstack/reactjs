@@ -6,8 +6,8 @@ import {
   StyledMobilePlayButton,
   StyledMobileNavButton,
   StyledMobileSpinner,
-} from './MobileCenterControls.styled';
-import { PlayIcon, PauseIcon, ReplayIcon, PrevIcon, NextIcon } from '../../icons';
+} from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/MobileCenterControls.styled';
+import { PlayIcon, PauseIcon, ReplayIcon, PrevIcon, NextIcon } from '@PlayerSkin/MobilePlayerSkin/icons';
 
 const MobileCenterControls = ({
   visible,

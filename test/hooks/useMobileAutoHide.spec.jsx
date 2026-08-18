@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import useMobileAutoHide from '../../src/hooks/useMobileAutoHide';
+import useMobileAutoHide from '@hooks/useMobileAutoHide';
 
 describe('useMobileAutoHide', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import SkipOverlay from '../../src/PlayerSkin/MobilePlayerSkin/components/SkipOverlay';
+import SkipOverlay from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay';
 
 // Minimal styled-components mock (already handled by test infra)
 jest.mock('../../src/PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled', () => ({

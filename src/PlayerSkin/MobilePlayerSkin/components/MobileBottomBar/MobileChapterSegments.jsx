@@ -6,7 +6,7 @@ import {
   StyledMobileChapterSegment,
   StyledMobileChapterSegmentBuffered,
   StyledMobileChapterSegmentFilled,
-} from './MobileChapterSegments.styled';
+} from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileChapterSegments.styled';
 
 /**
  * Mobile-specific chapter segments that replace the standard progress bar

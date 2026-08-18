@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CAPTION_STYLE_OPTIONS, DEFAULT_CAPTION_STYLE } from '@playerstack/core';
-import { useAppSelector } from '../../../context/index';
+import { useAppSelector } from '@context/index';
 import {
   StyledOptionsContainer,
   StyledOptionsHeader,
@@ -9,10 +9,10 @@ import {
   StyledOptionsLabel,
   StyledOptionsValue,
   StyledOptionsContent,
-} from './CaptionOptions.styled';
-import StyledGeneralButton from '../Buttons/StyledGeneralButton';
-import ArrowLeftIcon from '../Icons/ArrowLeftIcon';
-import ArrowRightIcon from '../Icons/ArrowRightIcon';
+} from '@PlayerSkin/Commons/CaptionOptions/CaptionOptions.styled';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import ArrowLeftIcon from '@PlayerSkin/Commons/Icons/ArrowLeftIcon';
+import ArrowRightIcon from '@PlayerSkin/Commons/Icons/ArrowRightIcon';
 
 /**
  * Caption style options panel (YouTube-style).

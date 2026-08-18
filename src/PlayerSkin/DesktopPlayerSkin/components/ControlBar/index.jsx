@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledControlBar, StyledLeftItem, StyledRightItem } from './ControlBar.styled';
+import { StyledControlBar, StyledLeftItem, StyledRightItem } from '@PlayerSkin/DesktopPlayerSkin/components/ControlBar/ControlBar.styled';
 
 const ControlBar = ({ children, extra, fullscreen }) => {
   return (

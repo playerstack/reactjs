@@ -6,10 +6,10 @@ import {
   StyledDropdownItem,
   StyledDropdownItemValueSub,
   StyledDropdownList,
-} from './DropdownOverlay.styled';
-import ArrowLeftIcon from '../../../../../../Commons/Icons/ArrowLeftIcon';
-import StyledGeneralButton from '../../../../../../Commons/Buttons/StyledGeneralButton';
-import { useAppSelector } from '../../../../../../../context/index';
+} from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay/DropdownOverlay.styled';
+import ArrowLeftIcon from '@PlayerSkin/Commons/Icons/ArrowLeftIcon';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import { useAppSelector } from '@context/index';
 
 const DropdownOverlay = React.forwardRef(
   (

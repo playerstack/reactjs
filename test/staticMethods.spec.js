@@ -1,4 +1,4 @@
-import PlayerStack from '../src';
+import PlayerStack from '@';
 
 describe('PlayerStack - static methods', () => {
   test('canPlay()', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledTip, StyledTooltip, StyledChapterLabel } from './TimeTooltip.styled';
+import { StyledTip, StyledTooltip, StyledChapterLabel } from '@PlayerSkin/Commons/TimeTooltip/TimeTooltip.styled';
 import { getMouseTranslateX } from '@playerstack/core';
 import { formatTime } from '@playerstack/core';
 

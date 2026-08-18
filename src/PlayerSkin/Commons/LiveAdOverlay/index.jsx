@@ -14,7 +14,7 @@ import {
   StyledLiveAdSkip,
   StyledLiveAdProgress,
   StyledLiveAdProgressBar,
-} from './LiveAdOverlay.styled';
+} from '@PlayerSkin/Commons/LiveAdOverlay/LiveAdOverlay.styled';
 
 /**
  * Live stream ad overlay — Twitch-style.

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import MobileSettingsPanel from '../../src/PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel/index';
-import { Provider } from '../../src/context/index';
+import MobileSettingsPanel from '@PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel/index';
+import { Provider } from '@context/index';
 
 const Wrapper = ({ children }) => (
   <Provider language="en">{children}</Provider>

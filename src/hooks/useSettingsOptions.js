@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch } from '../context/index';
+import { useAppSelector, useAppDispatch } from '@context/index';
 import { settingsInitialState as initialSettings } from '@playerstack/core';
 import { buildSettingsLabel } from '@playerstack/core';
 import { buildSettingsOptions as settingsOverlayFn } from '@playerstack/core';

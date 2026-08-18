@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { StyledPlayerSkin } from '../../../../DesktopPlayerSkin.styled';
-import { StyledMediaPlayerWrapper } from '../../../../../../MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
+import { StyledPlayerSkin } from '@PlayerSkin/DesktopPlayerSkin/DesktopPlayerSkin.styled';
+import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
 
 export const SliderContainer = React.forwardRef(({ isFullscreen, ...rest }, ref) => <div ref={ref} {...rest} />);
 

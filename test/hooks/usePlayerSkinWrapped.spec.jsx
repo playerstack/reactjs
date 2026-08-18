@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import usePlayerSkinWrapped from '../../src/hooks/usePlayerSkinWrapped';
-import { Provider } from '../../src/context/index';
+import usePlayerSkinWrapped from '@hooks/usePlayerSkinWrapped';
+import { Provider } from '@context/index';
 
 const wrapper = ({ children }) => <Provider language="en">{children}</Provider>;
 

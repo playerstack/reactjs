@@ -9,15 +9,15 @@ import {
   StyledSliderHandleRail,
   StyledTrack,
   StyledSliderContent,
-} from './TimeSlider.styled';
-import Timelens from './components/Timelens';
-import TimeTooltip from './components/TimeTooltip';
-import ChapterSegments from './components/ChapterSegments';
-import HeatmapGraph from '../../../Commons/HeatmapGraph';
-import useTimeSlider from '../../../../hooks/useTimeSlider';
+} from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/TimeSlider.styled';
+import Timelens from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens';
+import TimeTooltip from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/TimeTooltip';
+import ChapterSegments from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/ChapterSegments';
+import HeatmapGraph from '@PlayerSkin/Commons/HeatmapGraph';
+import useTimeSlider from '@hooks/useTimeSlider';
 import { useChapters, useHeatmap } from '@playerstack/core/hooks';
 import { formatTime } from '@playerstack/core';
-import { useAppSelector } from '../../../../context/index';
+import { useAppSelector } from '@context/index';
 
 const TimeSlider = ({
   spriteVTTFile,

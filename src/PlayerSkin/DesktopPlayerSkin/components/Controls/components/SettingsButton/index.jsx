@@ -10,15 +10,15 @@ import {
   StyledDropdownOverlay,
   StyledDropdownTitle,
   StyledDropdownValue,
-} from './SettingsButton.styled';
-import StyledGeneralButton from '../../../../../Commons/Buttons/StyledGeneralButton';
-import Tooltip from '../../../../../Commons/Tooltip';
-import SettingsIcon from '../../../../../Commons/Icons/SetttingsIcon';
-import CaptionOptions from '../../../../../Commons/CaptionOptions';
-import ArrowRightIcon from '../../../../../Commons/Icons/ArrowRightIcon';
-import { StyledDropdownOverlayScrolled } from './DropdownOverlay/DropdownOverlay.styled';
-import { useAppSelector } from '../../../../../../context/index';
-import useSettingsOptions from '../../../../../../hooks/useSettingsOptions';
+} from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.styled';
+import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
+import Tooltip from '@PlayerSkin/Commons/Tooltip';
+import SettingsIcon from '@PlayerSkin/Commons/Icons/SetttingsIcon';
+import CaptionOptions from '@PlayerSkin/Commons/CaptionOptions';
+import ArrowRightIcon from '@PlayerSkin/Commons/Icons/ArrowRightIcon';
+import { StyledDropdownOverlayScrolled } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay/DropdownOverlay.styled';
+import { useAppSelector } from '@context/index';
+import useSettingsOptions from '@hooks/useSettingsOptions';
 
 const SettingsButton = ({
   live,

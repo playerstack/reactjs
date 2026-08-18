@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledControls } from './Controls.styled';
-import { useAppDispatch, useAppSelector } from '../../../../context/index';
+import { StyledControls } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/Controls.styled';
+import { useAppDispatch, useAppSelector } from '@context/index';
 
 const Controls = ({ children }) => {
   const state = useAppSelector();
