@@ -16,7 +16,16 @@ export default function useMobileAutoHide({ hasResource, loading, prevented, pau
   const { timeSliding, volumeSliding, menuVisible } = useAppSelector();
 
   const shouldStayVisible =
-    !hasResource || loading || prevented || paused || ended || waiting || seeking || timeSliding || volumeSliding || menuVisible;
+    !hasResource ||
+    loading ||
+    prevented ||
+    paused ||
+    ended ||
+    waiting ||
+    seeking ||
+    timeSliding ||
+    volumeSliding ||
+    menuVisible;
 
   const shouldStayVisibleRef = useRef(shouldStayVisible);
   shouldStayVisibleRef.current = shouldStayVisible;
@@ -25,7 +34,12 @@ export default function useMobileAutoHide({ hasResource, loading, prevented, pau
     dispatch({ type: 'hiding', payload: hiding });
   };
 
-  const { controlsVisible, toggleControls, showControls, hideControls: coreHideControls } = useMobileAutoHideCore({
+  const {
+    controlsVisible,
+    toggleControls,
+    showControls,
+    hideControls: coreHideControls,
+  } = useMobileAutoHideCore({
     shouldStayVisible,
     onHidingChange,
   });
