@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledTimelensRail, StyledTimelensThumbnail } from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens/Timelens.styled';
+import {
+  StyledTimelensRail,
+  StyledTimelensThumbnail,
+} from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/Timelens/Timelens.styled';
 import { parseSpriteVTT as parseVTT } from '@playerstack/core';
 import { getOffset } from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/utils';
 import { useAppSelector } from '@context/index';

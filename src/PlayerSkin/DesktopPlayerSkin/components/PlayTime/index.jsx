@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyledControlText, StyledLiveDot, StyledLiveBadge, StyledChapterIndicator } from '@PlayerSkin/DesktopPlayerSkin/components/PlayTime/PlayTime.styled';
+import {
+  StyledControlText,
+  StyledLiveDot,
+  StyledLiveBadge,
+  StyledChapterIndicator,
+} from '@PlayerSkin/DesktopPlayerSkin/components/PlayTime/PlayTime.styled';
 import { formatTime } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 

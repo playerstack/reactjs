@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 
 import { StyledSliderWrapper } from '@PlayerSkin/DesktopPlayerSkin/components/Volume/Volume.styled';
 import useVolumeSlider from '@hooks/useVolumeSlider';
-import { VolumeSliderContainer, VolumeSliderThumb, VolumeSliderTrack } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider/VolumeSlider.styled';
+import {
+  VolumeSliderContainer,
+  VolumeSliderThumb,
+  VolumeSliderTrack,
+} from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/VolumeSlider/VolumeSlider.styled';
 
 const VolumeSlider = ({ fullscreen, value, isDisabled, onChange, onMouseEnter, onMouseLeave }) => {
   const { thumbLeft, sliderRef, thumbRef, onMouseMove, onMouseDown, handleChange } = useVolumeSlider({
