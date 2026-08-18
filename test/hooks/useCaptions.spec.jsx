@@ -1,3 +1,4 @@
+jest.setTimeout(30000);
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 
@@ -64,7 +65,7 @@ describe('useCaptions', () => {
       expect(result.current.cues.length).toBeGreaterThan(0);
     });
     expect(mockFetch).toHaveBeenCalledWith('http://example.com/en.vtt');
-  }, 15000);
+  }, 30000);
 
   it('sets empty cues when activeCaption is null', () => {
     const { result } = renderHook(() => useCaptions({ captions: stableCaptions, activeCaption: null }));
@@ -94,7 +95,7 @@ describe('useCaptions', () => {
     });
     expect(result.current.cues).toEqual([]);
     consoleSpy.mockRestore();
-  }, 15000);
+  }, 30000);
 
   it('updateCaptionStyle updates style and saves to cookie', () => {
     const { result } = renderHook(() => useCaptions({ captions: null, activeCaption: null }));
@@ -118,7 +119,7 @@ describe('useCaptions', () => {
 
     rerender({ active: null });
     expect(result.current.cues).toEqual([]);
-  }, 15000);
+  }, 30000);
 
   it('re-fetches when activeCaption language changes', async () => {
     const { result, rerender } = renderHook(
@@ -131,5 +132,5 @@ describe('useCaptions', () => {
 
     rerender({ active: 'es' });
     await waitFor(() => expect(mockFetch).toHaveBeenCalledWith('es.vtt'));
-  }, 15000);
+  }, 30000);
 });

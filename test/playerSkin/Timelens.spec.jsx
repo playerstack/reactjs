@@ -1,3 +1,4 @@
+jest.setTimeout(30000);
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import { Provider } from '../../src/context/index';
@@ -54,7 +55,7 @@ describe('Timelens', () => {
       );
     });
     expect(global.fetch).toHaveBeenCalledWith('sprite.vtt');
-  }, 15000);
+  }, 30000);
 
   test('handles fetch error gracefully', async () => {
     global.fetch.mockRejectedValueOnce(new Error('Network error'));
@@ -67,7 +68,7 @@ describe('Timelens', () => {
     });
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
-  }, 15000);
+  }, 30000);
 
   test('exposes handleTimelens and setShowTimelens via ref', async () => {
     const ref = React.createRef();

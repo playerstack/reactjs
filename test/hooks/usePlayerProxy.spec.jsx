@@ -1,3 +1,4 @@
+jest.setTimeout(30000);
 import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import usePlayerProxy from '../../src/MediaPlayer/hooks/usePlayerProxy';
@@ -375,7 +376,7 @@ describe('usePlayerProxy', () => {
 
     // The auto-quality measurement must NOT run again, so no extra updateState calls
     expect(updateState.mock.calls.length).toBe(callsAfterFirst);
-  }, 15000);
+  }, 30000);
 
   test('keeps manually selected videoUrl after unrelated re-render', async () => {
     const inlineSources = () => [

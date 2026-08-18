@@ -381,7 +381,7 @@ describe('core/index – lazyPlayer', () => {
 
   test('lazy utility resolves import correctly', async () => {
     // Directly test the lazy utility function from utils/player
-    const { lazy } = require('../../src/utils/player');
+    const { lazy } = require('@playerstack/core/hooks');
     const LazyComp = lazy(() => Promise.resolve({ default: () => <div>Loaded</div> }));
     expect(LazyComp).toBeDefined();
     expect(LazyComp.$$typeof).toBeDefined();
