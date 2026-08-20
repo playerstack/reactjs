@@ -7,7 +7,8 @@ import {
   StyledSkipText,
   StyledSkipTapArea,
 } from '@PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOverlay.styled';
-import { MobileSkipChevronIcon as SkipChevronIcon } from '@playerstack/core/icons/mobile';
+import { mobileSkipChevronIcon } from '@playerstack/core/icons/mobile';
+import Icon from '@components/Icon';
 
 const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
   const secondsLabel = i18n?.seconds || 'seconds';
@@ -44,9 +45,9 @@ const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
       {skipState.visible && skipState.direction === 'backward' && (
         <StyledSkipOverlay direction="backward">
           <StyledSkipIconContainer direction="backward">
-            <SkipChevronIcon />
-            <SkipChevronIcon />
-            <SkipChevronIcon />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
           </StyledSkipIconContainer>
           <StyledSkipText>
             {skipState.seconds} {secondsLabel}
@@ -57,9 +58,9 @@ const SkipOverlay = ({ skipState, onTapLeft, onTapRight, i18n }) => {
       {skipState.visible && skipState.direction === 'forward' && (
         <StyledSkipOverlay direction="forward">
           <StyledSkipIconContainer direction="forward">
-            <SkipChevronIcon />
-            <SkipChevronIcon />
-            <SkipChevronIcon />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
+            <Icon icon={mobileSkipChevronIcon} width={20} height={20} />
           </StyledSkipIconContainer>
           <StyledSkipText>
             {skipState.seconds} {secondsLabel}

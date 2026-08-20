@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useVolume } from '@playerstack/core/hooks';
+import { useVolume } from '@hooks/useVolume';
 import { createWebVolumeAdapter } from '@utils/volumeAdapter';
 import useFullscreen from '@hooks/useFullscreen';
 import { buildSettingsLabel } from '@playerstack/core';

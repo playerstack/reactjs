@@ -11,8 +11,9 @@ import {
 /**
  * Renders the timeline as segmented chapters instead of a continuous bar.
  * Each segment represents a chapter and is visually separated by a small gap.
+ * Supports multi-range buffer visualization (YouTube-style).
  */
-const ChapterSegments = ({ segments, currentTime, duration, bufferedScaleX, hoveredIndex, fullscreen }) => {
+const ChapterSegments = ({ segments, currentTime, duration, bufferedRanges = [], hoveredIndex, fullscreen }) => {
   if (segments.length === 0 || duration <= 0) return null;
 
   return (
@@ -29,14 +30,21 @@ const ChapterSegments = ({ segments, currentTime, duration, bufferedScaleX, hove
           fillPercent = ((currentTime - segment.startTime) / segmentDuration) * 100;
         }
 
-        // Calculate buffered fill within this segment
-        const bufferedTime = bufferedScaleX * duration;
-        let bufferedPercent = 0;
-        if (bufferedTime >= segment.endTime) {
-          bufferedPercent = 100;
-        } else if (bufferedTime > segment.startTime) {
-          bufferedPercent = ((bufferedTime - segment.startTime) / segmentDuration) * 100;
-        }
+        // Multi-range buffer: compute buffered portions within this segment
+        const segmentBufferRanges =
+          bufferedRanges.length > 0
+            ? bufferedRanges
+                .map((range) => {
+                  const overlapStart = Math.max(range.start, segment.startTime);
+                  const overlapEnd = Math.min(range.end, segment.endTime);
+                  if (overlapStart >= overlapEnd) return null;
+                  return {
+                    left: ((overlapStart - segment.startTime) / segmentDuration) * 100,
+                    width: ((overlapEnd - overlapStart) / segmentDuration) * 100,
+                  };
+                })
+                .filter(Boolean)
+            : [];
 
         return (
           <StyledChapterSegment
@@ -46,7 +54,12 @@ const ChapterSegments = ({ segments, currentTime, duration, bufferedScaleX, hove
             isFullscreen={fullscreen}
             isHovered={hoveredIndex === index}
           >
-            <StyledChapterSegmentBuffered style={{ width: `${bufferedPercent}%` }} />
+            {segmentBufferRanges.map((r, i) => (
+              <StyledChapterSegmentBuffered
+                key={i}
+                style={{ position: 'absolute', left: `${r.left}%`, width: `${r.width}%` }}
+              />
+            ))}
             <StyledChapterSegmentFilled style={{ width: `${fillPercent}%` }} />
           </StyledChapterSegment>
         );
@@ -67,7 +80,12 @@ ChapterSegments.propTypes = {
   ).isRequired,
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
-  bufferedScaleX: PropTypes.number.isRequired,
+  bufferedRanges: PropTypes.arrayOf(
+    PropTypes.shape({
+      start: PropTypes.number.isRequired,
+      end: PropTypes.number.isRequired,
+    }),
+  ),
   hoveredIndex: PropTypes.number,
   fullscreen: PropTypes.bool.isRequired,
 };

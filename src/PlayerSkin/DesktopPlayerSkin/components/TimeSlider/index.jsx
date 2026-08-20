@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   StyledSlideRail,
   StyledSliderContainer,
-  StyledSliderBuffered,
   StyledSliderHandle,
   StyledSliderHandleRail,
   StyledTrack,
@@ -15,7 +14,8 @@ import TimeTooltip from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/com
 import ChapterSegments from '@PlayerSkin/DesktopPlayerSkin/components/TimeSlider/components/ChapterSegments';
 import HeatmapGraph from '@PlayerSkin/Commons/HeatmapGraph';
 import useTimeSlider from '@hooks/useTimeSlider';
-import { useChapters, useHeatmap } from '@playerstack/core/hooks';
+import { useChapters } from '@hooks/useChapters';
+import { useHeatmap } from '@hooks/useHeatmap';
 import { formatTime } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 
@@ -25,7 +25,7 @@ const TimeSlider = ({
   heatmapData,
   currentTime,
   duration,
-  buffered: bufferedScaleX,
+  bufferedRanges = [],
   onChange,
   onSeeking,
   fullscreen,
@@ -105,7 +105,7 @@ const TimeSlider = ({
               segments={segments}
               currentTime={timeSliderSliding ? timeSliderState.value : currentTime}
               duration={duration}
-              bufferedScaleX={bufferedScaleX}
+              bufferedRanges={bufferedRanges}
               hoveredIndex={hoveredSegmentIndex}
               fullscreen={fullscreen}
             />
@@ -123,7 +123,20 @@ const TimeSlider = ({
       ) : (
         <StyledSliderContent>
           <StyledSlideRail isFullscreen={fullscreen}>
-            <StyledSliderBuffered style={{ transform: `scaleX(${bufferedScaleX})` }} />
+            {bufferedRanges.length > 0 &&
+              duration > 0 &&
+              bufferedRanges.map((range, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    left: `${(range.start / duration) * 100}%`,
+                    width: `${((range.end - range.start) / duration) * 100}%`,
+                    height: '100%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                  }}
+                />
+              ))}
             <StyledTrack adMode={adMode} style={{ transform: `translateX(${trackTranslateX.track}%)` }} />
           </StyledSlideRail>
           <StyledSliderHandleRail style={{ transform: `translateX(${trackTranslateX.handle}%)` }}>
@@ -186,7 +199,12 @@ TimeSlider.propTypes = {
   ),
   currentTime: PropTypes.number.isRequired,
   duration: PropTypes.number.isRequired,
-  buffered: PropTypes.number,
+  bufferedRanges: PropTypes.arrayOf(
+    PropTypes.shape({
+      start: PropTypes.number.isRequired,
+      end: PropTypes.number.isRequired,
+    }),
+  ),
   onChange: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool.isRequired,
 };
@@ -199,7 +217,7 @@ export default React.memo(
     p.heatmapData === n.heatmapData &&
     p.currentTime === n.currentTime &&
     p.duration === n.duration &&
-    p.buffered === n.buffered &&
+    p.bufferedRanges === n.bufferedRanges &&
     p.onChange === n.onChange &&
     p.onSeeking === n.onSeeking &&
     p.fullscreen === n.fullscreen,

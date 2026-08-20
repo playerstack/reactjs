@@ -10,11 +10,9 @@ import {
   StyledMobileLiveDot,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileBottomBar.styled';
 import MobileProgressBar from '@PlayerSkin/MobilePlayerSkin/components/MobileBottomBar/MobileProgressBar';
-import {
-  MobileFullscreenIcon as FullscreenIcon,
-  MobileExitFullscreenIcon as ExitFullscreenIcon,
-} from '@playerstack/core/icons/mobile';
+import { mobileFullscreenIcon, mobileExitFullscreenIcon } from '@playerstack/core/icons/mobile';
 import { formatTime } from '@playerstack/core';
+import Icon from '@components/Icon';
 
 const MobileBottomBar = ({
   visible,
@@ -96,7 +94,11 @@ const MobileBottomBar = ({
       aria-label={fullscreen ? i18n.exitFullscreen : i18n.fullscreen}
       onClick={fullscreen ? onExitFullscreen : onRequestFullscreen}
     >
-      {fullscreen ? <ExitFullscreenIcon /> : <FullscreenIcon />}
+      {fullscreen ? (
+        <Icon icon={mobileExitFullscreenIcon} width="100%" height="100%" />
+      ) : (
+        <Icon icon={mobileFullscreenIcon} width="100%" height="100%" />
+      )}
     </StyledMobileFullscreenButton>
   </StyledMobileBottomBar>
 );

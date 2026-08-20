@@ -318,11 +318,12 @@ describe('SkipOverlay.styled – CSS interpolation coverage', () => {
 
 // ─── 4. UnfullscreenIcon – render with props ─────────────────────────────────
 
-import { UnfullscreenIcon } from '@playerstack/core/icons';
+import { unfullscreenIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 
 describe('UnfullscreenIcon – function coverage', () => {
   test('renders with default width/height', () => {
-    const { container } = render(<UnfullscreenIcon />);
+    const { container } = render(<Icon icon={unfullscreenIcon} />);
     const svg = container.querySelector('svg');
     expect(svg).toBeInTheDocument();
     expect(svg.getAttribute('width')).toBe('36');
@@ -330,14 +331,14 @@ describe('UnfullscreenIcon – function coverage', () => {
   });
 
   test('renders with custom width/height', () => {
-    const { container } = render(<UnfullscreenIcon width={48} height={48} />);
+    const { container } = render(<Icon icon={unfullscreenIcon} width={48} height={48} />);
     const svg = container.querySelector('svg');
     expect(svg.getAttribute('width')).toBe('48');
     expect(svg.getAttribute('height')).toBe('48');
   });
 
   test('renders with string width/height', () => {
-    const { container } = render(<UnfullscreenIcon width="100%" height="100%" />);
+    const { container } = render(<Icon icon={unfullscreenIcon} width="100%" height="100%" />);
     const svg = container.querySelector('svg');
     expect(svg.getAttribute('width')).toBe('100%');
     expect(svg.getAttribute('height')).toBe('100%');
@@ -347,15 +348,17 @@ describe('UnfullscreenIcon – function coverage', () => {
 // ─── 5. core/index.js – lazyPlayer (React.lazy callback) ────────────────────
 
 describe('core/index – lazyPlayer', () => {
-  test('lazyPlayer is a valid React.lazy component', () => {
-    const corePlayer = require('../../src/core/index').default;
+  // Removed: lazyPlayer lived in the deleted reactjs core barrel; core is now a
+  // framework-agnostic package and the React entry no longer exposes lazyPlayer.
+  test.skip('lazyPlayer is a valid React.lazy component', () => {
+    const corePlayer = { lazyPlayer: null };
     expect(corePlayer.lazyPlayer).toBeDefined();
     // React.lazy returns an object with $$typeof and _init/_payload
     expect(corePlayer.lazyPlayer.$$typeof).toBeDefined();
   });
 
-  test('lazyPlayer can be rendered inside Suspense (triggers lazy callback)', async () => {
-    const corePlayer = require('../../src/core/index').default;
+  test.skip('lazyPlayer can be rendered inside Suspense (triggers lazy callback)', async () => {
+    const corePlayer = { lazyPlayer: () => null };
     const LazyPlayer = corePlayer.lazyPlayer;
 
     // Render in Suspense to trigger the lazy import callback
@@ -371,7 +374,7 @@ describe('core/index – lazyPlayer', () => {
 
   test('lazy utility resolves import correctly', async () => {
     // Directly test the lazy utility function from utils/player
-    const { lazy } = require('@playerstack/core/hooks');
+    const { lazy } = require('@hooks/utils/lazy');
     const LazyComp = lazy(() => Promise.resolve({ default: () => <div>Loaded</div> }));
     expect(LazyComp).toBeDefined();
     expect(LazyComp.$$typeof).toBeDefined();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
-import { useChapters } from '@playerstack/core/hooks';
+import { useChapters } from '@hooks/useChapters';
 
 describe('useChapters', () => {
   const sampleChapters = [

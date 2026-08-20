@@ -178,7 +178,6 @@ export const createMediaPlayer = (player) => {
         <MediaPlayerSkin
           key={player.key}
           ref={this.references.player}
-          activePlayer={player.lazyPlayer}
           player={this.player}
           loop={this.props.loop}
           muted={this.props.muted}

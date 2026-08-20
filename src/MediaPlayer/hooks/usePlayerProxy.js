@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { indexBy } from '@playerstack/core';
-import { useDeepCompareMemoize } from '@playerstack/core/hooks';
+import { useDeepCompareMemoize } from '@hooks/useDeepCompareMemoize';
 import { getRecommendedVideoQuality, measureNetworkSpeed as measureNetworkSpeedGeneratedFile } from '@playerstack/core';
 
 /**
  * Video-specific player proxy hook that layers quality-switch logic on top of
  * the same stable-proxy-via-refs pattern used by `usePlayerCallbackProxy` from
- * `@playerstack/core/hooks`.
+ * `@hooks/usePlayerCallbackProxy`.
  *
  * This hook is intentionally kept separate because it adds:
  * - Multi-source quality switching (network speed measurement, auto-resolution)
@@ -219,7 +219,9 @@ const usePlayerProxy = ({
         if (callbacksRef.current.onEnded) {
           callbacksRef.current.onEnded(e);
         }
-        updateStateRef.current((prev) => ({ ...prev, isEnded: true }));
+        // Clear `playing` alongside `isEnded` so the skin renders the replay state
+        // (paused/ended) consistently and auto-hide keeps controls visible.
+        updateStateRef.current((prev) => ({ ...prev, isEnded: true, playing: false }));
       },
       onError: (e, data, hls, HLS) => {
         if (callbacksRef.current.onError) {
@@ -233,20 +235,26 @@ const usePlayerProxy = ({
           'bufferAppendError',
           'fragParsingError',
         ];
+
+        // Skip browser autoplay/abort errors — these are transient during load
+        const errorName = e?.name || e?.message || '';
+        const isAutoplayBlocked = errorName === 'NotAllowedError' || errorName === 'AbortError';
+        if (isAutoplayBlocked) return;
+
         const isRecoverable =
           skipErrors.includes(data?.type) ||
           (data?.type === 'mediaError' && recoverableDetails.includes(data?.details));
-        if (!isRecoverable) {
+        if (!isRecoverable && data) {
+          // Only show kernel error UI for structured errors (HLS/DASH/FLV).
+          // Never force playing: false — user intent should be preserved.
+          // The kernelError UI gives user visual feedback that something failed.
           updateStateRef.current((prev) => ({
             ...prev,
-            kernelError: data
-              ? {
-                  type: data?.type || 'UnknownError',
-                  detail: data?.error?.message || 'Something was wrong with the playback. Please try again.',
-                }
-              : null,
+            kernelError: {
+              type: data?.type || 'UnknownError',
+              detail: data?.error?.message || 'Something was wrong with the playback. Please try again.',
+            },
             isLoading: false,
-            playing: false,
           }));
         }
       },
@@ -290,7 +298,12 @@ const usePlayerProxy = ({
           callbacksRef.current.onProgress(state);
         }
         if (!seekingRef.current) {
-          updateStateRef.current((prev) => ({ ...prev, played: state.playedSeconds, loaded: state.loaded }));
+          updateStateRef.current((prev) => ({
+            ...prev,
+            played: state.playedSeconds,
+            loaded: state.loaded,
+            bufferedRanges: state.bufferedRanges || [],
+          }));
         }
       },
       onReady: (e) => {

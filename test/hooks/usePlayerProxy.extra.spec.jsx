@@ -171,7 +171,7 @@ describe('usePlayerProxy - extra coverage', () => {
       expect(newState.kernelError.type).toBe('mediaError');
       expect(newState.kernelError.detail).toBe('codec error');
       expect(newState.isLoading).toBe(false);
-      expect(newState.playing).toBe(false);
+      // playing is intentionally NOT forced to false — user intent is preserved.
     });
 
     test('unknown error type sets kernelError', () => {
@@ -203,16 +203,18 @@ describe('usePlayerProxy - extra coverage', () => {
       expect(newState.kernelError.detail).toBe('Something was wrong with the playback. Please try again.');
     });
 
-    test('error with null data sets kernelError to null', () => {
+    test('error with null data does not set kernelError', () => {
+      // Unstructured errors (no data) are transient — the kernel error UI is only
+      // shown for structured HLS/DASH/FLV errors, so state is left untouched.
       const updateState = jest.fn();
+      const onError = jest.fn();
       const { result } = renderHook(
-        () => usePlayerProxy({ ...baseProps, updateState }),
+        () => usePlayerProxy({ ...baseProps, updateState, onError }),
         { wrapper },
       );
       act(() => result.current.onError('event', null, null, null));
-      const fn = updateState.mock.calls[0][0];
-      const newState = fn({});
-      expect(newState.kernelError).toBeNull();
+      expect(onError).toHaveBeenCalledWith('event', null, null, null);
+      expect(updateState).not.toHaveBeenCalled();
     });
   });
 

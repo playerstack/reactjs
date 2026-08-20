@@ -12,9 +12,9 @@ jest.mock('../../src/PlayerSkin/MobilePlayerSkin/components/SkipOverlay/SkipOver
   ),
 }));
 
-jest.mock('@playerstack/core/icons/mobile', () => ({
-  MobileSkipChevronIcon: () => <svg data-testid="chevron" />,
-}));
+// The generic Icon renders SVG from a descriptor; stub it so the chevrons are
+// identifiable by test id.
+jest.mock('@components/Icon', () => () => <svg data-testid="chevron" />);
 
 describe('SkipOverlay', () => {
   const defaultProps = {

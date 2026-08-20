@@ -1,6 +1,5 @@
 export {
   StyledPeventedTip,
-  StyledPlayCircle,
-  StyledMutedIcon,
+  StyledPreventedIcon,
   StyledPeventedTipClicked,
 } from '@PlayerSkin/Commons/PreventedTip/PreventedTip.styled';

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { MutedIcon, UnmutedIcon } from '@playerstack/core/icons';
+import { mutedIcon, unmutedIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import { useAppSelector } from '@context/index';
 import { buildIconProps } from '@playerstack/core';
 
@@ -14,9 +15,9 @@ const useVolumeButton = ({ fullscreen, isMuted, volume, forceMuted, changeVolume
 
   const renderIcon = React.useCallback(() => {
     if (isMutedMemorized) {
-      return <MutedIcon {...iconProps} />;
+      return <Icon icon={mutedIcon} {...iconProps} />;
     }
-    return <UnmutedIcon {...iconProps} />;
+    return <Icon icon={unmutedIcon} {...iconProps} />;
   }, [isMutedMemorized, iconProps]);
 
   const titleMemorized = React.useMemo(() => {

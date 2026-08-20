@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
-import { PreviousTrackIcon, NextTrackIcon } from '@playerstack/core/icons';
+import { previousTrackIcon, nextTrackIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import { buildIconProps } from '@playerstack/core';
 import { useAppSelector } from '@context/index';
 
@@ -23,7 +24,7 @@ export const PreviousButton = React.memo(({ fullscreen, onPrevious, showNavButto
         isFullscreen={fullscreen}
         isFakeDisabled={!hasPrevious}
       >
-        <PreviousTrackIcon {...iconProps} />
+        <Icon icon={previousTrackIcon} {...iconProps} />
       </StyledGeneralButton>
     </Tooltip>
   );
@@ -53,7 +54,7 @@ export const NextButton = React.memo(({ fullscreen, onNext, showNavButtons = fal
         isFullscreen={fullscreen}
         isFakeDisabled={!hasNext}
       >
-        <NextTrackIcon {...iconProps} />
+        <Icon icon={nextTrackIcon} {...iconProps} />
       </StyledGeneralButton>
     </Tooltip>
   );

@@ -18,12 +18,13 @@ import {
   StyledMainPage,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileSettingsPanel/MobileSettingsPanel.styled';
 import {
-  MobileSettingsGearIcon as SettingsGearIcon,
-  MobileSpeedIcon as SpeedIcon,
-  MobileCloseIcon as CloseIcon,
-  MobileBackIcon as BackIcon,
-  MobileCaptionsIcon as CaptionsIcon,
+  mobileSettingsGearIcon,
+  mobileSpeedIcon,
+  mobileCloseIcon,
+  mobileBackIcon,
+  mobileCaptionsIcon,
 } from '@playerstack/core/icons/mobile';
+import Icon from '@components/Icon';
 import { useAppSelector } from '@context/index';
 
 const SPEED_OPTIONS = [
@@ -141,11 +142,11 @@ const MobileSettingsPanel = ({
       <StyledSettingsHeader>
         {!isSubMenuOpen ? (
           <StyledIconButton $position="left" aria-label={i18n.settings}>
-            <SettingsGearIcon />
+            <Icon icon={mobileSettingsGearIcon} width={24} height={24} />
           </StyledIconButton>
         ) : (
           <StyledIconButton $position="left" onClick={handleBack} aria-label={i18n.back}>
-            <BackIcon />
+            <Icon icon={mobileBackIcon} width={24} height={24} />
           </StyledIconButton>
         )}
         <StyledHeaderTitle>
@@ -158,7 +159,7 @@ const MobileSettingsPanel = ({
                 : i18n.speed}
         </StyledHeaderTitle>
         <StyledIconButton $position="right" onClick={handleClose} aria-label={i18n.close}>
-          <CloseIcon />
+          <Icon icon={mobileCloseIcon} width={24} height={24} />
         </StyledIconButton>
       </StyledSettingsHeader>
 
@@ -168,7 +169,7 @@ const MobileSettingsPanel = ({
           {qualities.length > 0 && (
             <StyledSwitchItem onClick={() => setSubMenu('quality')}>
               <StyledSwitchIcon>
-                <SettingsGearIcon />
+                <Icon icon={mobileSettingsGearIcon} width="100%" height="100%" />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.quality}</StyledSwitchLabel>
               <StyledSwitchValue>
@@ -183,7 +184,7 @@ const MobileSettingsPanel = ({
           {!adMode && (
             <StyledSwitchItem onClick={() => setSubMenu('speed')}>
               <StyledSwitchIcon>
-                <SpeedIcon />
+                <Icon icon={mobileSpeedIcon} width="100%" height="100%" />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.speed}</StyledSwitchLabel>
               <StyledSwitchValue>{currentSpeedLabel}</StyledSwitchValue>
@@ -192,7 +193,7 @@ const MobileSettingsPanel = ({
           {captions && captions.length > 0 && (
             <StyledSwitchItem onClick={() => setSubMenu('captions')}>
               <StyledSwitchIcon>
-                <CaptionsIcon />
+                <Icon icon={mobileCaptionsIcon} width="100%" height="100%" />
               </StyledSwitchIcon>
               <StyledSwitchLabel>{i18n.captions}</StyledSwitchLabel>
               <StyledSwitchValue>{currentCaptionLabel}</StyledSwitchValue>

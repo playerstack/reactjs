@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useMobileAutoHide as useMobileAutoHideCore } from '@playerstack/core/hooks';
+import { useMobileAutoHideCore } from '@hooks/useMobileAutoHideCore';
 import { useAppDispatch, useAppSelector } from '@context/index';
 
 /**
