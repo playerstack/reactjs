@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { useDoubleTapSkip } from '@playerstack/core/hooks';
+import { useDoubleTapSkip } from '@hooks/useDoubleTapSkip';
 
 describe('useDoubleTapSkip', () => {
   beforeEach(() => {

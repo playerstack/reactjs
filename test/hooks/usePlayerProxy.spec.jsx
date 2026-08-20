@@ -269,13 +269,15 @@ describe('usePlayerProxy', () => {
     expect(updateState).not.toHaveBeenCalled();
   });
 
-  test('onError with null data sets kernelError to null', () => {
+  test('onError with null data does not touch state', () => {
+    // Unstructured errors (no data) are transient; the kernel error UI is only
+    // shown for structured HLS/DASH/FLV errors.
     const updateState = jest.fn();
-    const { result } = renderHook(() => usePlayerProxy({ ...baseProps, updateState }), { wrapper });
+    const onError = jest.fn();
+    const { result } = renderHook(() => usePlayerProxy({ ...baseProps, updateState, onError }), { wrapper });
     act(() => result.current.onError('event', null, null, null));
-    const fn = updateState.mock.calls[0][0];
-    const newState = fn({});
-    expect(newState.kernelError).toBeNull();
+    expect(onError).toHaveBeenCalledWith('event', null, null, null);
+    expect(updateState).not.toHaveBeenCalled();
   });
 
   test('logs error when fullHDQualityBreak is not in sources resolutions', () => {

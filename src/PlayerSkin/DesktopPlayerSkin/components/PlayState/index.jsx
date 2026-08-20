@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { StyledPlayButton } from '@PlayerSkin/DesktopPlayerSkin/components/PlayState/PlayState.styled';
-import { PlayIcon, ReplayIcon, SpinnerLoading } from '@playerstack/core/icons';
+import { playIcon, replayIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
+import SpinnerLoading from '@components/SpinnerLoading';
 
 const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kernelMsg, onClick }) => {
   if (hasResource === false || loading || kernelMsg) {
@@ -14,7 +16,11 @@ const PlayState = ({ hasResource, loading, paused, ended, seeking, waiting, kern
   } else {
     return (
       <StyledPlayButton showing={paused || ended} onClick={onClick}>
-        {ended ? <ReplayIcon width="14%" height="100%" /> : <PlayIcon width="20%" height="100%" />}
+        {ended ? (
+          <Icon icon={replayIcon} width="14%" height="100%" />
+        ) : (
+          <Icon icon={playIcon} width="20%" height="100%" />
+        )}
       </StyledPlayButton>
     );
   }

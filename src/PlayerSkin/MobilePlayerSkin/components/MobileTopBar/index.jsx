@@ -5,8 +5,9 @@ import {
   StyledMobileTopBar,
   StyledMobileSettingsButton,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileTopBar/MobileTopBar.styled';
-import { MobileSettingsGearIcon as SettingsGearIcon } from '@playerstack/core/icons/mobile';
-import { CaptionsIcon, CastIcon } from '@playerstack/core/icons';
+import { mobileSettingsGearIcon } from '@playerstack/core/icons/mobile';
+import { captionsIcon, captionsActiveIcon, castIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 
 const MobileTopBar = ({
   visible,
@@ -39,7 +40,7 @@ const MobileTopBar = ({
     <StyledMobileTopBar $visible={visible}>
       {hasCaptions && (
         <StyledMobileSettingsButton onClick={handleCaptionToggle} aria-label={captionsLabel || 'Captions'}>
-          <CaptionsIcon width={24} height={24} active={!!activeCaption} />
+          <Icon icon={activeCaption ? captionsActiveIcon : captionsIcon} width={24} height={24} />
         </StyledMobileSettingsButton>
       )}
       {showCast && (
@@ -51,12 +52,12 @@ const MobileTopBar = ({
           aria-label="Google Cast"
           style={{ opacity: castState === 'connected' ? 1 : 0.7 }}
         >
-          <CastIcon width={22} height={22} connected={castState === 'connected'} />
+          <Icon icon={castIcon} width={22} height={22} />
         </StyledMobileSettingsButton>
       )}
       {!hideSettings && (
         <StyledMobileSettingsButton onClick={onOpenSettings} aria-label={settingsLabel}>
-          <SettingsGearIcon />
+          <Icon icon={mobileSettingsGearIcon} width={24} height={24} />
         </StyledMobileSettingsButton>
       )}
     </StyledMobileTopBar>

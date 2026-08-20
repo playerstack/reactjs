@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import { useAds } from '@playerstack/core/hooks';
+import { useAds } from '@hooks/useAds';
 import { webAdsPlatform } from '@utils/adsPlatform';
 
 // Helper to render hook

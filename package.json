@@ -45,9 +45,7 @@
   "dependencies": {
     "@playerstack/core": "alpha",
     "deepmerge": "^4.0.0",
-    "load-script": "^1.0.0",
     "memoize-one": "^5.1.1",
-    "minimatch": "^5.1.2",
     "prop-types": "^15.7.2",
     "react-fast-compare": "^3.0.1"
   },
@@ -58,7 +56,6 @@
     "@types/deepmerge": "^2.1.0",
     "@types/glob": "^8.1.0",
     "@types/jest": "^29.5.14",
-    "@types/minimatch": "^5.1.2",
     "@types/node": "^20.17.11",
     "@types/prop-types": "^15.7.14",
     "@types/react": "^18.3.1",

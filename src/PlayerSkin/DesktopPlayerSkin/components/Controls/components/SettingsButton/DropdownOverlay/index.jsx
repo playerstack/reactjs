@@ -7,7 +7,8 @@ import {
   StyledDropdownItemValueSub,
   StyledDropdownList,
 } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay/DropdownOverlay.styled';
-import { ArrowLeftIcon } from '@playerstack/core/icons';
+import { arrowLeftIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import { useAppSelector } from '@context/index';
 
@@ -37,7 +38,7 @@ const DropdownOverlay = React.forwardRef(
             isText
             style={showOptionsButton ? { width: 'auto' } : undefined}
           >
-            <ArrowLeftIcon width={28} height={28} />
+            <Icon icon={arrowLeftIcon} width={28} height={28} />
             <span>{title}</span>
           </StyledGeneralButton>
           {showOptionsButton && onOptionsClick && (

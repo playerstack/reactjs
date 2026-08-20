@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
-import { CaptionsIcon } from '@playerstack/core/icons';
+import { captionsIcon, captionsActiveIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import { useAppSelector } from '@context/index';
 import { buildIconProps } from '@playerstack/core';
 
@@ -46,7 +47,7 @@ const CaptionsButton = ({ fullscreen, captions, activeCaption, onCaptionChange }
   return (
     <Tooltip label={i18n.captions} fullscreen={fullscreen}>
       <StyledGeneralButton type="button" aria-label={i18n.captions} onClick={handleClick} isFullscreen={fullscreen}>
-        <CaptionsIcon {...iconProps} active={!!activeCaption} />
+        <Icon icon={activeCaption ? captionsActiveIcon : captionsIcon} {...iconProps} />
       </StyledGeneralButton>
     </Tooltip>
   );

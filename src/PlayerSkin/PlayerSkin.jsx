@@ -49,7 +49,6 @@ PlayerSkin.propTypes = {
   onPlayClick: PropTypes.func.isRequired,
   onPauseClick: PropTypes.func.isRequired,
   duration: PropTypes.number.isRequired,
-  buffered: PropTypes.number.isRequired || null,
   currentTime: PropTypes.number.isRequired,
   changeCurrentTime: PropTypes.func.isRequired,
   muted: PropTypes.bool.isRequired,
@@ -106,7 +105,7 @@ export default React.memo(
     p.waiting === n.waiting &&
     p.duration === n.duration &&
     p.currentTime === n.currentTime &&
-    p.buffered === n.buffered &&
+    p.bufferedRanges === n.bufferedRanges &&
     p.muted === n.muted &&
     p.volume === n.volume &&
     p.pictureInPictureEnabled === n.pictureInPictureEnabled &&

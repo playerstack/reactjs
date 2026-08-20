@@ -7,13 +7,9 @@ import {
   StyledMobileNavButton,
   StyledMobileSpinner,
 } from '@PlayerSkin/MobilePlayerSkin/components/MobileCenterControls/MobileCenterControls.styled';
-import {
-  MobilePlayIcon as PlayIcon,
-  MobilePauseIcon as PauseIcon,
-  MobilePrevIcon as PrevIcon,
-  MobileNextIcon as NextIcon,
-} from '@playerstack/core/icons/mobile';
-import { ReplayIcon } from '@playerstack/core/icons';
+import { mobilePlayIcon, mobilePauseIcon, mobilePrevIcon, mobileNextIcon } from '@playerstack/core/icons/mobile';
+import { replayIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 
 const MobileCenterControls = ({
   visible,
@@ -63,7 +59,7 @@ const MobileCenterControls = ({
     <StyledMobileCenterControls $visible={visible}>
       {showPrevious && (
         <StyledMobileNavButton aria-label={i18n.previous} onClick={handlePrevious} disabled={!hasPrevious}>
-          <PrevIcon />
+          <Icon icon={mobilePrevIcon} width="100%" height="100%" />
         </StyledMobileNavButton>
       )}
 
@@ -73,13 +69,19 @@ const MobileCenterControls = ({
         </StyledMobileSpinner>
       ) : (
         <StyledMobilePlayButton aria-label={paused ? i18n.play : i18n.pause} onClick={handlePlayPause}>
-          {ended ? <ReplayIcon width="100%" height="100%" /> : paused ? <PlayIcon /> : <PauseIcon />}
+          {ended ? (
+            <Icon icon={replayIcon} width="100%" height="100%" />
+          ) : paused ? (
+            <Icon icon={mobilePlayIcon} width="100%" height="100%" />
+          ) : (
+            <Icon icon={mobilePauseIcon} width="100%" height="100%" />
+          )}
         </StyledMobilePlayButton>
       )}
 
       {showNext && (
         <StyledMobileNavButton aria-label={i18n.next} onClick={handleNext} disabled={!hasNext}>
-          <NextIcon />
+          <Icon icon={mobileNextIcon} width="100%" height="100%" />
         </StyledMobileNavButton>
       )}
     </StyledMobileCenterControls>

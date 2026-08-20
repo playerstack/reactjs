@@ -11,8 +11,7 @@ jest.mock('../../src/hooks/useMobileAutoHide', () => () => ({
   hideControls: jest.fn(),
 }));
 
-jest.mock('@playerstack/core/hooks', () => ({
-  ...jest.requireActual('@playerstack/core/hooks'),
+jest.mock('@hooks/useDoubleTapSkip', () => ({
   useDoubleTapSkip: () => ({
     skipState: { left: false, right: false, visible: false, seconds: 0 },
     handleTapLeft: jest.fn(),

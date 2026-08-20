@@ -2,19 +2,31 @@ import React from 'react';
 import { render, act, fireEvent } from '@testing-library/react';
 import MediaPlayerSkin from '@MediaPlayer/components/MediaPlayerSkin/index';
 
-jest.mock('../../src/core/PlayerProxy', () => {
+jest.mock('../../src/core/VideoElement', () => {
   const ReactMock = require('react');
   // Store the onReady callback so tests can trigger it
   let onReadyCallback = null;
-  const PlayerProxyMock = ReactMock.forwardRef((props, ref) => {
-    ReactMock.useImperativeHandle(ref, () => ({}));
+  const VideoElementMock = ReactMock.forwardRef((props, ref) => {
+    ReactMock.useImperativeHandle(ref, () => ({
+      getPlayer: () => null,
+      getOrchestrator: () => null,
+      getEngine: () => null,
+      seekTo: () => {},
+      getDuration: () => null,
+      getCurrentTime: () => null,
+      getSecondsLoaded: () => null,
+      getInternalPlayer: () => null,
+      play: () => {},
+      pause: () => {},
+      stop: () => {},
+    }));
     // Store onReady for external triggering
     onReadyCallback = props.onReady;
-    return ReactMock.createElement('div', { 'data-testid': 'player-proxy' });
+    return ReactMock.createElement('div', { 'data-testid': 'video-element' });
   });
-  PlayerProxyMock.displayName = 'PlayerProxy';
-  PlayerProxyMock.triggerReady = () => { if (onReadyCallback) onReadyCallback(); };
-  return { __esModule: true, default: PlayerProxyMock };
+  VideoElementMock.displayName = 'VideoElement';
+  VideoElementMock.triggerReady = () => { if (onReadyCallback) onReadyCallback(); };
+  return { __esModule: true, default: VideoElementMock };
 });
 
 jest.mock('@playerstack/core', () => ({ ...jest.requireActual('@playerstack/core'),
@@ -219,7 +231,7 @@ describe('MediaPlayerSkin integration', () => {
     });
 
     test('sets dimensions from player element after timeout when loading finishes', async () => {
-      const PlayerProxy = require('../../src/core/PlayerProxy').default;
+      const VideoElement = require('../../src/core/VideoElement').default;
 
       const mockPlayerElement = document.createElement('div');
       Object.defineProperty(mockPlayerElement, 'offsetWidth', { value: 800 });
@@ -235,7 +247,7 @@ describe('MediaPlayerSkin integration', () => {
 
       // Trigger onReady to set isLoading = false
       act(() => {
-        PlayerProxy.triggerReady();
+        VideoElement.triggerReady();
       });
 
       // Now the effect should fire and set a timeout
@@ -252,7 +264,7 @@ describe('MediaPlayerSkin integration', () => {
     });
 
     test('cleans up timeout on unmount before it fires', () => {
-      const PlayerProxy = require('../../src/core/PlayerProxy').default;
+      const VideoElement = require('../../src/core/VideoElement').default;
 
       const mockPlayerElement = document.createElement('div');
       Object.defineProperty(mockPlayerElement, 'offsetWidth', { value: 640 });
@@ -268,7 +280,7 @@ describe('MediaPlayerSkin integration', () => {
 
       // Trigger onReady
       act(() => {
-        PlayerProxy.triggerReady();
+        VideoElement.triggerReady();
       });
 
       // Unmount before the 500ms timeout fires
@@ -281,23 +293,23 @@ describe('MediaPlayerSkin integration', () => {
     });
   });
 
-  describe('PlayerProxy rendering with videoUrl', () => {
-    test('renders PlayerProxy when url is provided', () => {
+  describe('VideoElement rendering with videoUrl', () => {
+    test('renders VideoElement when url is provided', () => {
       const { queryByTestId } = render(
         <MediaPlayerSkin {...baseProps} url="video.mp4" />,
       );
-      expect(queryByTestId('player-proxy')).not.toBeNull();
+      expect(queryByTestId('video-element')).not.toBeNull();
     });
 
-    test('does not render PlayerProxy when url is empty', () => {
+    test('does not render VideoElement when url is empty', () => {
       const { queryByTestId } = render(
         <MediaPlayerSkin {...baseProps} url="" />,
       );
-      // Empty string is falsy, so PlayerProxy should not render
-      expect(queryByTestId('player-proxy')).toBeNull();
+      // Empty string is falsy, so VideoElement should not render
+      expect(queryByTestId('video-element')).toBeNull();
     });
 
-    test('renders PlayerProxy with sources', async () => {
+    test('renders VideoElement with sources', async () => {
       const sources = [
         { src: 'video-720.mp4', resolution: 720 },
         { src: 'video-1080.mp4', resolution: 1080 },
@@ -311,7 +323,7 @@ describe('MediaPlayerSkin integration', () => {
       await act(async () => {
         await new Promise((r) => setTimeout(r, 0));
       });
-      expect(queryByTestId('player-proxy')).not.toBeNull();
+      expect(queryByTestId('video-element')).not.toBeNull();
     });
   });
 

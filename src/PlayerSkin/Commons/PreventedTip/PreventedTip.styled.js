@@ -1,6 +1,4 @@
-import styled, { css } from 'styled-components';
-
-import { MutedIcon, PlayIcon } from '@playerstack/core/icons';
+import styled from 'styled-components';
 
 export const StyledPeventedTip = styled.div`
   position: absolute;
@@ -21,17 +19,11 @@ export const StyledPeventedTip = styled.div`
   z-index: 6;
 `;
 
-const commonStyles = css`
+export const StyledPreventedIcon = styled.span`
   font-size: 20px;
   margin-right: 8px;
-`;
-
-export const StyledPlayCircle = styled(PlayIcon)`
-  ${commonStyles}
-`;
-
-export const StyledMutedIcon = styled(MutedIcon)`
-  ${commonStyles}
+  display: inline-flex;
+  align-items: center;
 `;
 
 export const StyledPeventedTipClicked = styled.div`

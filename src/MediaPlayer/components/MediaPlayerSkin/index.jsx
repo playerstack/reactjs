@@ -1,7 +1,7 @@
 import React from 'react';
 import isEqual from 'react-fast-compare';
 
-import PlayerProxy from '@core/PlayerProxy';
+import VideoElement from '@core/VideoElement';
 import PlayerSkin from '@PlayerSkin';
 import { playerStateInitial } from '@playerstack/core';
 import MediaPlayerWrapper from '@MediaPlayer/components/MediaPlayerWrapper';
@@ -76,6 +76,26 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
 
   const playerSkinRef = React.useRef(null);
   const playerRef = React.useRef(null);
+
+  // When a live stream transitions to VOD (HLS #EXT-X-ENDLIST / duration becomes
+  // finite), the player must behave like a normal on-demand asset: drop the
+  // live/DVR UI and render the standard timeline. Tracked locally because it is
+  // driven by the media itself, not by the consumer prop.
+  const [liveEnded, setLiveEnded] = React.useState(false);
+  const handleLiveEnded = React.useCallback(() => setLiveEnded(true), []);
+
+  // Reset the live→VOD flag whenever the source changes.
+  const prevLiveSrcRef = React.useRef(props.url);
+  const prevLiveSourcesRef = React.useRef(props.sources);
+  if (prevLiveSrcRef.current !== props.url || prevLiveSourcesRef.current !== props.sources) {
+    prevLiveSrcRef.current = props.url;
+    prevLiveSourcesRef.current = props.sources;
+    if (liveEnded) setLiveEnded(false);
+  }
+
+  // Effective live flags: honor the consumer props until the stream ends.
+  const effectiveLive = (props.live || props.liveDVR) && !liveEnded;
+  const effectiveLiveDVR = props.liveDVR && !liveEnded;
 
   // Track previous url/sources to detect source changes and reset state/dimensions
   const prevUrlRef = React.useRef(props.url);
@@ -208,9 +228,9 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       hlsVersion: props.config.hlsVersion,
       forceSafariHLS: props.config.forceSafariHLS,
       loopOnEnded: props.config.loopOnEnded,
-      live: props.live || props.liveDVR,
+      live: effectiveLive,
     }),
-    [props.config, props.live, props.liveDVR],
+    [props.config, effectiveLive],
   );
 
   return (
@@ -224,26 +244,19 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
     >
       <StyledPlayerContainer>
         {videoUrl && (
-          <PlayerProxy
+          <VideoElement
             ref={ref}
-            activePlayer={props.activePlayer}
             loop={playerState.loop}
             muted={playerState.isMuted}
-            pip={playerState.isPIP}
             playbackRate={playerState.playbackRate}
-            playbackQuality={playerState.playbackQuality}
             playsinline={props.playsinline}
-            progressInterval={props.progressInterval}
-            stopOnUnmount={props.stopOnUnmount}
             volume={playerState.volume}
             url={videoUrl}
             width={props.width}
             height={props.height}
             playing={playerState.playing}
-            activeCaption={playerState.activeCaption}
             config={playerConfig}
-            disableDeferredLoading={props.disableDeferredLoading}
-            progressFrequency={props.progressFrequency}
+            onLiveEnded={handleLiveEnded}
             {...playerProxy}
           />
         )}
@@ -265,10 +278,10 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
         prevented={preventedMemorized}
         muted={playerState.isMuted}
         paused={playerState.playing === false}
-        live={props.live || props.liveDVR}
-        liveDVR={props.liveDVR}
+        live={effectiveLive}
+        liveDVR={effectiveLiveDVR}
         liveAd={props.liveAd}
-        buffered={playerState.loaded}
+        bufferedRanges={playerState.bufferedRanges || []}
         ended={playerState.isEnded}
         seeking={playerState.seeking}
         waiting={playerState.isBuffering || props.waiting}
@@ -324,7 +337,6 @@ export default React.memo(
     p.playsinline === n.playsinline &&
     p.pipeline === n.pipeline &&
     p.stopOnUnmount === n.stopOnUnmount &&
-    p.activePlayer === n.activePlayer &&
     p.player === n.player &&
     p.progressFrequency === n.progressFrequency &&
     p.disableDeferredLoading === n.disableDeferredLoading &&

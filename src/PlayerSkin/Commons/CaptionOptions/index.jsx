@@ -11,7 +11,8 @@ import {
   StyledOptionsContent,
 } from '@PlayerSkin/Commons/CaptionOptions/CaptionOptions.styled';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
-import { ArrowLeftIcon, ArrowRightIcon } from '@playerstack/core/icons';
+import { arrowLeftIcon, arrowRightIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 
 /**
  * Caption style options panel (YouTube-style).
@@ -71,7 +72,7 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
       <StyledOptionsContainer isFullscreen={isFullscreen}>
         <StyledOptionsHeader isFullscreen={isFullscreen}>
           <StyledGeneralButton onClick={() => setSubMenu(null)} isFullscreen={isFullscreen} isText>
-            <ArrowLeftIcon width={28} height={28} />
+            <Icon icon={arrowLeftIcon} width={28} height={28} />
             <span>{optionDef?.label}</span>
           </StyledGeneralButton>
         </StyledOptionsHeader>
@@ -97,7 +98,7 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
     <StyledOptionsContainer isFullscreen={isFullscreen}>
       <StyledOptionsHeader isFullscreen={isFullscreen}>
         <StyledGeneralButton onClick={onClose} isFullscreen={isFullscreen} isText>
-          <ArrowLeftIcon width={28} height={28} />
+          <Icon icon={arrowLeftIcon} width={28} height={28} />
           <span>{i18n.captionOptions}</span>
         </StyledGeneralButton>
       </StyledOptionsHeader>
@@ -106,7 +107,7 @@ const CaptionOptions = ({ captionStyle, onStyleChange, onClose, isFullscreen }) 
           <StyledOptionsItem key={opt.key} onClick={() => setSubMenu(opt)} isFullscreen={isFullscreen}>
             <StyledOptionsLabel>{opt.label}</StyledOptionsLabel>
             <StyledOptionsValue>
-              {getCurrentLabel(opt.key)} <ArrowRightIcon width={16} height={16} />
+              {getCurrentLabel(opt.key)} <Icon icon={arrowRightIcon} width={16} height={16} />
             </StyledOptionsValue>
           </StyledOptionsItem>
         ))}

@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  StyledMutedIcon,
+  StyledPreventedIcon,
   StyledPeventedTip,
   StyledPeventedTipClicked,
-  StyledPlayCircle,
 } from '@PlayerSkin/Commons/PreventedTip/PreventedTip.styled';
+import { mutedIcon, playIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import { useAppSelector } from '@context/index';
 
 const PreventedTip = ({ hasResource = false, prevented, paused, muted, currentTime, onClick }) => {
@@ -28,7 +29,9 @@ const PreventedTip = ({ hasResource = false, prevented, paused, muted, currentTi
         <React.Fragment key="preventedClickedTip">
           <StyledPeventedTipClicked onClick={handleClickInner} />
           <StyledPeventedTip>
-            <StyledMutedIcon />
+            <StyledPreventedIcon>
+              <Icon icon={mutedIcon} width={20} height={20} />
+            </StyledPreventedIcon>
             {i18n.clickToUnmute}
           </StyledPeventedTip>
         </React.Fragment>
@@ -47,7 +50,9 @@ const PreventedTip = ({ hasResource = false, prevented, paused, muted, currentTi
       return (
         <React.Fragment key="preventedTip">
           <StyledPeventedTip>
-            <StyledPlayCircle />
+            <StyledPreventedIcon>
+              <Icon icon={playIcon} width={20} height={20} />
+            </StyledPreventedIcon>
             {i18n.playbackStuckClickResumePlayback}
           </StyledPeventedTip>
         </React.Fragment>

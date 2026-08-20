@@ -1,10 +1,10 @@
 import React from 'react';
-import { useAutoHide as useAutoHideCore } from '@playerstack/core/hooks';
+import { useAutoHideCore } from '@hooks/useAutoHideCore';
 
 import { useAppDispatch, useAppSelector } from '@context/index';
 
 const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, seeking, kernelMsg }) => {
-  const { controlsHovering, timeSliding, volumeSliding, menuVisible, subMenuVisible } = useAppSelector();
+  const { controlsHovering, timeSliding, volumeSliding, menuVisible, subMenuVisible, hiding } = useAppSelector();
   const dispatch = useAppDispatch();
 
   const shouldStayVisible =
@@ -23,11 +23,21 @@ const useAutoHide = ({ hasResource, loading, prevented, paused, ended, waiting, 
     kernelMsg;
 
   const onHidingChange = React.useCallback(
-    (hiding) => {
-      dispatch({ type: 'hiding', payload: hiding });
+    (newHiding) => {
+      dispatch({ type: 'hiding', payload: newHiding });
     },
     [dispatch],
   );
+
+  // If controls should stay visible but are currently hidden, force show.
+  // This handles the case where shouldStayVisible value didn't change
+  // (e.g., was true for 'waiting', stays true for 'paused') but hiding
+  // was set to true by the timer before the state transition.
+  React.useEffect(() => {
+    if (shouldStayVisible && hiding) {
+      dispatch({ type: 'hiding', payload: false });
+    }
+  }, [shouldStayVisible, hiding, dispatch]);
 
   const { showControls, hideControls } = useAutoHideCore({
     shouldStayVisible: !!shouldStayVisible,

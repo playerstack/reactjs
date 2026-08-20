@@ -6,13 +6,14 @@ import {
   StyledContextMenuItem,
   StyledContextMenuLabel,
 } from '@PlayerSkin/Commons/ContextMenu/ContextMenu.styled';
-import { mergeRefs } from '@playerstack/core/hooks';
-import { CheckedIcon, InLoopIcon, PipIcon } from '@playerstack/core/icons';
+import { mergeRefs } from '@hooks/utils/mergeRefs';
+import { checkedIcon, inLoopIcon, pipIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import { useAppDispatch, useAppSelector } from '@context/index';
 
 const ICON_MAP = {
-  loop: InLoopIcon,
-  pip: PipIcon,
+  loop: inLoopIcon,
+  pip: pipIcon,
 };
 
 const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) => {
@@ -49,7 +50,7 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
       aria-checked={state.contextMenuVisible}
     >
       {menuItems.map((item, i) => {
-        const IconComponent = ICON_MAP[item.iconType];
+        const iconDescriptor = ICON_MAP[item.iconType];
         return (
           <StyledContextMenuItem
             key={i}
@@ -62,11 +63,11 @@ const ContextMenu = React.forwardRef(({ fullscreen, position, menuItems }, ref) 
             }}
             isFullscreen={fullscreen}
           >
-            {IconComponent && <IconComponent {...item.iconProps} />}
+            {iconDescriptor && <Icon icon={iconDescriptor} {...item.iconProps} />}
             <StyledContextMenuLabel>{item.label}</StyledContextMenuLabel>
             {item.isCheckable && item.defaultChecked && (
               <StyledContextMenuChecked>
-                <CheckedIcon width={24} height={24} />
+                <Icon icon={checkedIcon} width={24} height={24} />
               </StyledContextMenuChecked>
             )}
           </StyledContextMenuItem>

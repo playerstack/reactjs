@@ -13,7 +13,8 @@ import {
 } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/SettingsButton.styled';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
-import { SettingsIcon, ArrowRightIcon } from '@playerstack/core/icons';
+import { settingsIcon, arrowRightIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import CaptionOptions from '@PlayerSkin/Commons/CaptionOptions';
 import { StyledDropdownOverlayScrolled } from '@PlayerSkin/DesktopPlayerSkin/components/Controls/components/SettingsButton/DropdownOverlay/DropdownOverlay.styled';
 import { useAppSelector } from '@context/index';
@@ -85,7 +86,7 @@ const SettingsButton = ({
           isFullHD={values.quality?.isFullHD}
           isExpanded={settings.generalMenu}
         >
-          <SettingsIcon {...iconProps} />
+          <Icon icon={settingsIcon} {...iconProps} />
         </StyledDropdownButton>
       </Tooltip>
       <StyledDropdownOverlay
@@ -100,7 +101,7 @@ const SettingsButton = ({
                 <StyledDropdownTitle>{item.label}</StyledDropdownTitle>
                 <StyledDropdownContentValue>
                   <StyledDropdownValue>{values[item.value]?.label}</StyledDropdownValue>
-                  <ArrowRightIcon width={28} height={28} />
+                  <Icon icon={arrowRightIcon} width={28} height={28} />
                 </StyledDropdownContentValue>
               </StyledGeneralButton>
             </StyledDropdownItem>

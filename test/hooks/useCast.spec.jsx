@@ -2,6 +2,11 @@ import React from 'react';
 import { render, act } from '@testing-library/react';
 import useCast from '@hooks/useCast';
 
+// These tests drive the async Cast/Presentation APIs with real timers. Under
+// parallel test load the event loop can lag close to Jest's 5s default, causing
+// false timeouts. Give the suite extra headroom.
+jest.setTimeout(20000);
+
 function TestComponent({ videoRef, disabled, onResult }) {
   const result = useCast({ videoRef, disabled });
   onResult(result);

@@ -98,7 +98,6 @@ PlayerSkinWrapper.propTypes = {
   ended: PropTypes.bool.isRequired,
   seeking: PropTypes.bool.isRequired,
   duration: PropTypes.number.isRequired,
-  buffered: PropTypes.number.isRequired || null,
   currentTime: PropTypes.number.isRequired,
   muted: PropTypes.bool.isRequired,
   volume: PropTypes.number.isRequired,

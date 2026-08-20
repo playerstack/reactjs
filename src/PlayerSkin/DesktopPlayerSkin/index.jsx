@@ -32,16 +32,17 @@ import ContextMenu from '@PlayerSkin/DesktopPlayerSkin/components/ContextMenu';
 import CaptionOverlay from '@PlayerSkin/Commons/CaptionOverlay';
 import LiveAdOverlay from '@PlayerSkin/Commons/LiveAdOverlay';
 import useCaptions from '@hooks/useCaptions';
-import { useChapters } from '@playerstack/core/hooks';
-import { useLiveDVR } from '@playerstack/core/hooks';
+import { useChapters } from '@hooks/useChapters';
+import { useLiveDVR } from '@hooks/useLiveDVR';
 import { createWebDVRAdapter } from '@utils/dvrAdapter';
 import useLiveAd from '@hooks/useLiveAd';
-import { useAds } from '@playerstack/core/hooks';
+import { useAds } from '@hooks/useAds';
 import { webAdsPlatform } from '@utils/adsPlatform';
 import useCast from '@hooks/useCast';
 import AdsOverlay from '@PlayerSkin/Commons/AdsOverlay';
 import { StyledAdTimeSliderWrapper } from '@PlayerSkin/Commons/AdsOverlay/AdsOverlay.styled';
-import { CastIcon } from '@playerstack/core/icons';
+import { castIcon } from '@playerstack/core/icons';
+import Icon from '@components/Icon';
 import Tooltip from '@PlayerSkin/Commons/Tooltip';
 import StyledGeneralButton from '@PlayerSkin/Commons/Buttons/StyledGeneralButton';
 
@@ -61,7 +62,7 @@ const DesktopPlayerSkin = React.forwardRef(
       seeking,
       waiting,
       duration,
-      buffered = null,
+      bufferedRanges = [],
       currentTime,
       muted,
       volume,
@@ -414,7 +415,6 @@ const DesktopPlayerSkin = React.forwardRef(
               heatmapData={[]}
               currentTime={currentTime}
               duration={duration}
-              buffered={buffered}
               onChange={noop}
               onSeeking={noop}
               fullscreen={fullscreen}
@@ -448,7 +448,7 @@ const DesktopPlayerSkin = React.forwardRef(
               heatmapData={heatmapData}
               currentTime={currentTime}
               duration={duration}
-              buffered={buffered}
+              bufferedRanges={bufferedRanges}
               onChange={changeCurrentTime}
               onSeeking={onSeeking}
               fullscreen={fullscreen}
@@ -464,7 +464,6 @@ const DesktopPlayerSkin = React.forwardRef(
               heatmapData={[]}
               currentTime={liveDragPosition !== null ? liveDragPosition : sliderPosition}
               duration={sliderDuration || 1}
-              buffered={null}
               onChange={handleLiveDVRChange}
               onSeeking={handleLiveDVRSeeking}
               fullscreen={fullscreen}
@@ -506,11 +505,7 @@ const DesktopPlayerSkin = React.forwardRef(
                       isFullscreen={fullscreen}
                       style={{ opacity: castState === 'connected' ? 1 : 0.8 }}
                     >
-                      <CastIcon
-                        width={fullscreen ? 28 : 20}
-                        height={fullscreen ? 28 : 20}
-                        connected={castState === 'connected'}
-                      />
+                      <Icon icon={castIcon} width={fullscreen ? 28 : 20} height={fullscreen ? 28 : 20} />
                     </StyledGeneralButton>
                   </Tooltip>
                 )}
