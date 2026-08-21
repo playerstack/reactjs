@@ -1,20 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DesktopPlayerSkin from '@PlayerSkin/DesktopPlayerSkin';
-import MobilePlayerSkin from '@PlayerSkin/MobilePlayerSkin';
-import { isMobile } from '@playerstack/core';
+import CorePlayerSkin from '@PlayerSkin/CorePlayerSkin';
 
+// The reactjs player UI is now rendered by composing Core's `playerstack-*` UI_Elements
+// through the React_Adapter (tasks 14.3/14.7). `CorePlayerSkin` handles both the desktop
+// (Table 21-A) and mobile (Table 21-B) layouts plus the Commons overlays (Table 21-C),
+// selecting the layout from `skinMode`/`isMobile` internally. Styling arrives via Core's
+// Style_Auto_Injection — the consumer imports no CSS. The former styled-components
+// Desktop/Mobile skins and their CSS-in-JS were removed in task 14.4 (CSS ported to Core
+// in task 14.6).
 const PlayerSkin = React.forwardRef((props, ref) => {
-  const { skinMode, ...rest } = props;
-
-  const useMobileSkin = skinMode === 'mobile' || (skinMode !== 'desktop' && isMobile);
-
-  if (useMobileSkin) {
-    return <MobilePlayerSkin ref={ref} {...rest} />;
-  }
-
-  return <DesktopPlayerSkin ref={ref} {...rest} />;
+  return <CorePlayerSkin ref={ref} {...props} />;
 });
 
 PlayerSkin.displayName = 'PlayerSkin';

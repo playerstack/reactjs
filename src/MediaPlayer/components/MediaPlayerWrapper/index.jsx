@@ -1,15 +1,25 @@
 import React from 'react';
-import { StyledMediaPlayerWrapper } from '@MediaPlayer/components/MediaPlayerWrapper/MediaPlayerWrapper.styled';
+
+import { ensureWrapperStyles } from '@MediaPlayer/components/MediaPlayerWrapper/wrapperStyles';
 
 /**
- * MediaPlayerWrapper provides a styled container for the video player.
- * CSS resets are applied via styled-components scoped rules (no Shadow DOM).
+ * MediaPlayerWrapper provides the light-DOM container for the video player.
+ *
+ * Styling is delivered via a single injected stylesheet (`ensureWrapperStyles`)
+ * instead of styled-components (task 14.4). The rules were ported 1:1 from the
+ * former `StyledMediaPlayerWrapper` so Visual_Parity is preserved. The inner
+ * player UI is styled by Core's Style_Auto_Injection inside the
+ * `playerstack-media-controller` shadow root — the consumer imports no CSS.
  */
-const MediaPlayerWrapper = React.forwardRef(({ children, style, ...props }, ref) => {
+// Inject once at module load so the styles exist before the first paint, mirroring
+// Core's Style_Auto_Injection. Idempotent and SSR-safe.
+ensureWrapperStyles();
+
+const MediaPlayerWrapper = React.forwardRef(({ children, style, className, ...props }, ref) => {
   return (
-    <StyledMediaPlayerWrapper ref={ref} style={style} {...props}>
+    <div ref={ref} className={`playerstack-wrapper${className ? ` ${className}` : ''}`} style={style} {...props}>
       {children}
-    </StyledMediaPlayerWrapper>
+    </div>
   );
 });
 

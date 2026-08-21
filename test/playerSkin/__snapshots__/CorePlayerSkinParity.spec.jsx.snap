@@ -1,0 +1,249 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) ads active state 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="false"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-ad-overlay />
+  <playerstack-context-menu
+    data-fullscreen="false"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-time-slider />
+  <playerstack-play-button
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="false"
+  />
+</playerstack-media-controller>
+`;
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) default desktop state 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="false"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-context-menu
+    data-fullscreen="false"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-time-slider />
+  <playerstack-play-button
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="false"
+  />
+</playerstack-media-controller>
+`;
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) fullscreen state 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="false"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-context-menu
+    data-fullscreen="true"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-time-slider />
+  <playerstack-play-button
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="true"
+  />
+</playerstack-media-controller>
+`;
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) live state 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="false"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-live-indicator />
+  <playerstack-context-menu
+    data-fullscreen="false"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-play-button
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="false"
+  />
+</playerstack-media-controller>
+`;
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) mobile skinMode state 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-double-tap />
+  <playerstack-context-menu
+    data-fullscreen="false"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-time-slider />
+  <playerstack-play-button
+    data-playing="false"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="false"
+  />
+</playerstack-media-controller>
+`;
+
+exports[`CorePlayerSkin — Visual_Parity DOM snapshots (Req 20.7, 21.2–21.5) playing state (paused=false) 1`] = `
+<playerstack-media-controller>
+  <playerstack-prevented-tip
+    data-active="false"
+    language="en"
+  />
+  <playerstack-spinner
+    data-active="false"
+    data-buffering="false"
+    data-loading="false"
+  />
+  <playerstack-play-state
+    data-ended="false"
+    data-playing="true"
+  />
+  <playerstack-top-state
+    data-active="false"
+    language="en"
+  />
+  <playerstack-context-menu
+    data-fullscreen="false"
+    data-loop="false"
+    data-pip="false"
+  />
+  <playerstack-time-slider />
+  <playerstack-play-button
+    data-playing="true"
+  />
+  <playerstack-volume
+    data-muted="false"
+  />
+  <playerstack-play-time />
+  <playerstack-settings
+    data-quality="0"
+  />
+  <playerstack-fullscreen-button
+    data-fullscreen="false"
+  />
+</playerstack-media-controller>
+`;

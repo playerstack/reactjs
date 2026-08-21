@@ -61,7 +61,7 @@ const baseProps = {
 };
 
 describe('PlayerSkin skinMode prop', () => {
-  test('renders DesktopPlayerSkin when skinMode is "desktop"', () => {
+  test('renders the desktop layout when skinMode is "desktop"', () => {
     const { container } = render(
       <Wrapper>
         <PlayerSkin {...baseProps} skinMode="desktop" />
@@ -71,7 +71,7 @@ describe('PlayerSkin skinMode prop', () => {
     expect(container.firstChild).toBeTruthy();
   });
 
-  test('renders MobilePlayerSkin when skinMode is "mobile"', () => {
+  test('renders the mobile layout when skinMode is "mobile"', () => {
     const { container } = render(
       <Wrapper>
         <PlayerSkin {...baseProps} skinMode="mobile" />
@@ -80,7 +80,7 @@ describe('PlayerSkin skinMode prop', () => {
     expect(container.firstChild).toBeTruthy();
   });
 
-  test('renders DesktopPlayerSkin when skinMode is "auto" and isMobile is false', () => {
+  test('renders the desktop layout when skinMode is "auto" and isMobile is false', () => {
     const { container } = render(
       <Wrapper>
         <PlayerSkin {...baseProps} skinMode="auto" />
@@ -89,7 +89,7 @@ describe('PlayerSkin skinMode prop', () => {
     expect(container.firstChild).toBeTruthy();
   });
 
-  test('renders DesktopPlayerSkin when skinMode is undefined (defaults to auto)', () => {
+  test('renders the desktop layout when skinMode is undefined (defaults to auto)', () => {
     const { container } = render(
       <Wrapper>
         <PlayerSkin {...baseProps} />

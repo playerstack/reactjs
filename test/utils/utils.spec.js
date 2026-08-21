@@ -1,5 +1,4 @@
 import { omit } from '@playerstack/core';
-import { mergeRefs } from '@hooks/utils/mergeRefs';
 import { isMediaStream, isBlobUrl, formatTime, indexBy } from '@playerstack/core';
 
 describe('utils/index', () => {
@@ -53,40 +52,6 @@ describe('utils/index', () => {
 
     test('returns false for empty string', () => {
       expect(isBlobUrl('')).toBe(false);
-    });
-  });
-
-  describe('mergeRefs', () => {
-    test('calls function refs with value', () => {
-      const fn1 = jest.fn();
-      const fn2 = jest.fn();
-      const merged = mergeRefs([fn1, fn2]);
-      merged('test-value');
-      expect(fn1).toHaveBeenCalledWith('test-value');
-      expect(fn2).toHaveBeenCalledWith('test-value');
-    });
-
-    test('assigns to object refs', () => {
-      const ref1 = { current: null };
-      const ref2 = { current: null };
-      const merged = mergeRefs([ref1, ref2]);
-      merged('test-value');
-      expect(ref1.current).toBe('test-value');
-      expect(ref2.current).toBe('test-value');
-    });
-
-    test('handles mixed function and object refs', () => {
-      const fn = jest.fn();
-      const ref = { current: null };
-      const merged = mergeRefs([fn, ref]);
-      merged(42);
-      expect(fn).toHaveBeenCalledWith(42);
-      expect(ref.current).toBe(42);
-    });
-
-    test('ignores falsy refs', () => {
-      const merged = mergeRefs([null, undefined, false]);
-      expect(() => merged('value')).not.toThrow();
     });
   });
 

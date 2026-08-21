@@ -6,7 +6,6 @@ import PlayerSkin from '@PlayerSkin';
 import { playerStateInitial } from '@playerstack/core';
 import MediaPlayerWrapper from '@MediaPlayer/components/MediaPlayerWrapper';
 import usePlayerProxy from '@MediaPlayer/hooks/usePlayerProxy';
-import { StyledPlayerContainer } from '@MediaPlayer/components/MediaPlayerSkin/MediaPlayerSkin.styled';
 
 const MediaPlayerSkin = React.forwardRef((props, ref) => {
   const [playerStyles, setPlayerStyles] = React.useState({
@@ -242,7 +241,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
       onKeyDown={handleKeyDown}
       style={playerStyles}
     >
-      <StyledPlayerContainer>
+      <div className="playerstack-container">
         {videoUrl && (
           <VideoElement
             ref={ref}
@@ -260,7 +259,7 @@ const MediaPlayerSkin = React.forwardRef((props, ref) => {
             {...playerProxy}
           />
         )}
-      </StyledPlayerContainer>
+      </div>
       <PlayerSkin
         ref={playerSkinRef}
         playerRef={playerRef}
