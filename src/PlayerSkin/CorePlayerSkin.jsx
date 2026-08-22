@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { isMobile } from '@playerstack/core';
+import { mobileSettingsGearIcon } from '@playerstack/core/icons/mobile';
 
 import {
   PlayerstackMediaController,
@@ -23,8 +24,11 @@ import {
   PlayerstackLiveIndicator,
   PlayerstackDoubleTap,
   PlayerstackNavButtons,
+  PlayerstackMobileSettings,
+  PlayerstackIcon,
 } from '@adapter/elements';
 import { useCoreMediaBridge } from '@hooks/useCoreMediaBridge';
+import { useCoreAutoHide } from '@hooks/useCoreAutoHide';
 
 /**
  * `CorePlayerSkin` renders the reactjs player UI by COMPOSING Core's `playerstack-*`
@@ -104,6 +108,16 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
   } = props;
 
   const controllerRef = React.useRef(null);
+  // Imperative handle to the mobile settings panel element so the top-bar gear can open it.
+  const mobileSettingsRef = React.useRef(null);
+  const openMobileSettings = React.useCallback(() => {
+    mobileSettingsRef.current?.open_?.();
+  }, []);
+
+  // An ad is active whenever the player passes an `ads` config (parity with the original
+  // `isAdActive`/`adMode` derived from `useAds`). Drives the ad-mode gating below: the time-slider
+  // becomes the yellow ad progress bar, chapters are suppressed, and speed is not changeable.
+  const isAdActive = ads != null;
 
   // Preserve the imperative surface the previous skins exposed to the wrapper hook
   // (`showControls`/`hideControls`/`triggerAd`). Auto-hide is now driven by Core's
@@ -146,6 +160,29 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
       activeCaption,
     },
   });
+
+  // Auto-hide (parity with the former `useAutoHide`): the controls stay visible while the user
+  // must see them — paused, ended, loading, buffering(waiting), seeking, prevented, or a kernel
+  // status message — and otherwise fade out after an idle delay, revealing again on any pointer
+  // movement. Reflects `data-hiding` on the controller host, which the Style_Layer fades on.
+  const shouldStayVisible =
+    !!paused || !!ended || !!loading || !!waiting || !!seeking || !!props.prevented || kernelMsg != null;
+  useCoreAutoHide({ controllerRef, shouldStayVisible });
+
+  // Reflect ad-active on the controller host so the Style_Layer's `playerstack-media-controller
+  // [data-ad-active]` rules resolve — this is the SINGLE hook that drives the ad-mode slider
+  // styling (yellow played fill, hidden handle, default cursor). It pairs with the `adMode`
+  // property passed to the time-slider/settings elements, which own the JS-side gating
+  // (chapters suppressed, speed dropped). Kept in an effect so no DOM is mutated during render.
+  React.useEffect(() => {
+    const controller = controllerRef.current;
+    if (!controller) return;
+    if (isAdActive) {
+      controller.setAttribute('data-ad-active', 'true');
+    } else {
+      controller.removeAttribute('data-ad-active');
+    }
+  }, [isAdActive]);
 
   // --- Request handlers wired to the existing playback handlers (Functional_Parity) ---
 
@@ -246,6 +283,7 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
       <PlayerstackSettings
         qualityOptions={qualityOptions}
         i18n={language ? { language } : null}
+        adMode={isAdActive}
         onRateRequest={handleRateRequest}
         onQualityRequest={handleQualityRequest}
       />
@@ -256,6 +294,90 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
     </>
   );
 
+  // ── Mobile skin layout ──────────────────────────────────────────────────────
+  // A dedicated composition (parity with the original MobilePlayerSkin): a dark scrim, a
+  // top-right settings/captions cluster, centered prev·play·next controls, and a bottom bar with
+  // time + inline progress + fullscreen. It reuses the SAME Core elements as desktop but arranges
+  // them in the mobile `[part='mobile-*']` wrappers the Style_Layer positions. Overlays (spinner,
+  // prevented tip, captions, ad, top-state, context menu) stay shared.
+  if (useMobileSkin) {
+    return (
+      <PlayerstackMediaController ref={controllerRef} data-skin-mode="mobile">
+        <PlayerstackPreventedTip language={language} onClick={onPreventedClick} />
+        <PlayerstackSpinner />
+        <PlayerstackTopState language={language} />
+
+        {activeCaption && captions && captions.length > 0 && <PlayerstackCaptions captionsSrc={captions} />}
+        {ads && <PlayerstackAdOverlay ads={ads} onAdSkip={handleAdSkip} onAdClick={handleAdClick} />}
+
+        <PlayerstackContextMenu
+          i18n={language ? { language } : null}
+          adMode={isAdActive}
+          live={live}
+          onLoopRequest={handleLoopRequest}
+          onEnterPipRequest={handleEnterPipRequest}
+          onExitPipRequest={handleExitPipRequest}
+        />
+
+        {/* Double-tap skip zones (disabled during ads). */}
+        {!isAdActive && <PlayerstackDoubleTap onSeekRequest={handleSeekRequest} />}
+
+        {/* Dark scrim shown while controls are visible. */}
+        <div className="playerstack-mobile-overlay" part="mobile-overlay" />
+
+        {/* Top bar: settings gear opening the full-surface panel. Hidden when there is nothing
+            to configure (parity: original `hideSettings` when no qualities/captions during
+            ad/live). */}
+        {!(isAdActive && qualityOptions.length === 0 && (!captions || captions.length === 0)) &&
+          !(live && qualityOptions.length === 0 && (!captions || captions.length === 0)) && (
+            <div className="playerstack-mobile-top-bar" part="mobile-top-bar">
+              <button type="button" aria-label="Settings" onClick={openMobileSettings}>
+                <PlayerstackIcon icon={mobileSettingsGearIcon} width="24" height="24" />
+              </button>
+            </div>
+          )}
+
+        {/* Center controls: Prev · Play/Pause · Next. */}
+        <div className="playerstack-mobile-center-controls" part="mobile-center-controls">
+          {showNavButtons && (
+            <PlayerstackNavButtons onPrevRequest={handlePrevRequest} onNextRequest={handleNextRequest} />
+          )}
+          <PlayerstackPlayState onPlayRequest={handlePlayRequest} onPauseRequest={handlePauseRequest} />
+        </div>
+
+        {/* Bottom bar: time · progress · fullscreen (single row). */}
+        <div className="playerstack-mobile-bottom-bar" part="mobile-bottom-bar">
+          <PlayerstackPlayTime />
+          {showTimeSlider && (
+            <PlayerstackTimeSlider
+              sprite-vtt-file={spriteVTTFile}
+              spriteData={spriteData}
+              chapters={!isAdActive && chapters && chapters.length > 0 ? chapters : null}
+              adMode={isAdActive}
+              onSeekRequest={handleSeekRequest}
+            />
+          )}
+          <PlayerstackFullscreenButton
+            onEnterFullscreenRequest={handleEnterFullscreenRequest}
+            onExitFullscreenRequest={handleExitFullscreenRequest}
+          />
+        </div>
+
+        {/* Full-surface settings panel (quality / speed / captions), opened by the top-bar gear. */}
+        <PlayerstackMobileSettings
+          ref={mobileSettingsRef}
+          qualityOptions={qualityOptions}
+          captions={captions && captions.length > 0 ? captions : null}
+          i18n={language ? { language } : null}
+          adMode={isAdActive}
+          onRateRequest={handleRateRequest}
+          onQualityRequest={handleQualityRequest}
+          onCaptionRequest={handleCaptionRequest}
+        />
+      </PlayerstackMediaController>
+    );
+  }
+
   return (
     <PlayerstackMediaController ref={controllerRef} data-skin-mode={useMobileSkin ? 'mobile' : 'desktop'}>
       {/* Overlays (Commons — Table 21-C) */}
@@ -264,7 +386,6 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
       {!useMobileSkin && <PlayerstackPlayState onPlayRequest={handlePlayRequest} onPauseRequest={handlePauseRequest} />}
       <PlayerstackTopState language={language} />
 
-      {chapters && chapters.length > 0 && <PlayerstackChapters chapters={chapters} />}
       {heatmapData && heatmapData.length > 0 && <PlayerstackHeatmap heatmapData={heatmapData} />}
 
       {activeCaption && captions && captions.length > 0 && <PlayerstackCaptions captionsSrc={captions} />}
@@ -278,35 +399,55 @@ const CorePlayerSkin = React.forwardRef((props, ref) => {
       {/* Right-click context menu (loop / PiP / fullscreen) */}
       <PlayerstackContextMenu
         i18n={language ? { language } : null}
+        adMode={isAdActive}
+        live={live}
         onLoopRequest={handleLoopRequest}
         onEnterPipRequest={handleEnterPipRequest}
         onExitPipRequest={handleExitPipRequest}
-        onEnterFullscreenRequest={handleEnterFullscreenRequest}
-        onExitFullscreenRequest={handleExitFullscreenRequest}
       />
 
-      {/* Progress slider (Timelens + chapters + tooltip) — desktop and mobile */}
+      {/* Progress slider (Timelens + chapter segments + tooltip) — desktop and mobile. The
+          chapter markers are fed to the slider too so it renders the chapter SEGMENT dividers
+          over the timeline (parity with the original ChapterSegments), in addition to the
+          `PlayerstackChapters` title read-out above. */}
       {showTimeSlider && (
         <PlayerstackTimeSlider
           sprite-vtt-file={spriteVTTFile}
           spriteData={spriteData}
+          chapters={!isAdActive && chapters && chapters.length > 0 ? chapters : null}
+          adMode={isAdActive}
           onSeekRequest={handleSeekRequest}
         />
       )}
 
-      {/* Bottom control bar (Table 21-A / 21-B) */}
-      {/* Prev/next nav cluster — desktop control bar, gated by the public `showNavButtons` prop. */}
-      {showNavButtons && !useMobileSkin && (
-        <PlayerstackNavButtons onPrevRequest={handlePrevRequest} onNextRequest={handleNextRequest} />
-      )}
-      <PlayerstackPlayButton onPlayRequest={handlePlayRequest} onPauseRequest={handlePauseRequest} />
-      <PlayerstackVolume
-        onMuteRequest={handleMuteRequest}
-        onUnmuteRequest={handleUnmuteRequest}
-        onVolumeRequest={handleVolumeRequest}
-      />
-      <PlayerstackPlayTime />
-      {controlsExtra}
+      {/* Bottom control bar (Table 21-A / 21-B). In the light-DOM model the controls that
+          form the horizontal bottom bar are wrapped in a single `.playerstack-controls`
+          container so Core's Style_Layer can pin + lay them out as one row (the overlays,
+          time-slider, chapters, heatmap, captions-overlay, context-menu, play-state,
+          spinner, prevented-tip, top-state, ad-overlay and double-tap stay direct children
+          of the controller so they overlay the stage). */}
+      <div className="playerstack-controls">
+        {/* Left cluster: transport + volume + time read-out (pinned to the left, matching
+            the previous skin's ControlBar layout). */}
+        <div className="playerstack-controls-left">
+          {/* Prev/next nav cluster — desktop control bar, gated by the public `showNavButtons` prop. */}
+          {showNavButtons && !useMobileSkin && (
+            <PlayerstackNavButtons onPrevRequest={handlePrevRequest} onNextRequest={handleNextRequest} />
+          )}
+          <PlayerstackPlayButton onPlayRequest={handlePlayRequest} onPauseRequest={handlePauseRequest} />
+          <PlayerstackVolume
+            onMuteRequest={handleMuteRequest}
+            onUnmuteRequest={handleUnmuteRequest}
+            onVolumeRequest={handleVolumeRequest}
+          />
+          <PlayerstackPlayTime />
+          {/* Active chapter title read-out — INLINE in the control bar after the time (parity
+              with the original StyledChapterIndicator ` · {title}`), not an absolute corner. */}
+          {chapters && chapters.length > 0 && <PlayerstackChapters chapters={chapters} />}
+        </div>
+        {/* Right cluster: captions + settings + fullscreen (pinned to the right). */}
+        <div className="playerstack-controls-right">{controlsExtra}</div>
+      </div>
 
       {/* Kept in the tree so onTogglePlay parity is preserved for the mobile center overlay */}
       {useMobileSkin && (

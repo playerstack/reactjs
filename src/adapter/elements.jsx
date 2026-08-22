@@ -81,3 +81,4 @@ export const PlayerstackLiveIndicator = PlayerstackElements.PlayerstackLiveIndic
 export const PlayerstackDoubleTap = PlayerstackElements.PlayerstackDoubleTap;
 export const PlayerstackIcon = PlayerstackElements.PlayerstackIcon;
 export const PlayerstackNavButtons = PlayerstackElements.PlayerstackNavButtons;
+export const PlayerstackMobileSettings = PlayerstackElements.PlayerstackMobileSettings;

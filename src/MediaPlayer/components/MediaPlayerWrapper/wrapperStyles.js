@@ -96,8 +96,36 @@ export const WRAPPER_CSS = `
   display: flex;
   position: relative;
   width: 100%;
-  height: auto;
+  height: 100%;
   margin: auto;
+}
+
+/*
+ * The video fills the container/stage. Without an explicit size the <video> keeps
+ * its intrinsic ratio and the flex container can collapse before metadata loads,
+ * shrinking the whole player — pin it to the stage.
+ */
+:where(.playerstack-container) video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/*
+ * The Core root host (<playerstack-media-controller>) is a LIGHT-DOM sibling of the
+ * video container inside the flex wrapper. It must OVERLAY the video (the controls,
+ * overlays and progress bar sit on top of the frame), so it is absolutely positioned
+ * to fill the wrapper rather than flowing as a second flex column beside the video.
+ * Its own shadow [part="root"] then lays out media/controls within this box.
+ */
+.playerstack-wrapper > playerstack-media-controller {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
 }
 `;
 
